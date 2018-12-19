@@ -1,4 +1,4 @@
-package my.code;
+package activity.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,12 +17,21 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        onCreateBaseData();
+
+        try
+        {
+            onCreateBaseData();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         onCreateUI(this);
         onCreateFinish();
     }
 
-    public abstract void onCreateBaseData();
+    public abstract void onCreateBaseData() throws Exception;
 
     public void onCreateUI(Context context)
     {

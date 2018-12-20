@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="my.code">
+          package="trunk">
 
     <application
             android:name=".MyApplication"
@@ -11,7 +11,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name="activity.main.MainActivity"
+                android:name=".MainActivity"
                 android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -19,10 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="activity.main.AndroidActivity"
+        <activity android:name=".AndroidActivity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name="activity.main.OpenGLActivity"
+        <activity android:name=".OpenGLActivity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

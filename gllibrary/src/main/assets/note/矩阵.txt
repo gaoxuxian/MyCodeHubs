@@ -1,5 +1,5 @@
 
-    // 逆序
+    // 前乘
     mMatrixTools.translate(mLayerTransX, mLayerTransY, 0);
     mMatrixTools.rotate(mLayerRotate, 0, 0, -1);
     mMatrixTools.scale(mLayerScaleX, mLayerScaleY, 1);

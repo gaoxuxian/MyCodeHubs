@@ -23,7 +23,7 @@ public class GPUImageFilter
     private int mSurfaceHeight;
 
     private Context mContext;
-    private VaryTools mMatrixTools;
+    private GlMatrixTools mMatrixTools;
 
     // 句柄
     protected int vPositionHandle;
@@ -62,7 +62,7 @@ public class GPUImageFilter
         mContext = context;
         mVertexStr = vertex;
         mFragmentStr = fragment;
-        mMatrixTools = new VaryTools();
+        mMatrixTools = new GlMatrixTools();
         mTasksMgr = new TaskWrapper();
 
         onInitBaseData();
@@ -148,7 +148,7 @@ public class GPUImageFilter
     protected void preDrawSteps3Matrix()
     {
         // 矩阵变换
-        VaryTools matrix = getMatrix();
+        GlMatrixTools matrix = getMatrix();
         matrix.pushMatrix();
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
@@ -276,7 +276,7 @@ public class GPUImageFilter
         return mContext;
     }
 
-    public VaryTools getMatrix()
+    public GlMatrixTools getMatrix()
     {
         return mMatrixTools;
     }

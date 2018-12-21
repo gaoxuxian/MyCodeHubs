@@ -8,7 +8,7 @@ import java.util.Stack;
 /**
  * open gl es 矩阵变换是前乘
  */
-public class VaryTools
+public class GlMatrixTools
 {
     private float[] mMatrixCamera;      //相机矩阵
     private float[] mMatrixProjection;  //投影矩阵
@@ -16,16 +16,12 @@ public class VaryTools
 
     private Stack<float[]> mStack;      //变换矩阵堆栈
 
-    public VaryTools()
+    public GlMatrixTools()
     {
         mStack = new Stack<>();
 
-        // mMatrixCamera = new float[16];
-        // mMatrixProjection = new float[16];
-
         mMatrixCamera = getOpenGLUnitMatrix();
         mMatrixProjection = getOpenGLUnitMatrix();
-
         mMatrixCurrent = getOpenGLUnitMatrix();
     }
 
@@ -78,6 +74,13 @@ public class VaryTools
     public void ortho(float left, float right, float bottom, float top, float near, float far)
     {
         Matrix.orthoM(mMatrixProjection, 0, left, right, bottom, top, near, far);
+    }
+
+    public void reset()
+    {
+        mMatrixCamera = getOpenGLUnitMatrix();
+        mMatrixProjection = getOpenGLUnitMatrix();
+        mMatrixCurrent = getOpenGLUnitMatrix();
     }
 
     public float[] getFinalMatrix()

@@ -49,7 +49,7 @@ public class GPUImageFilter
 
     public GPUImageFilter(Context context)
     {
-        this(context, GLUtil.readShaderFromRaw(context, R.raw.image_default_vertex), GLUtil.readShaderFromRaw(context, R.raw.image_default_fragment));
+        this(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_image_default));
     }
 
     public GPUImageFilter(Context context, String vertex, String fragment)

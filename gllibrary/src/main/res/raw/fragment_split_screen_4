@@ -1,0 +1,62 @@
+precision mediump float;
+
+uniform sampler2D vTexture;
+uniform sampler2D vTexture2;
+uniform sampler2D vTexture3;
+uniform sampler2D vTexture4;
+uniform sampler2D vTexture5;
+varying vec2 aCoordinate;
+
+float funLTB(float y) {
+    return y / 1.25;
+}
+
+float funRTB(float y) {
+    return y / -1.25;
+}
+
+void main(){
+    // bg
+    vec2 bgCoordinate = aCoordinate;
+    vec4 bgColor = texture2D(vTexture, bgCoordinate);
+
+    vec2 tempCoordinate = aCoordinate * 2.0;
+
+    float x = step(1.0, tempCoordinate.x);
+    float y = step(1.0, tempCoordinate.y);
+
+    vec2 tCoordinate = vec2(tempCoordinate.x - x, tempCoordinate.y - y);
+
+    if (x == 0.0 && y == 1.0)
+    {
+        vec4 tColor = texture2D(vTexture2, tCoordinate);
+        vec2 center = tCoordinate - vec2(0.5, 0.5);
+        float tAlpha = smoothstep(-0.3, 0.3, funLTB(center.y) - center.x);
+        gl_FragColor = mix(bgColor, tColor, tAlpha);
+    }
+    else if (x == 1.0 && y == 1.0)
+    {
+        vec4 tColor = texture2D(vTexture3, tCoordinate);
+        vec2 center = tCoordinate - vec2(0.5, 0.5);
+        float tAlpha = 1.0 - smoothstep(-0.3, 0.3, funRTB(center.y) - center.x);
+        gl_FragColor = mix(bgColor, tColor, tAlpha);
+    }
+    else if (x == 0.0 && y == 0.0)
+    {
+        vec4 tColor = texture2D(vTexture4, tCoordinate);
+        vec2 center = tCoordinate - vec2(0.5, 0.5);
+        float tAlpha = smoothstep(-0.3, 0.3, funRTB(center.y) - center.x);
+        gl_FragColor = mix(bgColor, tColor, tAlpha);
+    }
+    else if (x == 1.0 && y == 0.0)
+    {
+        vec4 tColor = texture2D(vTexture5, tCoordinate);
+        vec2 center = tCoordinate - vec2(0.5, 0.5);
+        float tAlpha = 1.0 - smoothstep(-0.3, 0.3, funLTB(center.y) - center.x);
+        gl_FragColor = mix(bgColor, tColor, tAlpha);
+    }
+    else
+    {
+        gl_FragColor = bgColor;
+    }
+}

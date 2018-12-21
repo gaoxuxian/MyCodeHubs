@@ -77,6 +77,9 @@ public interface OpenGLES
      *    着色器 基础知识
      *    https://www.jianshu.com/p/eea423753fb0
      *
+     *    着色器系列文章
+     *    https://www.jianshu.com/p/dc49c946438e
+     *
      * 5、
      *  GlSurface View 工作原理初理解
      *  https://www.jianshu.com/p/2414c8c09843

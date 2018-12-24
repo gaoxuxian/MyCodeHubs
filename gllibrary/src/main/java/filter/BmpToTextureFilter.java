@@ -88,7 +88,14 @@ public class BmpToTextureFilter extends GPUImageFilter
     {
         if (mBmpW != 0 && mBmpH != 0)
         {
-            super.initFrameBuffer(mBmpW, mBmpH, true, false, false);
+            if (mFrameBufferMgr == null)
+            {
+                super.initFrameBuffer(mBmpW, mBmpH, true, false, false);
+            }
+            else if (mFrameBufferMgr.getBufferWidth() != mBmpW || mFrameBufferMgr.getBufferHeight() != mBmpH)
+            {
+                checkFrameBufferReMount(mBmpW, mBmpH);
+            }
         }
     }
 
@@ -140,6 +147,23 @@ public class BmpToTextureFilter extends GPUImageFilter
             runTask(true); // 卡线程
 
             checkFrameBufferReMount(mBmpW, mBmpH);
+        }
+    }
+
+    @Override
+    public GPUFilterType getFilterType()
+    {
+        return GPUFilterType.BITMAP_TRANSFORM_TEXTURE;
+    }
+
+    @Override
+    public void destroy()
+    {
+        super.destroy();
+
+        if (mTask != null)
+        {
+            mTask.destroy();
         }
     }
 }

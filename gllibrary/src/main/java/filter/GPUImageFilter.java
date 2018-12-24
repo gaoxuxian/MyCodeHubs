@@ -17,7 +17,7 @@ import java.nio.ShortBuffer;
  * 生命周期: onSurfaceCreated() --> onSurfaceChanged()
  * 如需管理 FBO : initFrameBuffer()
  */
-public class GPUImageFilter
+public abstract class GPUImageFilter implements AbsFilter<GPUFilterType>
 {
     private int mSurfaceWidth;
     private int mSurfaceHeight;
@@ -241,7 +241,7 @@ public class GPUImageFilter
      * @param width
      * @param height
      */
-    public final void initFrameBuffer(int width, int height, boolean color, boolean depth, boolean stencil)
+    protected final void initFrameBuffer(int width, int height, boolean color, boolean depth, boolean stencil)
     {
         if (mFrameBufferMgr != null)
         {
@@ -294,6 +294,16 @@ public class GPUImageFilter
     public int getSurfaceH()
     {
         return mSurfaceHeight;
+    }
+
+    public int getFrameBufferW()
+    {
+        return mFrameBufferMgr != null ? mFrameBufferMgr.getBufferWidth() : 0;
+    }
+
+    public int getFrameBufferH()
+    {
+        return mFrameBufferMgr != null ? mFrameBufferMgr.getBufferHeight() : 0;
     }
 
     public void blendEnable(boolean enable)
@@ -356,9 +366,30 @@ public class GPUImageFilter
     {
         mContext = null;
 
+        if (GLES20.glIsProgram(mProgram))
+        {
+            if (GLES20.glIsShader(mVertexShader))
+            {
+                GLES20.glDetachShader(mProgram, mVertexShader);
+                GLES20.glDeleteShader(mVertexShader);
+                mVertexShader = 0;
+            }
+
+            if (GLES20.glIsShader(mFragmentShader))
+            {
+                GLES20.glDetachShader(mProgram, mFragmentShader);
+                GLES20.glDeleteShader(mFragmentShader);
+                mFragmentShader = 0;
+            }
+
+            GLES20.glDeleteProgram(mProgram);
+            mProgram = 0;
+        }
+
         if (mFrameBufferMgr != null)
         {
             mFrameBufferMgr.destroy();
+            mFrameBufferMgr = null;
         }
 
         if (mTasksMgr != null)

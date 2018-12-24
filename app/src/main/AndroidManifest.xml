@@ -27,7 +27,11 @@
             android:name=".OpenGLActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name=".gles.SplitScreenActivity"
+        <activity
+            android:name=".gles.SplitScreenActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".gles.SplitScreenV2Activity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

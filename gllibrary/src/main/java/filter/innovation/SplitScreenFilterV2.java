@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES30;
 
 import filter.GLConstant;
+import filter.GPUFilterType;
 import filter.GPUImageFilter;
 import library.R;
 import util.ByteBufferUtil;
@@ -99,5 +100,11 @@ public class SplitScreenFilterV2 extends GPUImageFilter
         GLUtil.checkGlError("AAA");
         draw(textureID);
         GLUtil.checkGlError("AAA");
+    }
+
+    @Override
+    public GPUFilterType getFilterType()
+    {
+        return null;
     }
 }

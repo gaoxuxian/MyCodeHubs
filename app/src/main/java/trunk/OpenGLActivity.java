@@ -23,7 +23,7 @@ public class OpenGLActivity extends BaseActivity {
         mData = new ArrayList<>();
 
         SparseArray<Object> map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "斜分屏着色器");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "斜分屏转场-动画");
         Intent intent = new Intent();
         Class cls = Class.forName(activity_package_path + "SplitScreenActivity");
         intent.setClass(this, cls);
@@ -34,6 +34,14 @@ public class OpenGLActivity extends BaseActivity {
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "四分屏着色器");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "SplitScreenV2Activity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "菱形扩散转场-动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "SplitScreenV3Activity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

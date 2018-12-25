@@ -1,17 +1,16 @@
 package trunk.gles;
 
 import trunk.BaseActivity;
-import trunk.gles.view.SplitScreenViewV2;
+import trunk.gles.view.SplitScreenViewV3;
 import util.PxUtil;
 
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
-public class SplitScreenV2Activity extends BaseActivity
+public class SplitScreenV3Activity extends BaseActivity
 {
-
-    private SplitScreenViewV2 mItemView;
+    private SplitScreenViewV3 mItemView;
 
     @Override
     public void onCreateBaseData() throws Exception
@@ -22,8 +21,8 @@ public class SplitScreenV2Activity extends BaseActivity
     @Override
     public void onCreateChildren(Context context, FrameLayout parent, FrameLayout.LayoutParams params)
     {
-        mItemView = new SplitScreenViewV2(context);
-        params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sV_1080p(1080));
+        mItemView = new SplitScreenViewV3(context);
+        params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(2160));
         params.gravity = Gravity.CENTER;
         parent.addView(mItemView, params);
     }

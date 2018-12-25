@@ -31,7 +31,11 @@
             android:name=".gles.SplitScreenActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name=".gles.SplitScreenV2Activity"
+        <activity
+            android:name=".gles.SplitScreenV2Activity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".gles.SplitScreenV3Activity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

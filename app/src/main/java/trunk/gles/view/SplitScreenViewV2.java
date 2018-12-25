@@ -34,14 +34,6 @@ public class SplitScreenViewV2 extends GLSurfaceView implements GLSurfaceView.Re
         mBmpResArr = new int[]{R.drawable.open_test, R.drawable.open_test_2, R.drawable.open_test_3, R.drawable.open_test_4, R.drawable.open_test_5};
         mTextureIDArr = new int[mBmpResArr.length];
 
-        mBmpToTextureFilter = new BmpToTextureFilter(context);
-        mBmpToTextureFilter2 = new BmpToTextureFilter(context);
-        mBmpToTextureFilter3 = new BmpToTextureFilter(context);
-        mBmpToTextureFilter4 = new BmpToTextureFilter(context);
-        mBmpToTextureFilter5 = new BmpToTextureFilter(context);
-
-        mSplitScreenFilter = new SplitScreenFilterV2(context);
-
         setEGLContextClientVersion(GLUtil.getGlSupportVersionInt(context));
         setEGLConfigChooser(8, 8, 8, 8, 0, 0);
         setRenderer(this);
@@ -52,6 +44,14 @@ public class SplitScreenViewV2 extends GLSurfaceView implements GLSurfaceView.Re
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config)
     {
+        mBmpToTextureFilter = new BmpToTextureFilter(getContext());
+        mBmpToTextureFilter2 = new BmpToTextureFilter(getContext());
+        mBmpToTextureFilter3 = new BmpToTextureFilter(getContext());
+        mBmpToTextureFilter4 = new BmpToTextureFilter(getContext());
+        mBmpToTextureFilter5 = new BmpToTextureFilter(getContext());
+
+        mSplitScreenFilter = new SplitScreenFilterV2(getContext());
+
         mBmpToTextureFilter.onSurfaceCreated(config);
         mBmpToTextureFilter2.onSurfaceCreated(config);
         mBmpToTextureFilter3.onSurfaceCreated(config);
@@ -107,5 +107,42 @@ public class SplitScreenViewV2 extends GLSurfaceView implements GLSurfaceView.Re
 
         mSplitScreenFilter.setTextures(mTextureIDArr);
         mSplitScreenFilter.onDrawFrame(0);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        if (mBmpToTextureFilter != null)
+        {
+            mBmpToTextureFilter.destroy();
+        }
+
+        if (mBmpToTextureFilter2 != null)
+        {
+            mBmpToTextureFilter2.destroy();
+        }
+
+        if (mBmpToTextureFilter3 != null)
+        {
+            mBmpToTextureFilter3.destroy();
+        }
+
+        if (mBmpToTextureFilter4 != null)
+        {
+            mBmpToTextureFilter4.destroy();
+        }
+
+        if (mBmpToTextureFilter5 != null)
+        {
+            mBmpToTextureFilter5.destroy();
+        }
+
+        if (mSplitScreenFilter != null)
+        {
+            mSplitScreenFilter.destroy();
+        }
+
     }
 }

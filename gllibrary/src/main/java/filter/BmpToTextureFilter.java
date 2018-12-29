@@ -145,8 +145,6 @@ public class BmpToTextureFilter extends GPUImageFilter
             mTask.setBitmapRes(res);
             queueRunnable(mTask);
             runTask(true); // 卡线程
-
-            checkFrameBufferReMount(mBmpW, mBmpH);
         }
     }
 

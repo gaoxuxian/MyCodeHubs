@@ -1,0 +1,26 @@
+precision highp float;
+
+uniform sampler2D vTexture;
+uniform float intensity;// default 0.1
+uniform float progress;
+uniform int passes;
+
+varying vec2 aCoordinate;
+
+void main() {
+    vec4 tempColor = vec4(0.0);
+    vec2 uv = aCoordinate;
+
+    float disp = intensity * (0.5 - distance(0.5, progress));
+    for (int xi = 0; xi<passes; xi++) {
+        float x = (float(xi) / float(passes) - 0.5) / 10.;
+
+        for (int yi = 0; yi<passes; yi++) {
+            float y = (float(yi) / float(passes) - 0.5)/ 10.;
+            vec2 temp = vec2(x, y);
+            tempColor += texture2D(vTexture, uv + disp*temp);
+        }
+    }
+
+    gl_FragColor = tempColor / float(passes * passes);
+}

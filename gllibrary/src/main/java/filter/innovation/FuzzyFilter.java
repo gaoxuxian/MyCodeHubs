@@ -29,6 +29,12 @@ public class FuzzyFilter extends GPUImageFilter
     }
 
     @Override
+    protected boolean onInitTaskMgr()
+    {
+        return false;
+    }
+
+    @Override
     protected void onInitBufferData()
     {
         mVertexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.VERTEX_SQUARE);

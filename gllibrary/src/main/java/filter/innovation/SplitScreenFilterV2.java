@@ -27,6 +27,12 @@ public class SplitScreenFilterV2 extends GPUImageFilter
         super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_split_screen_4), GLUtil.readShaderFromRaw(context, R.raw.fragment_split_screen_4));
     }
 
+    @Override
+    protected boolean onInitTaskMgr()
+    {
+        return false;
+    }
+
     public void setTextures(int[] id)
     {
         mTexutreIDs = id;

@@ -3,39 +3,45 @@ package filter;
 import android.content.Context;
 import android.opengl.GLES20;
 
-import library.R;
-import util.*;
-
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import library.R;
+import util.ByteBufferUtil;
+import util.GLUtil;
+import util.GlMatrixTools;
+
 /**
  * @author Gxx
- * Created by Gxx on 2018/12/05.
- * <p>
- * 生命周期: onSurfaceCreated() --> onSurfaceChanged()
- * 如需管理 FBO : initFrameBuffer()
+ * Created by Gxx on 2019/1/2.
  */
-public abstract class GPUImageFilter extends AbsFilter
+public class GPUImageTransitionFilter extends AbsFilter
 {
-    // 句柄
     protected int vPositionHandle;
     protected int vCoordinateHandle;
     protected int vMatrixHandle;
-    protected int vTextureHandle;
+    protected int vTextureFrontHandle;
+    protected int vTextureBackHandle;
+    protected int progressHandle;
+
+    protected float mProgressValue;
+    protected long mStartTime;
 
     protected FloatBuffer mVertexBuffer;
     protected ShortBuffer mVertexIndexBuffer;
     protected FloatBuffer mTextureIndexBuffer;
 
-    public GPUImageFilter(Context context)
+    public GPUImageTransitionFilter(Context context)
     {
-        this(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_image_default));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_image_transition_default));
     }
 
-    public GPUImageFilter(Context context, String vertex, String fragment)
+    @Override
+    protected void onInitBufferData()
     {
-        super(context, vertex, fragment);
+        mVertexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.VERTEX_SQUARE);
+        mVertexIndexBuffer = ByteBufferUtil.getNativeShortBuffer(GLConstant.VERTEX_INDEX);
+        mTextureIndexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.TEXTURE_INDEX_V2);
     }
 
     @Override
@@ -44,15 +50,9 @@ public abstract class GPUImageFilter extends AbsFilter
         vPositionHandle = GLES20.glGetAttribLocation(getProgram(), "vPosition");
         vCoordinateHandle = GLES20.glGetAttribLocation(getProgram(), "vCoordinate");
         vMatrixHandle = GLES20.glGetUniformLocation(getProgram(), "vMatrix");
-        vTextureHandle = GLES20.glGetUniformLocation(getProgram(), "vTexture");
-    }
-
-    @Override
-    protected void onInitBufferData()
-    {
-        mVertexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.VERTEX_SQUARE);
-        mVertexIndexBuffer = ByteBufferUtil.getNativeShortBuffer(GLConstant.VERTEX_INDEX);
-        mTextureIndexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.TEXTURE_INDEX);
+        vTextureFrontHandle = GLES20.glGetUniformLocation(getProgram(), "vTextureFront");
+        vTextureBackHandle = GLES20.glGetUniformLocation(getProgram(), "vTextureBack");
+        progressHandle = GLES20.glGetUniformLocation(getProgram(), "progress");
     }
 
     protected void preDrawSteps1DataBuffer()
@@ -68,12 +68,21 @@ public abstract class GPUImageFilter extends AbsFilter
         GLES20.glEnableVertexAttribArray(vCoordinateHandle);
     }
 
-    protected void preDrawSteps2BindTexture(int textureID)
+    protected void preDrawSteps2BindTexture(int front, int back)
     {
         // 绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(getTextureType(), textureID);
-        GLES20.glUniform1i(vTextureHandle, 0);
+        GLES20.glBindTexture(getTextureType(), front);
+        GLES20.glUniform1i(vTextureFrontHandle, 0);
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+        GLES20.glBindTexture(getTextureType(), back);
+        GLES20.glUniform1i(vTextureBackHandle, 1);
+    }
+
+    private int getTextureType()
+    {
+        return GLES20.GL_TEXTURE_2D;
     }
 
     protected void preDrawSteps3Matrix()
@@ -87,16 +96,16 @@ public abstract class GPUImageFilter extends AbsFilter
 
     protected void preDrawSteps4Other()
     {
-
+        GLES20.glUniform1f(progressHandle, mProgressValue);
     }
 
-    protected void draw(int textureID)
+    protected void draw(int front, int back)
     {
         GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
         GLES20.glUseProgram(getProgram());
 
         preDrawSteps1DataBuffer();
-        preDrawSteps2BindTexture(textureID);
+        preDrawSteps2BindTexture(front, back);
         preDrawSteps3Matrix();
         preDrawSteps4Other();
 
@@ -112,20 +121,20 @@ public abstract class GPUImageFilter extends AbsFilter
         GLES20.glBindTexture(getTextureType(), 0);
     }
 
-    public void onDrawFrame(int textureID)
+    public void onDrawFrame(int frontTextureID, int backTextureID)
     {
         if (!GLES20.glIsProgram(getProgram()))
         {
             return;
         }
-        draw(textureID);
+        draw(frontTextureID, backTextureID);
     }
 
-    public int onDrawBuffer(int textureID)
+    public int onDrawBuffer(int lastTextureID, int frontTextureID, int backTextureID)
     {
         if (!GLES20.glIsProgram(getProgram()))
         {
-            return textureID;
+            return lastTextureID;
         }
 
         if (mFrameBufferMgr != null)
@@ -135,30 +144,33 @@ public abstract class GPUImageFilter extends AbsFilter
             mFrameBufferMgr.clearDepth(true, true);
             mFrameBufferMgr.clearStencil(true, true);
 
-            draw(textureID);
+            draw(frontTextureID, backTextureID);
             mFrameBufferMgr.unbind();
             return mFrameBufferMgr.getCurrentTextureId();
         }
 
-        return textureID;
+        return lastTextureID;
     }
 
-    protected int getTextureType()
+    public void setStartTimeValue(long start)
     {
-        return GLES20.GL_TEXTURE_2D;
+        mStartTime = start;
     }
 
-    public void blendEnable(boolean enable)
+    public void setTimeValue(long time)
     {
-        if (enable)
+        float dt = (time - mStartTime) / 1200f;
+        int dtInt = (int) dt;
+        mProgressValue = dt - dtInt;
+        if (dtInt > 0)
         {
-            GLES20.glEnable(GLES20.GL_BLEND);
-            GLES20.glBlendEquation(GLES20.GL_FUNC_ADD);
-            GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
+            mProgressValue = 1;
         }
-        else
-        {
-            GLES20.glDisable(GLES20.GL_BLEND);
-        }
+    }
+
+    @Override
+    public GPUFilterType getFilterType()
+    {
+        return null;
     }
 }

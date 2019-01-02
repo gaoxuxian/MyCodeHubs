@@ -1,4 +1,4 @@
-package filter.innovation;
+package filter.transitions;
 
 import android.content.Context;
 
@@ -6,12 +6,13 @@ import filter.GPUFilterType;
 import filter.GPUImageFilter;
 
 /**
+ * 矩形平滑转场
  * @author Gxx
- * Created by Gxx on 2018/12/29.
+ * Created by Gxx on 2019/1/2.
  */
-public class ZoomFilter extends GPUImageFilter
+public class SmoothnessTransitionFilter extends GPUImageFilter
 {
-    public ZoomFilter(Context context)
+    public SmoothnessTransitionFilter(Context context)
     {
         super(context);
     }

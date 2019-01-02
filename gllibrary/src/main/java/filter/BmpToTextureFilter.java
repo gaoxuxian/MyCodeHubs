@@ -148,6 +148,16 @@ public class BmpToTextureFilter extends GPUImageFilter
         }
     }
 
+    public int getTextureW()
+    {
+        return mBmpW;
+    }
+
+    public int getTextureH()
+    {
+        return mBmpH;
+    }
+
     @Override
     public GPUFilterType getFilterType()
     {

@@ -10,6 +10,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 /**
+ * 单纹理类 filter 基类
  * @author Gxx
  * Created by Gxx on 2018/12/05.
  * <p>

@@ -18,7 +18,6 @@ import util.GlMatrixTools;
 public class ZoomTransitionFilter extends GPUImageTransitionFilter
 {
     private int zoomQuicknessHandle;
-    private int progressHandle;
 
     public ZoomTransitionFilter(Context context)
     {
@@ -43,7 +42,6 @@ public class ZoomTransitionFilter extends GPUImageTransitionFilter
         super.onInitProgramHandle();
 
         zoomQuicknessHandle = GLES30.glGetUniformLocation(getProgram(), "zoom_quickness");
-        progressHandle = GLES30.glGetUniformLocation(getProgram(), "progress");
     }
 
     @Override
@@ -82,14 +80,14 @@ public class ZoomTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public void setTimeValue(long time)
+    protected float getEffectTimeCycle()
     {
-        float dt = (System.currentTimeMillis() - mStartTime) / 2500f;
-        int dtInt = (int) dt;
-        mProgressValue = dt - dtInt;
-        if (dtInt > 0)
-        {
-            mProgressValue = 1;
-        }
+        return 2000f;
+    }
+
+    @Override
+    protected boolean isEffectCycle()
+    {
+        return super.isEffectCycle();
     }
 }

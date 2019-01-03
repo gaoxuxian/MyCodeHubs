@@ -12,6 +12,7 @@ import util.GLUtil;
 import util.GlMatrixTools;
 
 /**
+ * 转场类 filter 基类
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
@@ -175,12 +176,22 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
 
     public void setTimeValue(long time)
     {
-        float dt = (time - mStartTime) / 1200f;
+        float dt = (time - mStartTime) / getEffectTimeCycle();
         int dtInt = (int) dt;
         mProgressValue = dt - dtInt;
-        if (dtInt > 0)
+        if (!isEffectCycle() && dtInt > 0)
         {
             mProgressValue = 1;
         }
+    }
+
+    protected float getEffectTimeCycle()
+    {
+        return 1200f;
+    }
+
+    protected boolean isEffectCycle()
+    {
+        return false;
     }
 }

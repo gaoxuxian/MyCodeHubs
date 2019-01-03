@@ -1,4 +1,4 @@
-package filter;
+package filter.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,8 @@ import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
 
+import filter.GPUFilterType;
+import filter.GPUImageFilter;
 import task.BmpToTextureTask;
 import util.GLUtil;
 import util.GlMatrixTools;

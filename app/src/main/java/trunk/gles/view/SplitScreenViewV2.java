@@ -6,7 +6,7 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.BmpToTextureFilter;
+import filter.common.BmpToTextureFilter;
 import filter.innovation.SplitScreenFilterV2;
 import trunk.R;
 import util.GLUtil;

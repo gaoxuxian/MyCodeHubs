@@ -8,7 +8,7 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.DisplayImageFilter;
+import filter.common.DisplayImageFilter;
 import filter.innovation.SplitScreenFilterV3;
 import trunk.R;
 import util.GLUtil;

@@ -10,18 +10,20 @@ import util.GLUtil;
 import util.GlMatrixTools;
 
 /**
- * 矩形平滑转场
+ * 扩散圆转场-- 固定圆、可变圆之间的比较算法, 固定圆算法：固定圆心、固定半径, 可变圆算法：指定圆心, 半径随时间变大
  * @author Gxx
- * Created by Gxx on 2019/1/2.
+ * Created by Gxx on 2019/1/3.
  */
-public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
+public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
 {
-    private int countHandle;
-    private int smoothnessHandle;
+    private int dotsHandle;
+    private int centerHandle;
 
-    public SmoothnessTransitionFilter(Context context)
+    private float[] centerValue;
+
+    public SpreadRoundTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_smoothness));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_spread_round));
     }
 
     @Override
@@ -33,7 +35,17 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_SMOOTHNESS;
+        return GPUFilterType.TRANSITION_SPREAD_ROUND;
+    }
+
+    @Override
+    protected void onInitBaseData()
+    {
+        super.onInitBaseData();
+
+        centerValue = new float[2];
+        centerValue[0] = 0;
+        centerValue[1] = 0;
     }
 
     @Override
@@ -41,8 +53,8 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     {
         super.onInitProgramHandle();
 
-        countHandle = GLES20.glGetUniformLocation(getProgram(), "count");
-        smoothnessHandle = GLES20.glGetUniformLocation(getProgram(), "smoothness");
+        dotsHandle = GLES20.glGetUniformLocation(getProgram(), "dots");
+        centerHandle = GLES20.glGetUniformLocation(getProgram(), "center");
     }
 
     @Override
@@ -50,12 +62,13 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     {
         if (!isViewPortAvailable(drawBuffer)) return;
 
+        // 视口区域大小(归一化映射范围)
         GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
-
+        // 矩阵变换
         GlMatrixTools matrix = getMatrix();
-        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
-        matrix.frustum(-1, 1, -vs, vs, 3, 5);
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
+        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
+        matrix.frustum(-1, 1, -vs, vs, 3, 7);
 
         matrix.pushMatrix();
         matrix.scale(1f, (float) mTextureH / mTextureW, 1f);
@@ -68,19 +81,19 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(countHandle, 10f);
-        GLES20.glUniform1f(smoothnessHandle, 0.5f);
+        GLES20.glUniform1f(dotsHandle, 20);
+        GLES20.glUniform2fv(centerHandle, 1, centerValue, 0);
     }
 
     @Override
     protected float getEffectTimeCycle()
     {
-        return 2000f;
+        return 2500f;
     }
 
     @Override
     protected boolean isEffectCycle()
     {
-        return super.isEffectCycle();
+        return true;
     }
 }

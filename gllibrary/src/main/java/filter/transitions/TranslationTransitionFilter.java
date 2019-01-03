@@ -24,6 +24,12 @@ public class TranslationTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
+    protected boolean onInitTaskMgr()
+    {
+        return false;
+    }
+
+    @Override
     protected void onInitBaseData()
     {
         super.onInitBaseData();
@@ -75,14 +81,14 @@ public class TranslationTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public void setTimeValue(long time)
+    protected float getEffectTimeCycle()
     {
-        float dt = (time - mStartTime) / 2500f;
-        int dtInt = (int) dt;
-        mProgressValue = dt - dtInt;
-        if (dtInt > 0)
-        {
-            mProgressValue = 1;
-        }
+        return 2000f;
+    }
+
+    @Override
+    protected boolean isEffectCycle()
+    {
+        return super.isEffectCycle();
     }
 }

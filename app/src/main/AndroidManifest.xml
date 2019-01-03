@@ -51,7 +51,14 @@
             android:name=".gles.RectSmoothTransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name=".gles.TranslationTransitionActivity"
+        <activity
+            android:name=".gles.TranslationTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".gles.SpreadRoundTransitionActivity"
+                  android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".gles.ShakeTransitionActivity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

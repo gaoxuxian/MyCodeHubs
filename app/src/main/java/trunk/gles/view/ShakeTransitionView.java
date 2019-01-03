@@ -8,7 +8,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import filter.common.BmpToTextureFilter;
-import filter.transitions.ZoomTransitionFilter;
+import filter.transitions.ShakeTransitionFilter;
+import filter.transitions.SpreadRoundTransitionFilter;
 import trunk.R;
 import util.GLUtil;
 
@@ -16,15 +17,15 @@ import util.GLUtil;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
+public class ShakeTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mFrontTextureFilter;
     private BmpToTextureFilter mBackTextureFilter;
-    private ZoomTransitionFilter mZoomTransitionFilter;
+    private ShakeTransitionFilter mShakeTransitionFilter;
 
     private long mStartTime;
 
-    public ZoomTransitionView(Context context)
+    public ShakeTransitionView(Context context)
     {
         super(context);
 
@@ -41,8 +42,8 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
         mBackTextureFilter = new BmpToTextureFilter(getContext());
         mBackTextureFilter.onSurfaceCreated(config);
 
-        mZoomTransitionFilter = new ZoomTransitionFilter(getContext());
-        mZoomTransitionFilter.onSurfaceCreated(config);
+        mShakeTransitionFilter = new ShakeTransitionFilter(getContext());
+        mShakeTransitionFilter.onSurfaceCreated(config);
     }
 
     @Override
@@ -56,8 +57,8 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
         mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
-        mZoomTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
-        mZoomTransitionFilter.onSurfaceChanged(width, height);
+        mShakeTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
+        mShakeTransitionFilter.onSurfaceChanged(width, height);
     }
 
     @Override
@@ -75,9 +76,9 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
         GLES20.glClearColor(1, 1, 1, 1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        mZoomTransitionFilter.setStartTimeValue(mStartTime);
-        mZoomTransitionFilter.setTimeValue(System.currentTimeMillis());
-        mZoomTransitionFilter.onDrawFrame(front, back);
+        mShakeTransitionFilter.setStartTimeValue(mStartTime);
+        mShakeTransitionFilter.setTimeValue(System.currentTimeMillis());
+        mShakeTransitionFilter.onDrawFrame(front, back);
     }
 
     @Override
@@ -95,9 +96,9 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
             mBackTextureFilter.destroy();
         }
 
-        if (mZoomTransitionFilter != null)
+        if (mShakeTransitionFilter != null)
         {
-            mZoomTransitionFilter.destroy();
+            mShakeTransitionFilter.destroy();
         }
     }
 }

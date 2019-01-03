@@ -1,7 +1,10 @@
-package filter;
+package filter.common;
 
 import android.content.Context;
 
+import filter.GLConstant;
+import filter.GPUFilterType;
+import filter.GPUImageFilter;
 import util.ByteBufferUtil;
 
 /**

@@ -7,9 +7,8 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.BmpToTextureFilter;
+import filter.common.BmpToTextureFilter;
 import filter.transitions.TranslationTransitionFilter;
-import filter.transitions.ZoomTransitionFilter;
 import trunk.R;
 import util.GLUtil;
 

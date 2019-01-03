@@ -62,7 +62,7 @@ public class SplitScreenFilterV2 extends GPUImageFilter
     }
 
     @Override
-    protected void preDrawSteps4Other()
+    protected void preDrawSteps4Other(boolean drawBuffer)
     {
         if (mTexutreIDs != null)
         {
@@ -104,7 +104,7 @@ public class SplitScreenFilterV2 extends GPUImageFilter
             return;
         }
         GLUtil.checkGlError("AAA");
-        draw(textureID);
+        draw(textureID, false);
         GLUtil.checkGlError("AAA");
     }
 

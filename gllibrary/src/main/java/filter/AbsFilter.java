@@ -151,6 +151,16 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
         mTextureH = height;
     }
 
+    public int getTextureW()
+    {
+        return mTextureW;
+    }
+
+    public int getTextureH()
+    {
+        return mTextureH;
+    }
+
     public final void initFrameBufferOfTextureSize()
     {
         initFrameBuffer(mTextureW, mTextureH);

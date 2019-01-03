@@ -1,14 +1,13 @@
 package trunk.gles.view;
 
 import android.content.Context;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import filter.BmpToTextureFilter;
-import filter.transitions.ZoomTransitionFilter;
+import filter.transitions.SmoothnessTransitionFilter;
 import trunk.R;
 import util.GLUtil;
 
@@ -16,15 +15,15 @@ import util.GLUtil;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
+public class SmoothnessTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mFrontTextureFilter;
     private BmpToTextureFilter mBackTextureFilter;
-    private ZoomTransitionFilter mZoomTransitionFilter;
+    private SmoothnessTransitionFilter mSmoothnessFilter;
 
     private long mStartTime;
 
-    public ZoomTransitionView(Context context)
+    public SmoothnessTransitionView(Context context)
     {
         super(context);
 
@@ -41,43 +40,40 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
         mBackTextureFilter = new BmpToTextureFilter(getContext());
         mBackTextureFilter.onSurfaceCreated(config);
 
-        mZoomTransitionFilter = new ZoomTransitionFilter(getContext());
-        mZoomTransitionFilter.onSurfaceCreated(config);
+        mSmoothnessFilter = new SmoothnessTransitionFilter(getContext());
+        mSmoothnessFilter.onSurfaceCreated(config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_2);
         mFrontTextureFilter.initFrameBufferOfTextureSize();
 
         mBackTextureFilter.onSurfaceChanged(width, height);
         mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
-        mZoomTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
-        mZoomTransitionFilter.onSurfaceChanged(width, height);
+        mSmoothnessFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
+        mSmoothnessFilter.onSurfaceChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        int front = mFrontTextureFilter.onDrawBuffer(0);
-
-        int back = mBackTextureFilter.onDrawBuffer(0);
-
         if (mStartTime == 0)
         {
             mStartTime = System.currentTimeMillis();
         }
 
-        GLES20.glClearColor(1, 1, 1, 1);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        int front = mFrontTextureFilter.onDrawBuffer(0);
 
-        mZoomTransitionFilter.setStartTimeValue(mStartTime);
-        mZoomTransitionFilter.setTimeValue(System.currentTimeMillis());
-        mZoomTransitionFilter.onDrawFrame(front, back);
+        int back = mBackTextureFilter.onDrawBuffer(0);
+
+        mSmoothnessFilter.setStartTimeValue(mStartTime);
+        mSmoothnessFilter.setTimeValue(System.currentTimeMillis());
+        mSmoothnessFilter.onDrawFrame(front, back);
     }
 
     @Override
@@ -95,9 +91,9 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
             mBackTextureFilter.destroy();
         }
 
-        if (mZoomTransitionFilter != null)
+        if (mSmoothnessFilter != null)
         {
-            mZoomTransitionFilter.destroy();
+            mSmoothnessFilter.destroy();
         }
     }
 }

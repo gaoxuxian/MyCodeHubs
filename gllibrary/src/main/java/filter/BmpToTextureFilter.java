@@ -17,8 +17,6 @@ import util.GlMatrixTools;
 public class BmpToTextureFilter extends GPUImageFilter
 {
     private BmpToTextureTask mTask;
-    private int mBmpW;
-    private int mBmpH;
     private int[] mTextureIDs;
 
     public BmpToTextureFilter(Context context)
@@ -40,10 +38,10 @@ public class BmpToTextureFilter extends GPUImageFilter
             {
                 if (bitmap != null && !bitmap.isRecycled())
                 {
-                    if (mBmpW != bitmap.getWidth() || mBmpH != bitmap.getHeight())
+                    if (mTextureW != bitmap.getWidth() || mTextureH != bitmap.getHeight())
                     {
-                        mBmpW = bitmap.getWidth();
-                        mBmpH = bitmap.getHeight();
+                        mTextureW = bitmap.getWidth();
+                        mTextureH = bitmap.getHeight();
 
                         if (GLES30.glIsTexture(mTextureIDs[0]))
                         {
@@ -83,27 +81,30 @@ public class BmpToTextureFilter extends GPUImageFilter
         return false;
     }
 
-    public void initFrameBufferByBitmap()
-    {
-        initFrameBuffer(mBmpW, mBmpH);
-    }
-
     @Override
-    protected void preDrawSteps3Matrix()
+    protected void preDrawSteps3Matrix(boolean drawBuffer)
     {
-        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
-
+        // 视口区域大小(归一化映射范围)
+        GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
+        // 矩阵变换
         GlMatrixTools matrix = getMatrix();
+        matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
+        matrix.frustum(-1, 1, -1, 1, 3, 7);
+
         matrix.pushMatrix();
-        matrix.scale(1f, 1f, 1f);
+        matrix.scale(1f, (float) mTextureH / mTextureW, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }
 
     @Override
-    protected void preDrawSteps4Other()
+    public void onDrawFrame(int textureID)
     {
-        GLES30.glViewport(0, 0, mBmpW, mBmpH);
+        if (!GLES20.glIsProgram(getProgram()))
+        {
+            return;
+        }
+        draw(mTextureIDs[0], false);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class BmpToTextureFilter extends GPUImageFilter
         {
             mFrameBufferMgr.bindNext();
 
-            draw(mTextureIDs[0]);
+            draw(mTextureIDs[0], true);
             mFrameBufferMgr.unbind();
             return mFrameBufferMgr.getCurrentTextureId();
         }
@@ -130,23 +131,13 @@ public class BmpToTextureFilter extends GPUImageFilter
     {
         if (mTask != null)
         {
-            mBmpW = 0;
-            mBmpH = 0;
+            mTextureW = 0;
+            mTextureH = 0;
 
             mTask.setBitmapRes(res);
             queueRunnable(mTask);
             runTask(true); // 卡线程
         }
-    }
-
-    public int getTextureW()
-    {
-        return mBmpW;
-    }
-
-    public int getTextureH()
-    {
-        return mBmpH;
     }
 
     @Override

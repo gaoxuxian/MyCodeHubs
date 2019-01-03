@@ -22,7 +22,7 @@ public class ZoomTransitionFilter extends GPUImageTransitionFilter
 
     public ZoomTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_zoom_fuzzy_transition));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_zoom_fuzzy));
     }
 
     @Override
@@ -47,14 +47,17 @@ public class ZoomTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    protected void preDrawSteps3Matrix()
+    protected void preDrawSteps3Matrix(boolean drawBuffer)
     {
-        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
+        if (!isViewPortAvailable(drawBuffer)) return;
+
+        GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
 
         GlMatrixTools matrix = getMatrix();
-        float vs = (float) getSurfaceH() / getSurfaceW();
+        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
         matrix.frustum(-1, 1, -vs, vs, 3, 5);
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
+
         matrix.pushMatrix();
         matrix.scale(1f, (float) mTextureH / mTextureW, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
@@ -62,26 +65,11 @@ public class ZoomTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    protected void preDrawSteps4Other()
+    protected void preDrawSteps4Other(boolean drawBuffer)
     {
+        super.preDrawSteps4Other(drawBuffer);
+
         GLES20.glUniform1f(zoomQuicknessHandle, 0.6f);
-
-        if (mStartTime == 0)
-        {
-            mStartTime = System.currentTimeMillis();
-        }
-
-        float dt = (System.currentTimeMillis() - mStartTime) / 2500f;
-        int dtInt = (int) dt;
-        float progress = dt - dtInt;
-        if (dtInt > 0)
-        {
-            progress = 1;
-        }
-        GLES20.glUniform1f(progressHandle, progress);
-
-        GLES20.glClearColor(1, 1, 1, 1);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         blendEnable(true);
     }
@@ -91,5 +79,17 @@ public class ZoomTransitionFilter extends GPUImageTransitionFilter
     {
         super.afterDraw();
         blendEnable(false);
+    }
+
+    @Override
+    public void setTimeValue(long time)
+    {
+        float dt = (System.currentTimeMillis() - mStartTime) / 2500f;
+        int dtInt = (int) dt;
+        mProgressValue = dt - dtInt;
+        if (dtInt > 0)
+        {
+            mProgressValue = 1;
+        }
     }
 }

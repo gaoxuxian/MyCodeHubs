@@ -33,7 +33,7 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
 
     public GPUImageTransitionFilter(Context context)
     {
-        this(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_image_transition_default));
+        this(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_image_default));
     }
 
     public GPUImageTransitionFilter(Context context, String vertex, String fragment)
@@ -90,30 +90,40 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
         return GLES20.GL_TEXTURE_2D;
     }
 
-    protected void preDrawSteps3Matrix()
+    protected void preDrawSteps3Matrix(boolean drawBuffer)
     {
-        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
+        if (!isViewPortAvailable(drawBuffer)) return;
 
+        // 视口区域大小(归一化映射范围)
+        GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
+        matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
+        matrix.frustum(-1, 1, -1, 1, 3, 7);
+
         matrix.pushMatrix();
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }
 
-    protected void preDrawSteps4Other()
+    protected boolean isViewPortAvailable(boolean drawBuffer)
+    {
+        return (drawBuffer && getFrameBufferH() != 0 && getFrameBufferW() != 0) || (!drawBuffer && getSurfaceW() != 0 && getSurfaceH() != 0);
+    }
+
+    protected void preDrawSteps4Other(boolean drawBuffer)
     {
         GLES20.glUniform1f(progressHandle, mProgressValue);
     }
 
-    protected final void draw(int front, int back)
+    protected final void draw(int front, int back, boolean drawBuffer)
     {
         GLES20.glUseProgram(getProgram());
 
         preDrawSteps1DataBuffer();
         preDrawSteps2BindTexture(front, back);
-        preDrawSteps3Matrix();
-        preDrawSteps4Other();
+        preDrawSteps3Matrix(drawBuffer);
+        preDrawSteps4Other(drawBuffer);
 
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT, mVertexIndexBuffer);
 
@@ -133,7 +143,7 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
         {
             return;
         }
-        draw(frontTextureID, backTextureID);
+        draw(frontTextureID, backTextureID, false);
     }
 
     public int onDrawBuffer(int lastTextureID, int frontTextureID, int backTextureID)
@@ -150,7 +160,7 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
             mFrameBufferMgr.clearDepth(true, true);
             mFrameBufferMgr.clearStencil(true, true);
 
-            draw(frontTextureID, backTextureID);
+            draw(frontTextureID, backTextureID, true);
             mFrameBufferMgr.unbind();
             return mFrameBufferMgr.getCurrentTextureId();
         }

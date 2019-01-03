@@ -51,7 +51,7 @@ public class SplitScreenView extends GLSurfaceView implements GLSurfaceView.Rend
     {
         mBmpToTextureFilter.onSurfaceChanged(width, height);
         mBmpToTextureFilter.setBitmapRes(R.drawable.open_test_2);
-        mBmpToTextureFilter.initFrameBufferByBitmap();
+        mBmpToTextureFilter.initFrameBufferOfTextureSize();
 
         mSplitScreenFilter.onSurfaceChanged(width, height);
         mSplitScreenFilter.setTextureRes(R.drawable.open_test_5);
@@ -67,7 +67,7 @@ public class SplitScreenView extends GLSurfaceView implements GLSurfaceView.Rend
         {
             mStartTime = System.currentTimeMillis();
         }
-        
+
         int bgID = mBmpToTextureFilter.onDrawBuffer(0);
 
         mDisplayFilter.onDrawFrame(bgID);

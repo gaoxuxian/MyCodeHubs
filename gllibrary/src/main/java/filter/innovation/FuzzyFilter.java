@@ -59,13 +59,7 @@ public class FuzzyFilter extends GPUImageFilter
     }
 
     @Override
-    protected void preDrawSteps3Matrix()
-    {
-        super.preDrawSteps3Matrix();
-    }
-
-    @Override
-    protected void preDrawSteps4Other()
+    protected void preDrawSteps4Other(boolean drawBuffer)
     {
         GLES30.glUniform1f(intensityHandle, 0.6f);
 

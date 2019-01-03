@@ -143,26 +143,25 @@ public class SplitScreenFilterV3 extends GPUImageFilter
     }
 
     @Override
-    protected void preDrawSteps3Matrix()
+    protected void preDrawSteps3Matrix(boolean drawBuffer)
     {
-        if (mTextureH == 0 || mTextureW == 0)
-        {
-            GLES30.glViewport(0, 0, getSurfaceW(), getSurfaceH());
-        }
-        else
-        {
-            GLES30.glViewport(0, 0, mTextureW, mTextureH);
+        if (!isViewPortAvailable(drawBuffer)) return;
 
-            GlMatrixTools matrix = getMatrix();
-            matrix.pushMatrix();
-            matrix.scale(1f, -1f, 1f);
-            GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
-            matrix.popMatrix();
-        }
+        // 视口区域大小(归一化映射范围)
+        GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
+        // 矩阵变换
+        GlMatrixTools matrix = getMatrix();
+        matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
+        matrix.frustum(-1, 1, -1, 1, 3, 7);
+
+        matrix.pushMatrix();
+        matrix.scale(1f, -1f, 1f);
+        GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
+        matrix.popMatrix();
     }
 
     @Override
-    protected void preDrawSteps4Other()
+    protected void preDrawSteps4Other(boolean drawBuffer)
     {
         if (mTextureH != 0 || mTextureW != 0)
         {
@@ -194,7 +193,7 @@ public class SplitScreenFilterV3 extends GPUImageFilter
             mFrameBufferMgr.clearDepth(true, true);
             mFrameBufferMgr.clearStencil(true, true);
 
-            draw(mTextureIDs[0]);
+            draw(mTextureIDs[0], true);
             mFrameBufferMgr.unbind();
             return mFrameBufferMgr.getCurrentTextureId();
         }
@@ -214,7 +213,7 @@ public class SplitScreenFilterV3 extends GPUImageFilter
         GLES20.glBlendEquation(GLES20.GL_FUNC_ADD);
         GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
 
-        draw(mTextureIDs[0]);
+        draw(mTextureIDs[0], false);
 
         GLES20.glDisable(GLES20.GL_BLEND);
     }

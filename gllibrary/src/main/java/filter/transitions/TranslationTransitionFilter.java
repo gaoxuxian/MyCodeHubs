@@ -10,30 +10,33 @@ import util.GLUtil;
 import util.GlMatrixTools;
 
 /**
- * 矩形平滑转场
  * @author Gxx
- * Created by Gxx on 2019/1/2.
+ * Created by Gxx on 2019/1/3.
  */
-public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
+public class TranslationTransitionFilter extends GPUImageTransitionFilter
 {
-    private int countHandle;
-    private int smoothnessHandle;
+    private int directionHandle;
+    private float[] directionValue; // 平移方向 -1\0\1
 
-    public SmoothnessTransitionFilter(Context context)
+    public TranslationTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_smoothness));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_translation));
     }
 
     @Override
-    protected boolean onInitTaskMgr()
+    protected void onInitBaseData()
     {
-        return false;
+        super.onInitBaseData();
+
+        directionValue = new float[2];
+        directionValue[0] = 1;
+        directionValue[1] = 1;
     }
 
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_SMOOTHNESS;
+        return GPUFilterType.TRANSITION_TRANSLATION;
     }
 
     @Override
@@ -41,8 +44,7 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     {
         super.onInitProgramHandle();
 
-        countHandle = GLES20.glGetUniformLocation(getProgram(), "count");
-        smoothnessHandle = GLES20.glGetUniformLocation(getProgram(), "smoothness");
+        directionHandle = GLES20.glGetUniformLocation(getProgram(), "direction");
     }
 
     @Override
@@ -50,12 +52,13 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     {
         if (!isViewPortAvailable(drawBuffer)) return;
 
+        // 视口区域大小(归一化映射范围)
         GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
-
+        // 矩阵变换
         GlMatrixTools matrix = getMatrix();
-        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
-        matrix.frustum(-1, 1, -vs, vs, 3, 5);
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
+        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
+        matrix.frustum(-1, 1, -vs, vs, 3, 7);
 
         matrix.pushMatrix();
         matrix.scale(1f, (float) mTextureH / mTextureW, 1f);
@@ -68,14 +71,13 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(countHandle, 10f);
-        GLES20.glUniform1f(smoothnessHandle, 0.5f);
+        GLES20.glUniform2fv(directionHandle, 1, directionValue, 0);
     }
 
     @Override
     public void setTimeValue(long time)
     {
-        float dt = (time - mStartTime) / 2000f;
+        float dt = (time - mStartTime) / 2500f;
         int dtInt = (int) dt;
         mProgressValue = dt - dtInt;
         if (dtInt > 0)

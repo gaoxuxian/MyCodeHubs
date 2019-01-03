@@ -43,7 +43,15 @@
             android:name=".gles.FuzzyActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name=".gles.ZoomTransitionActivity"
+        <activity
+            android:name=".gles.ZoomTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.RectSmoothTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".gles.TranslationTransitionActivity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

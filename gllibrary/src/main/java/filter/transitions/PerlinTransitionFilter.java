@@ -10,20 +10,17 @@ import util.GLUtil;
 import util.GlMatrixTools;
 
 /**
- * 扩散圆转场-- 固定圆、可变圆之间的比较算法, 固定圆算法：固定圆心、固定半径, 可变圆算法：指定圆心, 半径随时间变大
  * @author Gxx
  * Created by Gxx on 2019/1/3.
  */
-public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
+public class PerlinTransitionFilter extends GPUImageTransitionFilter
 {
-    private int dotsHandle;
-    private int centerHandle;
+    private int scaleHandle;
+    private int smoothnessHandle;
 
-    private float[] centerValue;
-
-    public SpreadRoundTransitionFilter(Context context)
+    public PerlinTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_spread_round));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_perlin));
     }
 
     @Override
@@ -35,17 +32,7 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_SPREAD_ROUND;
-    }
-
-    @Override
-    protected void onInitBaseData()
-    {
-        super.onInitBaseData();
-
-        centerValue = new float[2];
-        centerValue[0] = 0;
-        centerValue[1] = 0;
+        return GPUFilterType.TRANSITION_PERLIN;
     }
 
     @Override
@@ -53,8 +40,8 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     {
         super.onInitProgramHandle();
 
-        dotsHandle = GLES20.glGetUniformLocation(getProgram(), "dots");
-        centerHandle = GLES20.glGetUniformLocation(getProgram(), "center");
+        scaleHandle = GLES20.glGetUniformLocation(getProgram(), "scale");
+        smoothnessHandle = GLES20.glGetUniformLocation(getProgram(), "smoothness");
     }
 
     @Override
@@ -81,14 +68,14 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(dotsHandle, 14);
-        GLES20.glUniform2fv(centerHandle, 1, centerValue, 0);
+        GLES20.glUniform1f(scaleHandle, 4.0f);
+        GLES20.glUniform1f(smoothnessHandle, 0.1f);
     }
 
     @Override
     protected float getEffectTimeCycle()
     {
-        return 2500f;
+        return 2000f;
     }
 
     @Override

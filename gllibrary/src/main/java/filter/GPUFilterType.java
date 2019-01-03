@@ -13,6 +13,7 @@ public enum GPUFilterType implements FilterType {
     TRANSITION_TRANSLATION(7), // 转场-平移
     TRANSITION_SPREAD_ROUND(8), // 转场-扩散圆
     TRANSITION_SHAKE(9), // 转场-抖动+rgb分离
+    TRANSITION_PERLIN(10), // 转场-佩尔林算法
     ;
 
     private int mValue;

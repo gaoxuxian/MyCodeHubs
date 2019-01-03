@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import util.ByteBufferUtil;
 
 import java.util.ArrayList;
 
@@ -90,6 +89,14 @@ public class OpenGLActivity extends BaseActivity {
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-抖动_rgb分离-动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "ShakeTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-perlin-动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "PerlinTransitionActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

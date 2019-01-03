@@ -4,11 +4,9 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
 
-import filter.GLConstant;
 import filter.GPUFilterType;
-import filter.GPUImageFilter;
+import filter.GPUImageTransitionFilter;
 import library.R;
-import util.ByteBufferUtil;
 import util.GLUtil;
 import util.GlMatrixTools;
 
@@ -17,18 +15,10 @@ import util.GlMatrixTools;
  * @author Gxx
  * Created by Gxx on 2018/12/29.
  */
-public class ZoomTransitionFilter extends GPUImageFilter
+public class ZoomTransitionFilter extends GPUImageTransitionFilter
 {
-    private int[] mTextureIDs; // 0 -- front, 1 -- back
-    private int mTextureW;
-    private int mTextureH;
-
-    private int vTextureFrontHandle;
-    private int vTextureBackHandle;
     private int zoomQuicknessHandle;
     private int progressHandle;
-
-    private long mStartTime;
 
     public ZoomTransitionFilter(Context context)
     {
@@ -48,47 +38,19 @@ public class ZoomTransitionFilter extends GPUImageFilter
     }
 
     @Override
-    protected void onInitBaseData()
-    {
-        mTextureIDs = new int[2];
-    }
-
-    @Override
     protected void onInitProgramHandle()
     {
-        vPositionHandle = GLES20.glGetAttribLocation(getProgram(), "vPosition");
-        vCoordinateHandle = GLES20.glGetAttribLocation(getProgram(), "vCoordinate");
-        vMatrixHandle = GLES20.glGetUniformLocation(getProgram(), "vMatrix");
-        vTextureFrontHandle = GLES30.glGetUniformLocation(getProgram(), "vTextureFront");
-        vTextureBackHandle = GLES30.glGetUniformLocation(getProgram(), "vTextureBack");
+        super.onInitProgramHandle();
+
         zoomQuicknessHandle = GLES30.glGetUniformLocation(getProgram(), "zoom_quickness");
         progressHandle = GLES30.glGetUniformLocation(getProgram(), "progress");
     }
 
     @Override
-    protected void onInitBufferData()
-    {
-        mVertexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.VERTEX_SQUARE);
-        mVertexIndexBuffer = ByteBufferUtil.getNativeShortBuffer(GLConstant.VERTEX_INDEX);
-        mTextureIndexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.TEXTURE_INDEX_V2);
-    }
-
-    @Override
-    protected void preDrawSteps2BindTexture(int textureID)
-    {
-        // 绑定纹理
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(getTextureType(), mTextureIDs[0]);
-        GLES20.glUniform1i(vTextureFrontHandle, 0);
-
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
-        GLES20.glBindTexture(getTextureType(), mTextureIDs[1]);
-        GLES20.glUniform1i(vTextureBackHandle, 1);
-    }
-
-    @Override
     protected void preDrawSteps3Matrix()
     {
+        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
+
         GlMatrixTools matrix = getMatrix();
         float vs = (float) getSurfaceH() / getSurfaceW();
         matrix.frustum(-1, 1, -vs, vs, 3, 5);
@@ -129,13 +91,5 @@ public class ZoomTransitionFilter extends GPUImageFilter
     {
         super.afterDraw();
         blendEnable(false);
-    }
-
-    public void setTextureID(int front, int back, int width, int height)
-    {
-        mTextureIDs[0] = front;
-        mTextureIDs[1] = back;
-        mTextureW = width;
-        mTextureH = height;
     }
 }

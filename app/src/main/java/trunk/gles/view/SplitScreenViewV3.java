@@ -53,6 +53,8 @@ public class SplitScreenViewV3 extends GLSurfaceView implements GLSurfaceView.Re
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mSplitScreenFilter.onSurfaceChanged(width, height);
+        mSplitScreenFilter.setTextureRes(R.drawable.open_test_6);
+        mSplitScreenFilter.initFrameBufferOfTextureSize();
 
         mDisplayFilter.onSurfaceChanged(width, height);
     }
@@ -68,8 +70,6 @@ public class SplitScreenViewV3 extends GLSurfaceView implements GLSurfaceView.Re
         GLES30.glClearColor(0, 0, 0, 1);
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
-        mSplitScreenFilter.setTextureRes(R.drawable.open_test_6);
-        mSplitScreenFilter.initFrameBuffer(0, 0);
         mSplitScreenFilter.setTime(mStartTime, System.currentTimeMillis());
         int displayID = mSplitScreenFilter.onDrawBuffer(0);
 

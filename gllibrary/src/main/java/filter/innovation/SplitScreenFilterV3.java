@@ -14,7 +14,6 @@ import task.SplitScreenTask;
 import util.ByteBufferUtil;
 import util.GLUtil;
 import util.GlMatrixTools;
-import util.SysConfig;
 
 /**
  * @author Gxx
@@ -31,8 +30,6 @@ public class SplitScreenFilterV3 extends GPUImageFilter
 
     private SplitScreenTask mTask;
     private int[] mTextureIDs;
-    private int mTextureW;
-    private int mTextureH;
 
     public SplitScreenFilterV3(Context context)
     {
@@ -146,45 +143,7 @@ public class SplitScreenFilterV3 extends GPUImageFilter
     }
 
     @Override
-    public void initFrameBuffer(int width, int height)
-    {
-        if (mTextureW == 0 || mTextureH == 0)
-        {
-            if (SysConfig.isDebugMode())
-            {
-                throw new RuntimeException("分屏滤镜fbo初始化参数异常");
-            }
-            else if (mFrameBufferMgr != null)
-            {
-                mFrameBufferMgr.destroy();
-                mFrameBufferMgr = null;
-            }
-        }
-        else
-        {
-            if (mFrameBufferMgr == null)
-            {
-                super.initFrameBuffer(mTextureW, mTextureH, true, false, false);
-            }
-            else if (mFrameBufferMgr.getBufferWidth() != mTextureW || mFrameBufferMgr.getBufferHeight() != mTextureH)
-            {
-                checkFrameBufferReMount(mTextureW, mTextureH);
-            }
-        }
-    }
-
-    @Override
     protected void preDrawSteps3Matrix()
-    {
-        GlMatrixTools matrix = getMatrix();
-        matrix.pushMatrix();
-        matrix.scale(1f, -1f, 1f);
-        GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
-        matrix.popMatrix();
-    }
-
-    @Override
-    protected void preDrawSteps4Other()
     {
         if (mTextureH == 0 || mTextureW == 0)
         {
@@ -194,6 +153,19 @@ public class SplitScreenFilterV3 extends GPUImageFilter
         {
             GLES30.glViewport(0, 0, mTextureW, mTextureH);
 
+            GlMatrixTools matrix = getMatrix();
+            matrix.pushMatrix();
+            matrix.scale(1f, -1f, 1f);
+            GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
+            matrix.popMatrix();
+        }
+    }
+
+    @Override
+    protected void preDrawSteps4Other()
+    {
+        if (mTextureH != 0 || mTextureW != 0)
+        {
             GLES30.glUniform1f(vTimeHandle, mTimeValue);
             GLES30.glUniform1f(vFuzzyRangHandle, 0.2f);
             GLES30.glUniform1f(vSpeedHandle, 2f);
@@ -205,9 +177,6 @@ public class SplitScreenFilterV3 extends GPUImageFilter
     protected void afterDraw()
     {
         super.afterDraw();
-
-        mTextureW = 0;
-        mTextureH = 0;
     }
 
     @Override

@@ -78,6 +78,8 @@ public abstract class GPUImageFilter extends AbsFilter
 
     protected void preDrawSteps3Matrix()
     {
+        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
+
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
         matrix.pushMatrix();
@@ -90,9 +92,8 @@ public abstract class GPUImageFilter extends AbsFilter
 
     }
 
-    protected void draw(int textureID)
+    protected final void draw(int textureID)
     {
-        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
         GLES20.glUseProgram(getProgram());
 
         preDrawSteps1DataBuffer();
@@ -146,19 +147,5 @@ public abstract class GPUImageFilter extends AbsFilter
     protected int getTextureType()
     {
         return GLES20.GL_TEXTURE_2D;
-    }
-
-    public void blendEnable(boolean enable)
-    {
-        if (enable)
-        {
-            GLES20.glEnable(GLES20.GL_BLEND);
-            GLES20.glBlendEquation(GLES20.GL_FUNC_ADD);
-            GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-        }
-        else
-        {
-            GLES20.glDisable(GLES20.GL_BLEND);
-        }
     }
 }

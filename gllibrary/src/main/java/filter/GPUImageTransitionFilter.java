@@ -15,7 +15,7 @@ import util.GlMatrixTools;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class GPUImageTransitionFilter extends AbsFilter
+public abstract class GPUImageTransitionFilter extends AbsFilter
 {
     protected int vPositionHandle;
     protected int vCoordinateHandle;
@@ -33,7 +33,12 @@ public class GPUImageTransitionFilter extends AbsFilter
 
     public GPUImageTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_image_transition_default));
+        this(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_image_transition_default));
+    }
+
+    public GPUImageTransitionFilter(Context context, String vertex, String fragment)
+    {
+        super(context, vertex, fragment);
     }
 
     @Override
@@ -80,13 +85,15 @@ public class GPUImageTransitionFilter extends AbsFilter
         GLES20.glUniform1i(vTextureBackHandle, 1);
     }
 
-    private int getTextureType()
+    protected int getTextureType()
     {
         return GLES20.GL_TEXTURE_2D;
     }
 
     protected void preDrawSteps3Matrix()
     {
+        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
+
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
         matrix.pushMatrix();
@@ -99,9 +106,8 @@ public class GPUImageTransitionFilter extends AbsFilter
         GLES20.glUniform1f(progressHandle, mProgressValue);
     }
 
-    protected void draw(int front, int back)
+    protected final void draw(int front, int back)
     {
-        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
         GLES20.glUseProgram(getProgram());
 
         preDrawSteps1DataBuffer();
@@ -166,11 +172,5 @@ public class GPUImageTransitionFilter extends AbsFilter
         {
             mProgressValue = 1;
         }
-    }
-
-    @Override
-    public GPUFilterType getFilterType()
-    {
-        return null;
     }
 }

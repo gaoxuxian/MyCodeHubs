@@ -49,9 +49,14 @@ public class SplitScreenView extends GLSurfaceView implements GLSurfaceView.Rend
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
-        mSplitScreenFilter.onSurfaceChanged(width, height);
-
         mBmpToTextureFilter.onSurfaceChanged(width, height);
+        mBmpToTextureFilter.setBitmapRes(R.drawable.open_test_2);
+        mBmpToTextureFilter.initFrameBufferByBitmap();
+
+        mSplitScreenFilter.onSurfaceChanged(width, height);
+        mSplitScreenFilter.setTextureRes(R.drawable.open_test_5);
+        mSplitScreenFilter.initFrameBufferOfTextureSize();
+
         mDisplayFilter.onSurfaceChanged(width, height);
     }
 
@@ -62,33 +67,13 @@ public class SplitScreenView extends GLSurfaceView implements GLSurfaceView.Rend
         {
             mStartTime = System.currentTimeMillis();
         }
-
-        mBmpToTextureFilter.setBitmapRes(R.drawable.open_test_2);
-        mBmpToTextureFilter.initFrameBuffer(0, 0);
+        
         int bgID = mBmpToTextureFilter.onDrawBuffer(0);
 
         mDisplayFilter.onDrawFrame(bgID);
 
-        mSplitScreenFilter.setTextureRes(R.drawable.open_test_5);
-        mSplitScreenFilter.initFrameBuffer(0, 0);
         mSplitScreenFilter.setTime(mStartTime, System.currentTimeMillis());
         mSplitScreenFilter.onDrawFrame(0);
-
-        // mBmpToTextureFilter.setBitmapRes(R.drawable.open_test_5);
-        // int frontID = mBmpToTextureFilter.onDrawBuffer(0);
-
-        // mSplitScreenFilter.setTextureRes(R.drawable.open_test_5);
-        // mSplitScreenFilter.initFrameBuffer(0, 0);
-        // mSplitScreenFilter.setTime(mStartTime, System.currentTimeMillis());
-        // int displayID = mSplitScreenFilter.onDrawBuffer(0);
-
-        // GLES20.glEnable(GLES20.GL_BLEND);
-        // GLES20.glBlendEquation(GLES20.GL_FUNC_ADD);
-        // GLES20.glBlendFuncSeparate(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
-        //
-        // mDisplayFilter.onDrawFrame(displayID);
-        //
-        // GLES20.glDisable(GLES20.GL_BLEND);
     }
 
     @Override

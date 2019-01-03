@@ -46,23 +46,25 @@ public class ZoomTransitionView extends GLSurfaceView implements GLSurfaceView.R
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test);
+        mFrontTextureFilter.initFrameBufferByBitmap();
+
         mBackTextureFilter.onSurfaceChanged(width, height);
+        mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
+        mBackTextureFilter.initFrameBufferByBitmap();
+
+        mZoomTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
         mZoomTransitionFilter.onSurfaceChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test);
-        mFrontTextureFilter.initFrameBuffer(0, 0);
         int front = mFrontTextureFilter.onDrawBuffer(0);
 
-        mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
-        mBackTextureFilter.initFrameBuffer(0, 0);
         int back = mBackTextureFilter.onDrawBuffer(0);
 
-        mZoomTransitionFilter.setTextureID(front, back, mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
-        mZoomTransitionFilter.onDrawFrame(0);
+        mZoomTransitionFilter.onDrawFrame(front, back);
     }
 
     @Override

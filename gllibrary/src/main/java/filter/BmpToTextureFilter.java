@@ -83,25 +83,16 @@ public class BmpToTextureFilter extends GPUImageFilter
         return false;
     }
 
-    @Override
-    public void initFrameBuffer(int width, int height)
+    public void initFrameBufferByBitmap()
     {
-        if (mBmpW != 0 && mBmpH != 0)
-        {
-            if (mFrameBufferMgr == null)
-            {
-                super.initFrameBuffer(mBmpW, mBmpH, true, false, false);
-            }
-            else if (mFrameBufferMgr.getBufferWidth() != mBmpW || mFrameBufferMgr.getBufferHeight() != mBmpH)
-            {
-                checkFrameBufferReMount(mBmpW, mBmpH);
-            }
-        }
+        initFrameBuffer(mBmpW, mBmpH);
     }
 
     @Override
     protected void preDrawSteps3Matrix()
     {
+        GLES20.glViewport(0, 0, getSurfaceW(), getSurfaceH());
+
         GlMatrixTools matrix = getMatrix();
         matrix.pushMatrix();
         matrix.scale(1f, 1f, 1f);

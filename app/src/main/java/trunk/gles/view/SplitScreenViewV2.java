@@ -65,23 +65,23 @@ public class SplitScreenViewV2 extends GLSurfaceView implements GLSurfaceView.Re
     {
         mBmpToTextureFilter.onSurfaceChanged(width, height);
         mBmpToTextureFilter.setBitmapRes(mBmpResArr[0]);
-        mBmpToTextureFilter.initFrameBuffer(width, height);
+        mBmpToTextureFilter.initFrameBufferByBitmap();
 
         mBmpToTextureFilter2.onSurfaceChanged(width, height);
         mBmpToTextureFilter2.setBitmapRes(mBmpResArr[1]);
-        mBmpToTextureFilter2.initFrameBuffer(width, height);
+        mBmpToTextureFilter2.initFrameBufferByBitmap();
 
         mBmpToTextureFilter3.onSurfaceChanged(width, height);
         mBmpToTextureFilter3.setBitmapRes(mBmpResArr[2]);
-        mBmpToTextureFilter3.initFrameBuffer(width, height);
+        mBmpToTextureFilter3.initFrameBufferByBitmap();
 
         mBmpToTextureFilter4.onSurfaceChanged(width, height);
         mBmpToTextureFilter4.setBitmapRes(mBmpResArr[3]);
-        mBmpToTextureFilter4.initFrameBuffer(width, height);
+        mBmpToTextureFilter4.initFrameBufferByBitmap();
 
         mBmpToTextureFilter5.onSurfaceChanged(width, height);
         mBmpToTextureFilter5.setBitmapRes(mBmpResArr[4]);
-        mBmpToTextureFilter5.initFrameBuffer(width, height);
+        mBmpToTextureFilter5.initFrameBufferByBitmap();
 
         mSplitScreenFilter.onSurfaceChanged(width, height);
     }

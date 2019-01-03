@@ -25,13 +25,17 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
     private final GlMatrixTools mMatrixTools;
     private TaskWrapper mTasksMgr;
 
-    protected int mProgram;
-    protected int mSurfaceWidth;
-    protected int mSurfaceHeight;
+    private int mProgram;
+    private int mSurfaceWidth;
+    private int mSurfaceHeight;
+    protected int mTextureW;
+    protected int mTextureH;
     protected AbsFboMgr mFrameBufferMgr;
 
     private int mVertexShader;
     private int mFragmentShader;
+
+    private final Object mLockObj;
 
     public AbsFilter(Context context, String vertex, String fragment)
     {
@@ -44,6 +48,7 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
         mVertexStr = vertex;
         mFragmentStr = fragment;
         mMatrixTools = new GlMatrixTools();
+        mLockObj = new Object();
 
         if (onInitTaskMgr())
         {
@@ -129,6 +134,7 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
         mFragmentShader = GLUtil.createShader(GLES20.GL_FRAGMENT_SHADER, mFragmentStr);
         mProgram = GLUtil.createAndLinkProgram(mVertexShader, mFragmentShader);
 
+        GLUtil.checkGlError("AbsFilter create error");
         onInitProgramHandle();
     }
 
@@ -137,6 +143,17 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
     {
         mSurfaceWidth = width;
         mSurfaceHeight = height;
+    }
+
+    public void setTextureWH(int width, int height)
+    {
+        mTextureW = width;
+        mTextureH = height;
+    }
+
+    public final void initFrameBufferOfTextureSize()
+    {
+        initFrameBuffer(mTextureW, mTextureH);
     }
 
     @Override
@@ -156,16 +173,22 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
      */
     protected final void initFrameBuffer(int width, int height, boolean color, boolean depth, boolean stencil)
     {
-        if (mFrameBufferMgr != null)
+        if (width == 0 || height == 0)
         {
-            if (width != mFrameBufferMgr.getBufferWidth() || height != mFrameBufferMgr.getBufferHeight())
+            if (mFrameBufferMgr != null)
             {
                 mFrameBufferMgr.destroy();
                 mFrameBufferMgr = null;
             }
         }
-
-        if (mFrameBufferMgr == null)
+        else if (mFrameBufferMgr != null)
+        {
+            if (width != mFrameBufferMgr.getBufferWidth() || height != mFrameBufferMgr.getBufferHeight())
+            {
+                checkFrameBufferReMount(width, height);
+            }
+        }
+        else
         {
             mFrameBufferMgr = new FrameBufferMgr(getContext(), width, height, createFrameBufferSize(), color, depth, stencil, needInitMsaaFbo());
         }
@@ -186,7 +209,7 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
      * @param width
      * @param height
      */
-    protected final void checkFrameBufferReMount(int width, int height)
+    private void checkFrameBufferReMount(int width, int height)
     {
         if (mFrameBufferMgr != null)
         {
@@ -194,9 +217,23 @@ public abstract class AbsFilter implements FilterIF<GPUFilterType>
         }
     }
 
+    public void blendEnable(boolean enable)
+    {
+        if (enable)
+        {
+            GLES20.glEnable(GLES20.GL_BLEND);
+            GLES20.glBlendEquation(GLES20.GL_FUNC_ADD);
+            GLES20.glBlendFuncSeparate(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA, GLES20.GL_ONE, GLES20.GL_ONE);
+        }
+        else
+        {
+            GLES20.glDisable(GLES20.GL_BLEND);
+        }
+    }
+
     protected void queueRunnable(final AbsTask runnable)
     {
-        synchronized (mTasksMgr)
+        synchronized (mLockObj)
         {
             mTasksMgr.queueRunnable(runnable);
         }

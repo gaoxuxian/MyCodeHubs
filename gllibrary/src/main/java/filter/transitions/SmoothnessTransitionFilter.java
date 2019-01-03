@@ -3,14 +3,14 @@ package filter.transitions;
 import android.content.Context;
 
 import filter.GPUFilterType;
-import filter.GPUImageFilter;
+import filter.GPUImageTransitionFilter;
 
 /**
  * 矩形平滑转场
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class SmoothnessTransitionFilter extends GPUImageFilter
+public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
 {
     public SmoothnessTransitionFilter(Context context)
     {

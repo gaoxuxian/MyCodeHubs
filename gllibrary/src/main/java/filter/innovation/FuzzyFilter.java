@@ -11,16 +11,13 @@ import util.ByteBufferUtil;
 import util.GLUtil;
 
 /**
+ * 简单模糊
  * @author Gxx
  * Created by Gxx on 2018/12/29.
  */
 public class FuzzyFilter extends GPUImageFilter
 {
     private int intensityHandle;
-    private int progressHandle;
-
-    private float progressValue;
-    private long mStartTime;
     private int passesHandle;
 
     public FuzzyFilter(Context context)
@@ -48,8 +45,6 @@ public class FuzzyFilter extends GPUImageFilter
         super.onInitProgramHandle();
 
         intensityHandle = GLES30.glGetUniformLocation(getProgram(), "intensity");
-        progressHandle = GLES30.glGetUniformLocation(getProgram(), "progress");
-        passesHandle = GLES30.glGetUniformLocation(getProgram(), "passes");
     }
 
     @Override
@@ -61,23 +56,7 @@ public class FuzzyFilter extends GPUImageFilter
     @Override
     protected void preDrawSteps4Other(boolean drawBuffer)
     {
-        GLES30.glUniform1f(intensityHandle, 0.6f);
-
-        if (mStartTime == 0)
-        {
-            mStartTime = System.currentTimeMillis();
-        }
-
-        float dt = (System.currentTimeMillis() - mStartTime) / 2000f;
-        int dtInt = (int) dt;
-        progressValue = dt - dtInt;
-
-        GLES30.glUniform1f(progressHandle, progressValue);
-        // if (dtInt > 0)
-        // {
-        //     GLES30.glUniform1f(progressHandle, 0);
-        // }
-        GLES30.glUniform1i(passesHandle, 6);
+        GLES30.glUniform1f(intensityHandle, 0.236638f);
     }
 
     @Override

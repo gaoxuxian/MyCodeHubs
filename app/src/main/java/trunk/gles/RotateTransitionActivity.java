@@ -5,12 +5,13 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import trunk.BaseActivity;
-import trunk.gles.view.FuzzyView;
+import trunk.gles.view.FuzzyTransitionView;
+import trunk.gles.view.RotateTransitionView;
 import util.PxUtil;
 
-public class FuzzyActivity extends BaseActivity
+public class RotateTransitionActivity extends BaseActivity
 {
-    private FuzzyView mItemView;
+    private RotateTransitionView mItemView;
 
     @Override
     public void onCreateBaseData() throws Exception
@@ -21,8 +22,8 @@ public class FuzzyActivity extends BaseActivity
     @Override
     public void onCreateChildren(Context context, FrameLayout parent, FrameLayout.LayoutParams params)
     {
-        mItemView = new FuzzyView(context);
-        params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(722));
+        mItemView = new RotateTransitionView(context);
+        params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1920));
         params.gravity = Gravity.CENTER;
         parent.addView(mItemView, params);
     }
@@ -34,17 +35,6 @@ public class FuzzyActivity extends BaseActivity
     }
 
     @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        if (mItemView != null)
-        {
-            mItemView.onResume();
-        }
-    }
-
-    @Override
     protected void onPause()
     {
         super.onPause();
@@ -52,6 +42,17 @@ public class FuzzyActivity extends BaseActivity
         if (mItemView != null)
         {
             mItemView.onPause();
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mItemView != null)
+        {
+            mItemView.onResume();
         }
     }
 }

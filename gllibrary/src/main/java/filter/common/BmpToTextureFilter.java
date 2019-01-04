@@ -91,7 +91,8 @@ public class BmpToTextureFilter extends GPUImageFilter
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
-        matrix.frustum(-1, 1, -1, 1, 3, 7);
+        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
+        matrix.frustum(-1, 1, -vs, vs, 3, 7);
 
         matrix.pushMatrix();
         matrix.scale(1f, (float) mTextureH / mTextureW, 1f);

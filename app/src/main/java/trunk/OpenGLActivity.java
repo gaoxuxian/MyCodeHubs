@@ -100,6 +100,30 @@ public class OpenGLActivity extends BaseActivity {
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-翻页-动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "PagingTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-模糊叠化-动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "FuzzyTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-旋转叠化-动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "RotateTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

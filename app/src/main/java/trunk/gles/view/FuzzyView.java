@@ -50,7 +50,7 @@ public class FuzzyView extends GLSurfaceView implements GLSurfaceView.Renderer
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        mBmpToTextureFilter.setBitmapRes(R.drawable.open_test_5);
+        mBmpToTextureFilter.setBitmapRes(R.drawable.open_test_7);
         mBmpToTextureFilter.initFrameBufferOfTextureSize();
         int textureID = mBmpToTextureFilter.onDrawBuffer(0);
 

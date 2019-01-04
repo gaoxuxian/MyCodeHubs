@@ -54,7 +54,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-变焦-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 变焦 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "ZoomTransitionActivity");
         intent.setClass(this, cls);
@@ -62,7 +62,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-矩形渐变-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 矩形渐变 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "RectSmoothTransitionActivity");
         intent.setClass(this, cls);
@@ -70,7 +70,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-平移-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 平移 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "TranslationTransitionActivity");
         intent.setClass(this, cls);
@@ -78,7 +78,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-扩散圆-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 扩散圆 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "SpreadRoundTransitionActivity");
         intent.setClass(this, cls);
@@ -86,7 +86,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-抖动_rgb分离-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 抖动_rgb分离 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "ShakeTransitionActivity");
         intent.setClass(this, cls);
@@ -94,7 +94,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-perlin-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- perlin -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "PerlinTransitionActivity");
         intent.setClass(this, cls);
@@ -102,7 +102,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-翻页-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 翻页 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "PagingTransitionActivity");
         intent.setClass(this, cls);
@@ -110,7 +110,7 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-模糊叠化-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 模糊叠化 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "FuzzyTransitionActivity");
         intent.setClass(this, cls);
@@ -118,9 +118,17 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场-旋转叠化-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 旋转叠化 -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "RotateTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- Circle Crop -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "CircleCropTransitionActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

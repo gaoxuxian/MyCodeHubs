@@ -79,6 +79,10 @@
             android:name=".gles.RotateTransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".gles.CircleCropTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
     </application>
 
 </manifest>

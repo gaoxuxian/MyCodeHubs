@@ -132,6 +132,22 @@ public class OpenGLActivity extends BaseActivity {
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 噪声亮度融化(上->下) -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "LuminanceMeltUpDownTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 噪声亮度融化(下->上) -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "LuminanceMeltDownUpTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

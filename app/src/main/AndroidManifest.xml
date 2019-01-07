@@ -83,6 +83,14 @@
             android:name=".gles.CircleCropTransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".gles.LuminanceMeltUpDownTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.LuminanceMeltDownUpTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
     </application>
 
 </manifest>

@@ -1,11 +1,14 @@
-package filter.transitions;
+package filter.innovation;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 
+import filter.GLConstant;
 import filter.GPUFilterType;
-import filter.GPUImageTransitionFilter;
+import filter.GPUImageAnimFilter;
 import library.R;
+import util.ByteBufferUtil;
 import util.GLUtil;
 import util.GlMatrixTools;
 
@@ -13,17 +16,15 @@ import util.GlMatrixTools;
  * @author Gxx
  * Created by Gxx on 2019/1/7.
  */
-public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
+public class GhostingFilter extends GPUImageAnimFilter
 {
-    private int directionHandle;
-    private int l_thresholdHandle;
-    private int aboveHandle;
+    private static final float DEFAULT_CYCLE_TIME = 2;
 
-    private float mUpDown;
+    private int vOffsetHandle;
 
-    public LuminanceMeltTransitionFilter(Context context)
+    public GhostingFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_luminance_melt));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_ghosting));
     }
 
     @Override
@@ -35,7 +36,15 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_LUMINANCE_MELT;
+        return GPUFilterType.GHOSTING;
+    }
+
+    @Override
+    protected void onInitBufferData()
+    {
+        mVertexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.VERTEX_SQUARE);
+        mVertexIndexBuffer = ByteBufferUtil.getNativeShortBuffer(GLConstant.VERTEX_INDEX);
+        mTextureIndexBuffer = ByteBufferUtil.getNativeFloatBuffer(GLConstant.TEXTURE_INDEX_V2);
     }
 
     @Override
@@ -43,9 +52,7 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     {
         super.onInitProgramHandle();
 
-        directionHandle = GLES20.glGetUniformLocation(getProgram(), "direction");
-        l_thresholdHandle = GLES20.glGetUniformLocation(getProgram(), "l_threshold");
-        aboveHandle = GLES20.glGetUniformLocation(getProgram(), "above");
+        vOffsetHandle = GLES20.glGetUniformLocation(getProgram(), "vOffset");
     }
 
     @Override
@@ -71,10 +78,27 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     protected void preDrawSteps4Other(boolean drawBuffer)
     {
         super.preDrawSteps4Other(drawBuffer);
+        GLES30.glUniform1f(vOffsetHandle, 0.1f);
+    }
 
-        GLES20.glUniform1f(l_thresholdHandle, 1f);
-        GLES20.glUniform1f(directionHandle, mUpDown);
-        GLES20.glUniform1f(aboveHandle, 0);
+    @Override
+    public void onDrawFrame(int textureID)
+    {
+        GLES30.glClearColor(1,1,1,1);
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+        super.onDrawFrame(textureID);
+    }
+
+    @Override
+    public void setTimeValue(long time)
+    {
+        float dt = (time - mStartTime) / getEffectTimeCycle();
+        int dtInt = (int) dt;
+        mITimeValue = (dt - dtInt) * DEFAULT_CYCLE_TIME;
+        if (!isEffectCycle() && dtInt > 0)
+        {
+            mITimeValue = 0;
+        }
     }
 
     @Override
@@ -87,10 +111,5 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     protected boolean isEffectCycle()
     {
         return true;
-    }
-
-    public void setDirection(boolean upDown)
-    {
-        mUpDown = upDown ? 1 : 0;
     }
 }

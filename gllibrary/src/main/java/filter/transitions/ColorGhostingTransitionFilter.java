@@ -13,17 +13,16 @@ import util.GlMatrixTools;
  * @author Gxx
  * Created by Gxx on 2019/1/7.
  */
-public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
+public class ColorGhostingTransitionFilter extends GPUImageTransitionFilter
 {
-    private int directionHandle;
-    private int l_thresholdHandle;
-    private int aboveHandle;
+    private int iTimeHandle;
+    private int vOffsetHandle;
+    private int powerHandle;
+    private float iTimeValue;
 
-    private float mUpDown;
-
-    public LuminanceMeltTransitionFilter(Context context)
+    public ColorGhostingTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_luminance_melt));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_color_ghosting));
     }
 
     @Override
@@ -35,7 +34,7 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_LUMINANCE_MELT;
+        return null;
     }
 
     @Override
@@ -43,9 +42,9 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     {
         super.onInitProgramHandle();
 
-        directionHandle = GLES20.glGetUniformLocation(getProgram(), "direction");
-        l_thresholdHandle = GLES20.glGetUniformLocation(getProgram(), "l_threshold");
-        aboveHandle = GLES20.glGetUniformLocation(getProgram(), "above");
+        iTimeHandle = GLES20.glGetUniformLocation(getProgram(), "iTime");
+        vOffsetHandle = GLES20.glGetUniformLocation(getProgram(), "vOffset");
+        powerHandle = GLES20.glGetUniformLocation(getProgram(), "power");
     }
 
     @Override
@@ -72,9 +71,23 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(l_thresholdHandle, 1f);
-        GLES20.glUniform1f(directionHandle, mUpDown);
-        GLES20.glUniform1f(aboveHandle, 0);
+        GLES20.glUniform1f(powerHandle, 2.f);
+        GLES20.glUniform1f(vOffsetHandle, 0.1f);
+        GLES20.glUniform1f(iTimeHandle, iTimeValue);
+    }
+
+    @Override
+    public void setTimeValue(long time)
+    {
+        float dt = (time - mStartTime) / getEffectTimeCycle();
+        int dtInt = (int) dt;
+        mProgressValue = dt - dtInt;
+
+        if (!isEffectCycle() && dtInt > 0)
+        {
+            mProgressValue = 1;
+        }
+        iTimeValue = mProgressValue * 2f;
     }
 
     @Override
@@ -86,11 +99,6 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected boolean isEffectCycle()
     {
-        return true;
-    }
-
-    public void setDirection(boolean upDown)
-    {
-        mUpDown = upDown ? 1 : 0;
+        return false;
     }
 }

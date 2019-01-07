@@ -46,9 +46,17 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "图片模糊-动画");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "图片模糊-静态");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "FuzzyActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "重影-动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "GhostingActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
@@ -145,6 +153,22 @@ public class OpenGLActivity extends BaseActivity {
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 噪声亮度融化(下->上) -动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "LuminanceMeltDownUpTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 色彩渐变 -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "ColorDistanceTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 色彩渐变 + 重影 -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "ColorGhostingTransitionActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

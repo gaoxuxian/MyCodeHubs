@@ -19,6 +19,9 @@ public enum GPUFilterType implements FilterType {
     TRANSITION_ROTATE(13), // 转场-旋转
     TRANSITION_CIRCLE_CROP(14), // 转场-可视范围以圆半径变化
     TRANSITION_LUMINANCE_MELT(15), // 转场-亮度融化
+    TRANSITION_COLOR_DISTANCE(16), // 转场-色彩渐变
+
+    GHOSTING(17), // 重影
     ;
 
     private int mValue;

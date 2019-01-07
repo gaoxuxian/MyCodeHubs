@@ -91,6 +91,18 @@
             android:name=".gles.LuminanceMeltDownUpTransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".gles.ColorDistanceTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.ColorGhostingTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.GhostingActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
     </application>
 
 </manifest>

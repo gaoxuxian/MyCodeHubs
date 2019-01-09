@@ -103,6 +103,18 @@
             android:name=".gles.GhostingActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".gles.SquareAnimTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.ColorTranslationTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.ColorTranslationTransitionActivityV2"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
     </application>
 
 </manifest>

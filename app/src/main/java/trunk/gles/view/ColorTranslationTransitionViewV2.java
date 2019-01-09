@@ -8,8 +8,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import filter.common.BmpToTextureFilter;
-import filter.transitions.ColorGhostingTransitionFilter;
-import filter.transitions.ZoomTransitionFilter;
+import filter.transitions.ColorTranslationTransitionFilter;
+import filter.transitions.ColorTranslationTransitionFilterV2;
 import trunk.R;
 import util.GLUtil;
 
@@ -17,15 +17,15 @@ import util.GLUtil;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
+public class ColorTranslationTransitionViewV2 extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mFrontTextureFilter;
     private BmpToTextureFilter mBackTextureFilter;
-    private ColorGhostingTransitionFilter mColorGhostingTransitionFilter;
+    private ColorTranslationTransitionFilterV2 mColorTranslationTransitionFilter;
 
     private long mStartTime;
 
-    public ColorGhostingTransitionView(Context context)
+    public ColorTranslationTransitionViewV2(Context context)
     {
         super(context);
 
@@ -42,23 +42,23 @@ public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurf
         mBackTextureFilter = new BmpToTextureFilter(getContext());
         mBackTextureFilter.onSurfaceCreated(config);
 
-        mColorGhostingTransitionFilter = new ColorGhostingTransitionFilter(getContext());
-        mColorGhostingTransitionFilter.onSurfaceCreated(config);
+        mColorTranslationTransitionFilter = new ColorTranslationTransitionFilterV2(getContext());
+        mColorTranslationTransitionFilter.onSurfaceCreated(config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_3);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_8);
         mFrontTextureFilter.initFrameBufferOfTextureSize();
 
         mBackTextureFilter.onSurfaceChanged(width, height);
-        mBackTextureFilter.setBitmapRes(R.drawable.open_test_4);
+        mBackTextureFilter.setBitmapRes(R.drawable.open_test_7);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
-        mColorGhostingTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
-        mColorGhostingTransitionFilter.onSurfaceChanged(width, height);
+        mColorTranslationTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
+        mColorTranslationTransitionFilter.onSurfaceChanged(width, height);
     }
 
     @Override
@@ -76,9 +76,9 @@ public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurf
         GLES20.glClearColor(1, 1, 1, 1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        mColorGhostingTransitionFilter.setStartTimeValue(mStartTime);
-        mColorGhostingTransitionFilter.setTimeValue(System.currentTimeMillis());
-        mColorGhostingTransitionFilter.onDrawFrame(front, back);
+        mColorTranslationTransitionFilter.setStartTimeValue(mStartTime);
+        mColorTranslationTransitionFilter.setTimeValue(System.currentTimeMillis());
+        mColorTranslationTransitionFilter.onDrawFrame(front, back);
     }
 
     @Override
@@ -96,9 +96,9 @@ public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurf
             mBackTextureFilter.destroy();
         }
 
-        if (mColorGhostingTransitionFilter != null)
+        if (mColorTranslationTransitionFilter != null)
         {
-            mColorGhostingTransitionFilter.destroy();
+            mColorTranslationTransitionFilter.destroy();
         }
     }
 }

@@ -21,7 +21,7 @@ void main(){
     vec4 bc2 = texture2D(vTextureBack,aCoordinate - vec2(bd,0.0));
     vec4 backColor = mix(mix(bc0, bc1, 0.5), bc2, 1.0/3.0);
 
-    float m = step(distance(frontColor, backColor), progress);
+    float m = step(distance(frontColor, backColor), smoothstep(0.224, 0.866, progress));
 
     gl_FragColor = mix(mix(frontColor, backColor, m), backColor, pow(progress, power));
 }

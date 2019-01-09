@@ -22,6 +22,10 @@ public enum GPUFilterType implements FilterType {
     TRANSITION_COLOR_DISTANCE(16), // 转场-色彩渐变
 
     GHOSTING(17), // 重影
+
+    TRANSITION_SQUARE_ANIM(18), // 转场-方块动画
+    TRANSITION_COLOR_GHOSTING(19), // 转场-色彩渐变 + 重影
+    TRANSITION_COLOR_TRANSLATION(20), // 转场 - 色彩平移
     ;
 
     private int mValue;

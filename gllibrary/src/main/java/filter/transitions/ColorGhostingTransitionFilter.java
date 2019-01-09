@@ -34,7 +34,7 @@ public class ColorGhostingTransitionFilter extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return null;
+        return GPUFilterType.TRANSITION_COLOR_GHOSTING;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ColorGhostingTransitionFilter extends GPUImageTransitionFilter
         super.preDrawSteps4Other(drawBuffer);
 
         GLES20.glUniform1f(powerHandle, 2.f);
-        GLES20.glUniform1f(vOffsetHandle, 0.1f);
+        GLES20.glUniform1f(vOffsetHandle, 0.05f);
         GLES20.glUniform1f(iTimeHandle, iTimeValue);
     }
 
@@ -93,12 +93,12 @@ public class ColorGhostingTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected float getEffectTimeCycle()
     {
-        return 2000f;
+        return 1200f;
     }
 
     @Override
     protected boolean isEffectCycle()
     {
-        return false;
+        return true;
     }
 }

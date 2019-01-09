@@ -50,11 +50,11 @@ public class PerlinTransitionView extends GLSurfaceView implements GLSurfaceView
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_7);
         mFrontTextureFilter.initFrameBufferOfTextureSize();
 
         mBackTextureFilter.onSurfaceChanged(width, height);
-        mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
+        mBackTextureFilter.setBitmapRes(R.drawable.open_test_8);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
         mPerlinTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());

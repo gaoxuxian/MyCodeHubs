@@ -44,8 +44,8 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
         super.onInitBaseData();
 
         centerValue = new float[2];
-        centerValue[0] = 0;
-        centerValue[1] = 0;
+        centerValue[0] = 0.5f;
+        centerValue[1] = 0.5f;
     }
 
     @Override
@@ -81,14 +81,14 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(dotsHandle, 14);
+        GLES20.glUniform1f(dotsHandle, 4);
         GLES20.glUniform2fv(centerHandle, 1, centerValue, 0);
     }
 
     @Override
     protected float getEffectTimeCycle()
     {
-        return 2500f;
+        return 1200f;
     }
 
     @Override

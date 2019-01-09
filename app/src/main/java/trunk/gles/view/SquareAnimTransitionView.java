@@ -8,8 +8,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import filter.common.BmpToTextureFilter;
-import filter.transitions.ColorGhostingTransitionFilter;
-import filter.transitions.ZoomTransitionFilter;
+import filter.common.DisplayImageFilter;
+import filter.transitions.SquareAnimTransitionFilter;
 import trunk.R;
 import util.GLUtil;
 
@@ -17,15 +17,16 @@ import util.GLUtil;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
+public class SquareAnimTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mFrontTextureFilter;
     private BmpToTextureFilter mBackTextureFilter;
-    private ColorGhostingTransitionFilter mColorGhostingTransitionFilter;
+    private SquareAnimTransitionFilter mSquareAnimTransitionFilter;
+    private DisplayImageFilter mDisplayFilter;
 
     private long mStartTime;
 
-    public ColorGhostingTransitionView(Context context)
+    public SquareAnimTransitionView(Context context)
     {
         super(context);
 
@@ -42,23 +43,30 @@ public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurf
         mBackTextureFilter = new BmpToTextureFilter(getContext());
         mBackTextureFilter.onSurfaceCreated(config);
 
-        mColorGhostingTransitionFilter = new ColorGhostingTransitionFilter(getContext());
-        mColorGhostingTransitionFilter.onSurfaceCreated(config);
+        mSquareAnimTransitionFilter = new SquareAnimTransitionFilter(getContext());
+        mSquareAnimTransitionFilter.onSurfaceCreated(config);
+
+        mDisplayFilter = new DisplayImageFilter(getContext());
+        mDisplayFilter.onSurfaceCreated(config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_3);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test);
         mFrontTextureFilter.initFrameBufferOfTextureSize();
 
         mBackTextureFilter.onSurfaceChanged(width, height);
-        mBackTextureFilter.setBitmapRes(R.drawable.open_test_4);
+        mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
-        mColorGhostingTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
-        mColorGhostingTransitionFilter.onSurfaceChanged(width, height);
+        mSquareAnimTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
+        mSquareAnimTransitionFilter.initFrameBufferOfTextureSize();
+        mSquareAnimTransitionFilter.onSurfaceChanged(width, height);
+
+        mDisplayFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
+        mDisplayFilter.onSurfaceChanged(width, height);
     }
 
     @Override
@@ -76,9 +84,11 @@ public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurf
         GLES20.glClearColor(1, 1, 1, 1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        mColorGhostingTransitionFilter.setStartTimeValue(mStartTime);
-        mColorGhostingTransitionFilter.setTimeValue(System.currentTimeMillis());
-        mColorGhostingTransitionFilter.onDrawFrame(front, back);
+        mSquareAnimTransitionFilter.setStartTimeValue(mStartTime);
+        mSquareAnimTransitionFilter.setTimeValue(System.currentTimeMillis());
+        int id = mSquareAnimTransitionFilter.onDrawBuffer(0, front, back);
+
+        mDisplayFilter.onDrawFrame(id);
     }
 
     @Override
@@ -96,9 +106,14 @@ public class ColorGhostingTransitionView extends GLSurfaceView implements GLSurf
             mBackTextureFilter.destroy();
         }
 
-        if (mColorGhostingTransitionFilter != null)
+        if (mSquareAnimTransitionFilter != null)
         {
-            mColorGhostingTransitionFilter.destroy();
+            mSquareAnimTransitionFilter.destroy();
+        }
+
+        if (mDisplayFilter != null)
+        {
+            mDisplayFilter.destroy();
         }
     }
 }

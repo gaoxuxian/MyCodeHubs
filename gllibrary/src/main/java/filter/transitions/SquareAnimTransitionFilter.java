@@ -10,17 +10,18 @@ import util.GLUtil;
 import util.GlMatrixTools;
 
 /**
+ * 方块自身翻转
  * @author Gxx
- * Created by Gxx on 2019/1/3.
+ * Created by Gxx on 2019/1/8.
  */
-public class PerlinTransitionFilter extends GPUImageTransitionFilter
+public class SquareAnimTransitionFilter extends GPUImageTransitionFilter
 {
-    private int scaleHandle;
-    private int smoothnessHandle;
+    private int sizeHandle;
+    private int[] sizeValue;
 
-    public PerlinTransitionFilter(Context context)
+    public SquareAnimTransitionFilter(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_perlin));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_square_anim));
     }
 
     @Override
@@ -30,9 +31,19 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
+    protected void onInitBaseData()
+    {
+        super.onInitBaseData();
+
+        sizeValue = new int[2];
+        sizeValue[0] = 4;
+        sizeValue[1] = 4;
+    }
+
+    @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_PERLIN;
+        return GPUFilterType.TRANSITION_SQUARE_ANIM;
     }
 
     @Override
@@ -40,8 +51,7 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     {
         super.onInitProgramHandle();
 
-        scaleHandle = GLES20.glGetUniformLocation(getProgram(), "scale");
-        smoothnessHandle = GLES20.glGetUniformLocation(getProgram(), "smoothness");
+        sizeHandle = GLES20.glGetUniformLocation(getProgram(), "size");
     }
 
     @Override
@@ -68,8 +78,7 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(scaleHandle, 4.0f);
-        GLES20.glUniform1f(smoothnessHandle, 0.5f);
+        GLES20.glUniform2iv(sizeHandle, 1, sizeValue, 0);
     }
 
     @Override
@@ -81,6 +90,6 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected boolean isEffectCycle()
     {
-        return true;
+        return false;
     }
 }

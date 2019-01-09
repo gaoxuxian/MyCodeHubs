@@ -11,16 +11,13 @@ import util.GlMatrixTools;
 
 /**
  * @author Gxx
- * Created by Gxx on 2019/1/3.
+ * Created by Gxx on 2019/1/7.
  */
-public class PerlinTransitionFilter extends GPUImageTransitionFilter
+public class ColorTranslationTransitionFilterV2 extends GPUImageTransitionFilter
 {
-    private int scaleHandle;
-    private int smoothnessHandle;
-
-    public PerlinTransitionFilter(Context context)
+    public ColorTranslationTransitionFilterV2(Context context)
     {
-        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_perlin));
+        super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_color_translation_v2));
     }
 
     @Override
@@ -32,16 +29,7 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_PERLIN;
-    }
-
-    @Override
-    protected void onInitProgramHandle()
-    {
-        super.onInitProgramHandle();
-
-        scaleHandle = GLES20.glGetUniformLocation(getProgram(), "scale");
-        smoothnessHandle = GLES20.glGetUniformLocation(getProgram(), "smoothness");
+        return GPUFilterType.TRANSITION_COLOR_TRANSLATION;
     }
 
     @Override
@@ -64,12 +52,15 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    protected void preDrawSteps4Other(boolean drawBuffer)
+    public void setTimeValue(long time)
     {
-        super.preDrawSteps4Other(drawBuffer);
-
-        GLES20.glUniform1f(scaleHandle, 4.0f);
-        GLES20.glUniform1f(smoothnessHandle, 0.5f);
+        float dt = (time - mStartTime) / getEffectTimeCycle();
+        int dtInt = (int) dt;
+        mProgressValue = dt - dtInt;
+        if (!isEffectCycle() && dtInt > 0)
+        {
+            mProgressValue = 1;
+        }
     }
 
     @Override
@@ -81,6 +72,6 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected boolean isEffectCycle()
     {
-        return true;
+        return false;
     }
 }

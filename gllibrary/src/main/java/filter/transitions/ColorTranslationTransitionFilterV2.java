@@ -29,7 +29,7 @@ public class ColorTranslationTransitionFilterV2 extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_COLOR_TRANSLATION;
+        return GPUFilterType.TRANSITION_COLOR_TRANSLATION_V2;
     }
 
     @Override

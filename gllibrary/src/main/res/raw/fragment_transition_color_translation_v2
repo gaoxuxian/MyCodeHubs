@@ -10,7 +10,7 @@ void main(){
     vec2 uv = aCoordinate;
 
     // first step width 50%
-    float rate = pow(progress, 3.);
+    float rate = pow(progress, 2.4);
     float first_step = 1. - step(0.5, rate);
     float first_rate = smoothstep(0., 0.5, rate) * first_step;
     float first_sx = -.5 + 1.5 * first_rate;

@@ -50,11 +50,11 @@ public class ColorTranslationTransitionViewV2 extends GLSurfaceView implements G
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_8);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_7);
         mFrontTextureFilter.initFrameBufferOfTextureSize();
 
         mBackTextureFilter.onSurfaceChanged(width, height);
-        mBackTextureFilter.setBitmapRes(R.drawable.open_test_7);
+        mBackTextureFilter.setBitmapRes(R.drawable.open_test_8);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
         mColorTranslationTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());

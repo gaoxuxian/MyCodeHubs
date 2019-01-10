@@ -220,6 +220,22 @@ public class OpenGLActivity extends BaseActivity {
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 单方向拉扯 -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "SingleDragTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 随机方块透明叠化 -动画");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "RandomSquareTransitionActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

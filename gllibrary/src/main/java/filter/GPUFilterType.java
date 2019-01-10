@@ -30,6 +30,8 @@ public enum GPUFilterType implements FilterType {
     TRANSITION_PARTICLES(22), // 转场 - 颗粒感
     TRANSITION_TEAR(23), // 转场 - 撕裂感
     TRANSITION_FUZZY_ZOOM(24), // 转场 - 模糊放大
+    TRANSITION_SINGLE_DRAG(25), // 转场 - 单方向拉扯
+    TRANSITION_RANDOM_SQUARE(26), // 转场 - 随机方块
     ;
 
     private int mValue;

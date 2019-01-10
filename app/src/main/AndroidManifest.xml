@@ -127,6 +127,14 @@
             android:name=".gles.FuzzyZoomTransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".gles.SingleDragTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+            android:name=".gles.RandomSquareTransitionActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
     </application>
 
 </manifest>

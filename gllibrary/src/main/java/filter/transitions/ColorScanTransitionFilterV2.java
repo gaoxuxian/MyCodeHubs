@@ -13,9 +13,9 @@ import util.GlMatrixTools;
  * @author Gxx
  * Created by Gxx on 2019/1/7.
  */
-public class ColorTranslationTransitionFilterV2 extends GPUImageTransitionFilter
+public class ColorScanTransitionFilterV2 extends GPUImageTransitionFilter
 {
-    public ColorTranslationTransitionFilterV2(Context context)
+    public ColorScanTransitionFilterV2(Context context)
     {
         super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default), GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_color_translation_v2));
     }
@@ -29,7 +29,7 @@ public class ColorTranslationTransitionFilterV2 extends GPUImageTransitionFilter
     @Override
     public GPUFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_COLOR_TRANSLATION_V2;
+        return GPUFilterType.TRANSITION_COLOR_SCAN_V2;
     }
 
     @Override

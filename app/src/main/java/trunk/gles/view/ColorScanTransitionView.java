@@ -8,8 +8,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import filter.common.BmpToTextureFilter;
-import filter.transitions.ColorTranslationTransitionFilter;
-import filter.transitions.ZoomTransitionFilter;
+import filter.transitions.ColorScanTransitionFilter;
 import trunk.R;
 import util.GLUtil;
 
@@ -17,15 +16,15 @@ import util.GLUtil;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class ColorTranslationTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
+public class ColorScanTransitionView extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mFrontTextureFilter;
     private BmpToTextureFilter mBackTextureFilter;
-    private ColorTranslationTransitionFilter mColorTranslationTransitionFilter;
+    private ColorScanTransitionFilter mColorScanTransitionFilter;
 
     private long mStartTime;
 
-    public ColorTranslationTransitionView(Context context)
+    public ColorScanTransitionView(Context context)
     {
         super(context);
 
@@ -42,8 +41,8 @@ public class ColorTranslationTransitionView extends GLSurfaceView implements GLS
         mBackTextureFilter = new BmpToTextureFilter(getContext());
         mBackTextureFilter.onSurfaceCreated(config);
 
-        mColorTranslationTransitionFilter = new ColorTranslationTransitionFilter(getContext());
-        mColorTranslationTransitionFilter.onSurfaceCreated(config);
+        mColorScanTransitionFilter = new ColorScanTransitionFilter(getContext());
+        mColorScanTransitionFilter.onSurfaceCreated(config);
     }
 
     @Override
@@ -57,8 +56,8 @@ public class ColorTranslationTransitionView extends GLSurfaceView implements GLS
         mBackTextureFilter.setBitmapRes(R.drawable.open_test_7);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
-        mColorTranslationTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
-        mColorTranslationTransitionFilter.onSurfaceChanged(width, height);
+        mColorScanTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());
+        mColorScanTransitionFilter.onSurfaceChanged(width, height);
     }
 
     @Override
@@ -76,9 +75,9 @@ public class ColorTranslationTransitionView extends GLSurfaceView implements GLS
         GLES20.glClearColor(1, 1, 1, 1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        mColorTranslationTransitionFilter.setStartTimeValue(mStartTime);
-        mColorTranslationTransitionFilter.setTimeValue(System.currentTimeMillis());
-        mColorTranslationTransitionFilter.onDrawFrame(front, back);
+        mColorScanTransitionFilter.setStartTimeValue(mStartTime);
+        mColorScanTransitionFilter.setTimeValue(System.currentTimeMillis());
+        mColorScanTransitionFilter.onDrawFrame(front, back);
     }
 
     @Override
@@ -96,9 +95,9 @@ public class ColorTranslationTransitionView extends GLSurfaceView implements GLS
             mBackTextureFilter.destroy();
         }
 
-        if (mColorTranslationTransitionFilter != null)
+        if (mColorScanTransitionFilter != null)
         {
-            mColorTranslationTransitionFilter.destroy();
+            mColorScanTransitionFilter.destroy();
         }
     }
 }

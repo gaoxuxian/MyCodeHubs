@@ -5,13 +5,12 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import trunk.BaseActivity;
-import trunk.gles.view.ColorTranslationTransitionView;
-import trunk.gles.view.ZoomTransitionView;
+import trunk.gles.view.ColorScanTransitionView;
 import util.PxUtil;
 
-public class ColorTranslationTransitionActivity extends BaseActivity
+public class ColorScanTransitionActivity extends BaseActivity
 {
-    private ColorTranslationTransitionView mItemView;
+    private ColorScanTransitionView mItemView;
 
     @Override
     public void onCreateBaseData() throws Exception
@@ -22,7 +21,7 @@ public class ColorTranslationTransitionActivity extends BaseActivity
     @Override
     public void onCreateChildren(Context context, FrameLayout parent, FrameLayout.LayoutParams params)
     {
-        mItemView = new ColorTranslationTransitionView(context);
+        mItemView = new ColorScanTransitionView(context);
         params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1920));
         params.gravity = Gravity.CENTER;
         parent.addView(mItemView, params);

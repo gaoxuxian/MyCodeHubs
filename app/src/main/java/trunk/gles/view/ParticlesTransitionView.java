@@ -9,7 +9,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import filter.common.BmpToTextureFilter;
 import filter.transitions.ParticlesTransitionFilter;
-import filter.transitions.ZoomTransitionFilter;
 import trunk.R;
 import util.GLUtil;
 
@@ -50,11 +49,11 @@ public class ParticlesTransitionView extends GLSurfaceView implements GLSurfaceV
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mFrontTextureFilter.onSurfaceChanged(width, height);
-        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_4);
+        mFrontTextureFilter.setBitmapRes(R.drawable.open_test_9);
         mFrontTextureFilter.initFrameBufferOfTextureSize();
 
         mBackTextureFilter.onSurfaceChanged(width, height);
-        mBackTextureFilter.setBitmapRes(R.drawable.open_test_3);
+        mBackTextureFilter.setBitmapRes(R.drawable.open_test_10);
         mBackTextureFilter.initFrameBufferOfTextureSize();
 
         mParticlesTransitionFilter.setTextureWH(mFrontTextureFilter.getTextureW(), mFrontTextureFilter.getTextureH());

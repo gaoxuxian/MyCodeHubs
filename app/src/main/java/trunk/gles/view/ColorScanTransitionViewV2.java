@@ -8,8 +8,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import filter.common.BmpToTextureFilter;
-import filter.transitions.ColorTranslationTransitionFilter;
-import filter.transitions.ColorTranslationTransitionFilterV2;
+import filter.transitions.ColorScanTransitionFilterV2;
 import trunk.R;
 import util.GLUtil;
 
@@ -17,15 +16,15 @@ import util.GLUtil;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public class ColorTranslationTransitionViewV2 extends GLSurfaceView implements GLSurfaceView.Renderer
+public class ColorScanTransitionViewV2 extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mFrontTextureFilter;
     private BmpToTextureFilter mBackTextureFilter;
-    private ColorTranslationTransitionFilterV2 mColorTranslationTransitionFilter;
+    private ColorScanTransitionFilterV2 mColorTranslationTransitionFilter;
 
     private long mStartTime;
 
-    public ColorTranslationTransitionViewV2(Context context)
+    public ColorScanTransitionViewV2(Context context)
     {
         super(context);
 
@@ -42,7 +41,7 @@ public class ColorTranslationTransitionViewV2 extends GLSurfaceView implements G
         mBackTextureFilter = new BmpToTextureFilter(getContext());
         mBackTextureFilter.onSurfaceCreated(config);
 
-        mColorTranslationTransitionFilter = new ColorTranslationTransitionFilterV2(getContext());
+        mColorTranslationTransitionFilter = new ColorScanTransitionFilterV2(getContext());
         mColorTranslationTransitionFilter.onSurfaceCreated(config);
     }
 

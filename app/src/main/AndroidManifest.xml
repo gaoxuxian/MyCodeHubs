@@ -108,11 +108,11 @@
             android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.ColorTranslationTransitionActivity"
+            android:name=".gles.ColorScanTransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.ColorTranslationTransitionActivityV2"
+            android:name=".gles.ColorScanTransitionActivityV2"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity

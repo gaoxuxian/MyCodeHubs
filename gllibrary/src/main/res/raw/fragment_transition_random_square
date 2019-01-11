@@ -14,7 +14,7 @@ float rand (vec2 co) {
 
 void main(){
     vec2 uv = aCoordinate;
-    float rate = pow(progress, 1.0);
+    float rate = smoothstep(0.2, 1., pow(progress, 0.5));
     float r = rand(floor(vec2(size) * uv));
     float m = smoothstep(0.0, -smoothness, r - (rate * (1.0 + smoothness)));
     gl_FragColor = mix(texture2D(vTextureFront, uv), texture2D(vTextureBack, uv), m);

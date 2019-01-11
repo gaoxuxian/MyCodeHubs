@@ -184,7 +184,7 @@ public class OpenGLActivity extends BaseActivity {
         map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 色彩平移 -动画");
         intent = new Intent();
-        cls = Class.forName(activity_package_path + "ColorTranslationTransitionActivity");
+        cls = Class.forName(activity_package_path + "ColorScanTransitionActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
@@ -192,7 +192,7 @@ public class OpenGLActivity extends BaseActivity {
         map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场- 色彩平移-v2 -动画");
         intent = new Intent();
-        cls = Class.forName(activity_package_path + "ColorTranslationTransitionActivityV2");
+        cls = Class.forName(activity_package_path + "ColorScanTransitionActivityV2");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

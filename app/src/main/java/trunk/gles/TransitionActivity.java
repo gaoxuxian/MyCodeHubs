@@ -224,6 +224,7 @@ public class TransitionActivity extends BaseActivity
         super.onPause();
 
         mItemView.onPause();
+        mAdapter.onPause();
     }
 
     @Override
@@ -238,6 +239,7 @@ public class TransitionActivity extends BaseActivity
     {
         private ArrayList<FilterInfo> mData;
         private Listener mListener;
+        private GPUTransitionFilterType mSelectedType = GPUTransitionFilterType.NONE;
 
         interface Listener
         {
@@ -271,6 +273,8 @@ public class TransitionActivity extends BaseActivity
                 itemView.setFilterName(info.mName);
                 itemView.setImage(info.mBmpRes);
                 itemView.setTag(info.mType);
+
+                itemView.setBackgroundColor(info.mType == mSelectedType ? Color.RED : Color.TRANSPARENT);
             }
         }
 
@@ -286,8 +290,16 @@ public class TransitionActivity extends BaseActivity
             Object tag = v.getTag();
             if (tag instanceof GPUTransitionFilterType && mListener != null)
             {
+                mSelectedType = (GPUTransitionFilterType) tag;
+                notifyDataSetChanged();
                 mListener.onItemClick((GPUTransitionFilterType) tag);
             }
+        }
+
+        public void onPause()
+        {
+            mSelectedType = GPUTransitionFilterType.NONE;
+            notifyDataSetChanged();
         }
     }
 

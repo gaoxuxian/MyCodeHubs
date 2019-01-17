@@ -82,7 +82,7 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(dotsHandle, 4);
+        GLES20.glUniform1f(dotsHandle, 20);
         GLES20.glUniform2fv(centerHandle, 1, centerValue, 0);
     }
 

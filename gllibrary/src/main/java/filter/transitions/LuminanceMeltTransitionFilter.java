@@ -20,7 +20,7 @@ public class LuminanceMeltTransitionFilter extends GPUImageTransitionFilter
     private int l_thresholdHandle;
     private int aboveHandle;
 
-    private float mUpDown;
+    private float mUpDown = 1;
 
     public LuminanceMeltTransitionFilter(Context context)
     {

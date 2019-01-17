@@ -39,6 +39,7 @@ public class TransitionView extends GLSurfaceView implements GLSurfaceView.Rende
     private int mSurfaceW, mSurfaceH;
 
     private volatile Runnable mSetFilterRunnable;
+    private volatile Runnable mChangeRatioRunnable;
 
     public TransitionView(Context context)
     {
@@ -66,6 +67,21 @@ public class TransitionView extends GLSurfaceView implements GLSurfaceView.Rende
                     }
                     mTransitionFilter = mTempFilter;
                     mTempFilter = null;
+                }
+            }
+        };
+
+        mChangeRatioRunnable = () ->
+        {
+            synchronized (LOCK)
+            {
+                if (mRatio == 1f)
+                {
+                    mRatio = 16f/9f;
+                }
+                else if (mRatio == 16f/9f)
+                {
+                    mRatio = 1f;
                 }
             }
         };
@@ -192,23 +208,6 @@ public class TransitionView extends GLSurfaceView implements GLSurfaceView.Rende
 
     public void changePreviewBmpRatio()
     {
-        this.queueEvent(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                synchronized (LOCK)
-                {
-                    if (mRatio == 1f)
-                    {
-                        mRatio = 16f/9f;
-                    }
-                    else if (mRatio == 16f/9f)
-                    {
-                        mRatio = 1f;
-                    }
-                }
-            }
-        });
+        this.queueEvent(mChangeRatioRunnable);
     }
 }

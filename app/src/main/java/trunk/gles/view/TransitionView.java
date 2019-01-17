@@ -10,11 +10,9 @@ import javax.microedition.khronos.opengles.GL10;
 import filter.GPUImageTransitionFilter;
 import filter.GPUTransitionFilterType;
 import filter.common.BmpToTextureFilter;
-import filter.transitions.ZoomTransitionFilter;
 import trunk.R;
 import util.FilterFactory;
 import util.GLUtil;
-import util.GlMatrixTools;
 
 /**
  * @author Gxx

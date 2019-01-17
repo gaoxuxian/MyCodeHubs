@@ -6,6 +6,7 @@ import android.opengl.GLES30;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -31,9 +32,9 @@ public class FuzzyZoomTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_FUZZY_ZOOM;
+        return GPUTransitionFilterType.FUZZY_ZOOM;
     }
 
     @Override
@@ -73,7 +74,7 @@ public class FuzzyZoomTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected float getEffectTimeCycle()
     {
-        return 1200;
+        return 1200f;
     }
 
     @Override

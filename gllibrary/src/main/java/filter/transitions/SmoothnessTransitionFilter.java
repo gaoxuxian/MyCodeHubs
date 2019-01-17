@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -31,9 +32,9 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_SMOOTHNESS;
+        return GPUTransitionFilterType.SMOOTHNESS;
     }
 
     @Override
@@ -75,12 +76,12 @@ public class SmoothnessTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected float getEffectTimeCycle()
     {
-        return 2000f;
+        return 1200f;
     }
 
     @Override
     protected boolean isEffectCycle()
     {
-        return super.isEffectCycle();
+        return false;
     }
 }

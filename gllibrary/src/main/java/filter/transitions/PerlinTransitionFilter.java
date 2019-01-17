@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -30,9 +31,9 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_PERLIN;
+        return GPUTransitionFilterType.PERLIN;
     }
 
     @Override
@@ -81,6 +82,6 @@ public class PerlinTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected boolean isEffectCycle()
     {
-        return true;
+        return false;
     }
 }

@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -32,9 +33,9 @@ public class ColorGhostingTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_COLOR_GHOSTING;
+        return GPUTransitionFilterType.COLOR_GHOSTING;
     }
 
     @Override
@@ -99,6 +100,6 @@ public class ColorGhostingTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected boolean isEffectCycle()
     {
-        return true;
+        return false;
     }
 }

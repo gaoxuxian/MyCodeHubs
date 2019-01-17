@@ -19,7 +19,7 @@ import util.GlMatrixTools;
  * 生命周期: onSurfaceCreated() --> onSurfaceChanged()
  * 如需管理 FBO : initFrameBuffer()
  */
-public abstract class GPUImageAnimFilter extends AbsFilter
+public abstract class GPUImageAnimFilter extends AbsFilter<GPUAnimFilterType>
 {
     // 句柄
     protected int vPositionHandle;

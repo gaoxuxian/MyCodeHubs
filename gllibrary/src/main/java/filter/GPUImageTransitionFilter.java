@@ -16,7 +16,7 @@ import util.GlMatrixTools;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public abstract class GPUImageTransitionFilter extends AbsFilter
+public class GPUImageTransitionFilter extends AbsFilter<GPUTransitionFilterType>
 {
     protected int vPositionHandle;
     protected int vCoordinateHandle;
@@ -40,6 +40,12 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
     public GPUImageTransitionFilter(Context context, String vertex, String fragment)
     {
         super(context, vertex, fragment);
+    }
+
+    @Override
+    public GPUTransitionFilterType getFilterType()
+    {
+        return GPUTransitionFilterType.NONE;
     }
 
     @Override
@@ -95,14 +101,16 @@ public abstract class GPUImageTransitionFilter extends AbsFilter
     {
         if (!isViewPortAvailable(drawBuffer)) return;
 
-        // 视口区域大小(归一化映射范围)
+        // 视口区域大小(归一化映射范围
         GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
-        // 矩阵变换
+
         GlMatrixTools matrix = getMatrix();
+        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
+        matrix.frustum(-1, 1, -vs, vs, 3, 5);
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
-        matrix.frustum(-1, 1, -1, 1, 3, 7);
 
         matrix.pushMatrix();
+        matrix.scale(1f, (float) mTextureH / mTextureW, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }

@@ -27,6 +27,12 @@ public class BmpToTextureFilter extends GPUImageFilter
     }
 
     @Override
+    protected int createFrameBufferSize()
+    {
+        return 3;
+    }
+
+    @Override
     protected void onInitBaseData()
     {
         super.onInitBaseData();

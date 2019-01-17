@@ -16,7 +16,7 @@ import util.TaskWrapper;
  * @author Gxx
  * Created by Gxx on 2019/1/2.
  */
-public abstract class AbsFilter implements FilterIF<GPUFilterType>
+public abstract class AbsFilter<Y extends FilterType> implements FilterIF<Y>
 {
     private Context mContext;
     private final String mVertexStr;

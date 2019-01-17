@@ -43,96 +43,14 @@
             android:name=".gles.FuzzyActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity
-            android:name=".gles.ZoomTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.RectSmoothTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.TranslationTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.SpreadRoundTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.ShakeTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.PerlinTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.PagingTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.FuzzyTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.RotateTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.CircleCropTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.LuminanceMeltUpDownTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.LuminanceMeltDownUpTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.ColorDistanceTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.ColorGhostingTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
+
         <activity
             android:name=".gles.GhostingActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+
         <activity
-            android:name=".gles.SquareAnimTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.ColorScanTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.ColorScanTransitionActivityV2"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.ParticlesTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.TearTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.FuzzyZoomTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.SingleDragTransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-            android:name=".gles.RandomSquareTransitionActivity"
+            android:name=".gles.TransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.GLES30;
 
 import filter.GLConstant;
-import filter.GPUFilterType;
+import filter.GPUAnimFilterType;
 import filter.GPUImageAnimFilter;
 import library.R;
 import util.ByteBufferUtil;
@@ -34,9 +34,9 @@ public class GhostingFilter extends GPUImageAnimFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUAnimFilterType getFilterType()
     {
-        return GPUFilterType.GHOSTING;
+        return GPUAnimFilterType.GHOSTING;
     }
 
     @Override

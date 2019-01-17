@@ -17,7 +17,7 @@ import java.nio.ShortBuffer;
  * 生命周期: onSurfaceCreated() --> onSurfaceChanged()
  * 如需管理 FBO : initFrameBuffer()
  */
-public abstract class GPUImageFilter extends AbsFilter
+public abstract class GPUImageFilter extends AbsFilter<GPUFilterType>
 {
     // 句柄
     protected int vPositionHandle;

@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -27,9 +28,9 @@ public class RotateTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_ROTATE;
+        return GPUTransitionFilterType.ROTATE;
     }
 
     @Override

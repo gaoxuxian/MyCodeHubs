@@ -6,6 +6,7 @@ import android.opengl.GLES30;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -31,9 +32,9 @@ public class ParticlesTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_PARTICLES;
+        return GPUTransitionFilterType.PARTICLES;
     }
 
     @Override

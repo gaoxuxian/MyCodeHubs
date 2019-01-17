@@ -6,6 +6,7 @@ import android.opengl.GLES30;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -44,9 +45,9 @@ public class RandomSquaresTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_RANDOM_SQUARE;
+        return GPUTransitionFilterType.RANDOM_SQUARE;
     }
 
     @Override

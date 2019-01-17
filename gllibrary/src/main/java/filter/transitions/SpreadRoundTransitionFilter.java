@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 
 import filter.GPUFilterType;
 import filter.GPUImageTransitionFilter;
+import filter.GPUTransitionFilterType;
 import library.R;
 import util.GLUtil;
 import util.GlMatrixTools;
@@ -33,9 +34,9 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     }
 
     @Override
-    public GPUFilterType getFilterType()
+    public GPUTransitionFilterType getFilterType()
     {
-        return GPUFilterType.TRANSITION_SPREAD_ROUND;
+        return GPUTransitionFilterType.SPREAD_ROUND;
     }
 
     @Override
@@ -94,6 +95,6 @@ public class SpreadRoundTransitionFilter extends GPUImageTransitionFilter
     @Override
     protected boolean isEffectCycle()
     {
-        return true;
+        return false;
     }
 }

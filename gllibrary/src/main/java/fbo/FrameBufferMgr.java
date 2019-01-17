@@ -15,7 +15,7 @@ public class FrameBufferMgr extends AbsFboMgr
     public FrameBufferMgr(Context context, int width, int height, int size, boolean color, boolean depth, boolean stencil, boolean msaa)
     {
         super(width, height, size, color, depth, stencil);
-        init(context, mBufferWidth, mBufferHeight, mBufferSize, color, depth, stencil, msaa);
+        init(context, width, height, mBufferSize, color, depth, stencil, msaa);
     }
 
     @Override
@@ -50,6 +50,18 @@ public class FrameBufferMgr extends AbsFboMgr
         {
             mMgr.reMount(width, height);
         }
+    }
+
+    @Override
+    public int getBufferHeight()
+    {
+        return mMgr != null ? mMgr.getBufferHeight() : 0;
+    }
+
+    @Override
+    public int getBufferWidth()
+    {
+        return mMgr != null ? mMgr.getBufferWidth() : 0;
     }
 
     @Override

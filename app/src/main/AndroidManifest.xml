@@ -2,6 +2,9 @@
 <manifest package="trunk"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".MyApplication"
         android:allowBackup="false"
@@ -43,15 +46,16 @@
             android:name=".gles.FuzzyActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-
         <activity
             android:name=".gles.GhostingActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-
         <activity
             android:name=".gles.TransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".android.MediaExtractorActivity"
+                  android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>
 

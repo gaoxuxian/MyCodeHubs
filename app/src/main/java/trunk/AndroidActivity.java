@@ -19,6 +19,14 @@ public class AndroidActivity extends BaseActivity {
     @Override
     public void onCreateBaseData() throws Exception {
         mData = new ArrayList<>();
+
+        SparseArray<Object> map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "MediaExtractor 试用");
+        Intent intent = new Intent();
+        Class cls = Class.forName(activity_package_path + "MediaExtractorActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

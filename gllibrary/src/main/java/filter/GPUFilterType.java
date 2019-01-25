@@ -6,6 +6,7 @@ public enum GPUFilterType implements FilterType {
     OBLIQUE_PLUS(1), // y = x 分屏滤镜
     BITMAP_TRANSFORM_TEXTURE(2), // android 位图转纹理
     DISPLAY(3), // 显示
+    DISPLAY_OES(4), // 显示
     ;
 
     private int mValue;

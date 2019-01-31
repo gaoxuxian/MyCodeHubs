@@ -62,6 +62,14 @@ public class OpenGLActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "EGL 后台绘图");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "EGLPbufferActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "转场动画");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "TransitionActivity");

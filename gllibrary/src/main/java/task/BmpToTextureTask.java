@@ -68,6 +68,10 @@ public class BmpToTextureTask extends AbsTask
             {
                 mBitmap = BitmapFactory.decodeFile((String) res);
             }
+            else if (res instanceof Bitmap)
+            {
+                mBitmap = (Bitmap) res;
+            }
         }
     }
 }

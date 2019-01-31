@@ -54,7 +54,11 @@
             android:name=".gles.TransitionActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name=".android.MediaExtractorActivity"
+        <activity
+            android:name=".android.MediaExtractorActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".gles.EGLPbufferActivity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>

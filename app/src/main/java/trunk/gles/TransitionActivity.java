@@ -27,9 +27,7 @@ import java.util.ArrayList;
 public class TransitionActivity extends BaseActivity
 {
     private TransitionView mItemView;
-    private RecyclerView mRecyclerView;
     private FilterAdapter mAdapter;
-    private Button mChangeRatioBtn;
 
     @Override
     public void onCreateBaseData() throws Exception
@@ -184,7 +182,7 @@ public class TransitionActivity extends BaseActivity
             lp.weight = 1f;
             outsideLayout.addView(mItemView, lp);
 
-            mRecyclerView = new RecyclerView(context);
+            RecyclerView mRecyclerView = new RecyclerView(context);
             mRecyclerView.setBackgroundColor(Color.WHITE);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
             mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration()
@@ -203,7 +201,7 @@ public class TransitionActivity extends BaseActivity
             outsideLayout.addView(mRecyclerView, lp);
         }
 
-        mChangeRatioBtn = new Button(context);
+        Button mChangeRatioBtn = new Button(context);
         mChangeRatioBtn.setText("切换图片比例");
         mChangeRatioBtn.setOnClickListener(v -> mItemView.changePreviewBmpRatio());
         params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -246,7 +244,7 @@ public class TransitionActivity extends BaseActivity
             void onItemClick(GPUTransitionFilterType type);
         }
 
-        public FilterAdapter(ArrayList<FilterInfo> data, Listener listener)
+        FilterAdapter(ArrayList<FilterInfo> data, Listener listener)
         {
             mData = data;
             mListener = listener;
@@ -351,8 +349,8 @@ public class TransitionActivity extends BaseActivity
 
     private static class FilterInfo
     {
-        public String mName;
-        public int mBmpRes;
-        public GPUTransitionFilterType mType;
+        String mName;
+        int mBmpRes;
+        GPUTransitionFilterType mType;
     }
 }

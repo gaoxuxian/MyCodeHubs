@@ -3,6 +3,7 @@ package util;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
+import android.opengl.EGL14;
 import android.opengl.GLES20;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +12,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import javax.microedition.khronos.egl.EGL;
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
 
 /**
  * @author Gxx
@@ -225,5 +231,20 @@ public class GLUtil
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+    }
+
+    public static void createEGL()
+    {
+        EGL10 egl = (EGL10) EGLContext.getEGL();
+
+        EGLDisplay eglDisplay = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+
+        int[] version = new int[2];
+        if (!egl.eglInitialize(eglDisplay, version))
+        {
+            throw new RuntimeException("eglInitialize failed");
+        }
+
+
     }
 }

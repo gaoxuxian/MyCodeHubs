@@ -1,0 +1,56 @@
+
+1、EGL 是什么？ EGL 是 OpenGL ES 和底层的 native window system 之间的接口, 简单的说, 就是应用层和底层window 图像数据交互的媒介
+
+2、EGL Pbuffer 环境配置流程: (以下讨论的是 EGL10, 这里埋个点 EGL10 和 EGL14 是有一点区别的)
+    2-1、通过 EGLContext.getEGL() 获取 EGL 对象 eglObject
+    2-2、通过 eglObject.eglGetDisplay() 获取 EGLDisplay 对象(EGLDisplay 是屏幕的抽象)
+    2-3、通过 eglObject.eglInitialize() 初始化 EGLDisplay
+    2-4、通过 eglObject.eglChooseConfig() 设置 EGL frame buffer 的配置
+    2-5、通过 eglObject.eglCreateContext() 构建 EGLContext 对象(EGLContext 是环境的抽象)
+    2-6、通过 eglObject.eglCreatePbufferSurface() 构建 EGLSurface 对象(其实是 FrameBuffer, 我将它理解成 屏幕画布的抽象)
+    2-7、通过 eglObject.eglMakeCurrent() 将 EGLContext 对象 与 当前线程、EGLSurface 进行绑定
+    2-8、可以开始调用 OpenGL ES 的api 进行渲染操作
+    2-9、如果是 eglCreateWindowSurface 渲染之后，可以调用SwapBuffer进行双缓冲切换显示渲染画面
+    2-10、渲染结束, eglObject 需要 destroy 资源
+
+3、EGL14 是什么？ 与 EGL10 又有什么区别？
+
+    它们都是 OpenGL ES 和底层的 native window system 之间的接口, 只是EGL的不同版本，EGL14 是Android上使用的OpenGL窗口系统接口。
+
+        EGL10对应于EGL 1.0，它是在2003年
+        EGL14释放的规范对应于EGL 1.4，其是在2014年
+        释放的规范这意味着EGL14是多更近。最新的规格是EGL 1.5，2015年发布。
+
+    这两个版本的Android Java绑定有很大不同。尽管功能上EGL 1.4是EGL 1.0的超集(至少AFAIK，我没有系统地比较这些规范)
+
+    在Java层，EGL封装了两套框架，分别是:
+
+        位于 javax.microedition.khronos.egl 包下的 EGL10。
+        位于 android.opengl 包下的 EGL14。
+
+        其主要区别是：
+
+        EGL14是在Android 4.2(API 17)引入的，换言之API 17以下的版本不支持 EGL14。
+
+        EGL10不支持OpenGL ES 2.x，因此在EGL10中某些相关常量参数只能用手写硬编码代替，例如 EGL14.EGL_CONTEXT_CLIENT_VERSION 以及 EGL14.EGL_OPENGL_ES2_BIT 等等。
+
+    但 Android 中的 EGL14 不是扩展版本的 EGL10 API。所以你不能在两者之间混合搭配功能。你几乎必须选择一个，并坚持下去。
+    不用说，基于11年的发布时间差异，EGL 1.4远远优于EGL 1.0。
+
+    现在你可能想知道为什么 GLSurfaceView 在其接口中使用 EGL10 引用。我强烈怀疑这是为了向后兼容。EGL14仅在API级别17中添加，而自从 API 3 以来 GLSurfaceView 一直存在。
+
+4、为什么 GlSurfaceView 在 eglCreateWindowSurface() 时, 对于 Object 类型参数 native_window 直接传入 SurfaceHolder 对象?
+
+    其实通过观察 EGL14 的源码, 不难发现 Google 其实只需要 SurfaceHolder 里的 Surface 对象, 那又是为什么呢？
+
+    Surface 的源码注解是这么说的 Handle onto a raw buffer that is being managed by the screen compositor.(大意: 是屏幕管理器的句柄)
+
+    那么这个时候，我们就需要到 Khronos 官网看一下 EGL eglCreateWindowSurface() 的方法说明(Android api 没做过多说明, 没办法)
+
+    method: EGLSurface  eglCreateWindowSurface() ---> create a new EGL window surface
+    param : Object  native_window ---> Specifies the native window.(指定本地窗口)
+
+    上面说过, EGLSurface 是屏幕画布的抽象,
+    所以 native_window 这个参数, 我更愿意将它理解成 将屏幕画布(EGLSurface)的句柄赋值到 native_window 这个参数对象上
+
+    那赋值到 native_window 这个对象上有什么用？就可以直接在 java 使用 Surface 对象对屏幕进行操作了

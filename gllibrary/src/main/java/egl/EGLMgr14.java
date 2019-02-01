@@ -37,7 +37,7 @@ public class EGLMgr14 extends EGLMgr<ComponentSizeChooser14>
         // 版本格式 xx.yy
         int[] version_major = new int[1]; // 代表版本格式的 xx
         int[] version_minor = new int[1]; // 代表版本格式的 yy
-        // second step: 初始化EGL显示连接, 成功返回具体版本
+        // second step: 初始化EGLDisplay连接, 成功返回具体版本
         if (!EGL14.eglInitialize(mEglDisplay, version_major, 0, version_minor, 0))
         {
             throw new RuntimeException("egl14 Initialize failed");

@@ -40,7 +40,7 @@ public class EGLMgr10 extends EGLMgr<ComponentSizeChooser>
 
         // 版本格式 xx.yy
         int[] version = new int[2];
-        // third step: 初始化EGL显示连接, 成功返回具体版本
+        // third step: 初始化EGLDisplay连接, 成功返回具体版本
         if (!mEgl.eglInitialize(mEglDisplay, version))
         {
             throw new RuntimeException("egl Initialize failed");

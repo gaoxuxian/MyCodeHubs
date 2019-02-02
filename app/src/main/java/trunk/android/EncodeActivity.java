@@ -1,6 +1,5 @@
 package trunk.android;
 
-import androidx.appcompat.app.AppCompatActivity;
 import trunk.BaseActivity;
 
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 

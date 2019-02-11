@@ -1,6 +1,7 @@
 package filter.common;
 
 import android.content.Context;
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import filter.GLConstant;
@@ -34,6 +35,24 @@ public class DisplayOESFilter extends GPUImageFilter
     public GPUFilterType getFilterType()
     {
         return GPUFilterType.DISPLAY_OES;
+    }
+
+    @Override
+    protected boolean needInitMsaaFbo()
+    {
+        return false;
+    }
+
+    @Override
+    public void initFrameBuffer(int width, int height)
+    {
+        this.initFrameBuffer(width, height, true, false, false);
+    }
+
+    @Override
+    protected int getTextureType()
+    {
+        return GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
     }
 
     @Override

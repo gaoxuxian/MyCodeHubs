@@ -7,6 +7,7 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
+import android.media.MediaMetadata;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -45,7 +46,6 @@ public class EncodeActivity extends BaseActivity
             encoderByType = MediaCodec.createEncoderByType("video/avc");
 
             encoder.createInputSurface();
-            codec
         }
         catch (IOException e)
         {

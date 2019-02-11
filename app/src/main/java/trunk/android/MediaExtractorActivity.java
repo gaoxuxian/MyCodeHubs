@@ -6,6 +6,8 @@ import filter.common.DisplayOESFilter;
 import trunk.BaseActivity;
 import util.GLUtil;
 import util.PxUtil;
+import util.VideoDecodeListener;
+import util.VideoDecoder;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +22,7 @@ import android.media.MediaMetadataRetriever;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,6 +50,8 @@ public class MediaExtractorActivity extends BaseActivity implements View.OnClick
     private int[] texture;
     private int mVideoWidth;
     private int mVideoHeight;
+    private VideoDecoder videoDecoder;
+    private boolean mUpdateFrame;
 
     @Override
     public void onCreateBaseData() throws Exception
@@ -126,8 +131,26 @@ public class MediaExtractorActivity extends BaseActivity implements View.OnClick
                             mVideoHeight = Integer.parseInt(sHeight);
                         }
                         retriever.release();
+                        videoDecoder = new VideoDecoder(path, mSurface);
+                        videoDecoder.setAutoDecode(false);
+                        videoDecoder.setDecodeListener(new Handler(), new VideoDecodeListener()
+                        {
+                            @Override
+                            public void onPrepareSucceed()
+                            {
+                                Log.d("xxx", "onPrepareSucceed: ");
+                                videoDecoder.nextFrame();
+                            }
+
+                            @Override
+                            public void onEnd()
+                            {
+                                Log.d("xxx", "onEnd: ");
+                            }
+                        });
+                        videoDecoder.start();
                         // decodeVideo(this, path);
-                        decodeVideoV2(path);
+                        // decodeVideoV2(path);
                     }
                 }
             }
@@ -317,6 +340,7 @@ public class MediaExtractorActivity extends BaseActivity implements View.OnClick
             @Override
             public void onFrameAvailable(SurfaceTexture surfaceTexture)
             {
+                mUpdateFrame = true;
                 mGlSurfaceView.requestRender();
             }
         });
@@ -340,7 +364,11 @@ public class MediaExtractorActivity extends BaseActivity implements View.OnClick
     @Override
     public void onDrawFrame(GL10 gl)
     {
-        mSurfaceTexture.updateTexImage();
+        if (mUpdateFrame)
+        {
+            mSurfaceTexture.updateTexImage();
+            mUpdateFrame = false;
+        }
 
         mDisplayFilter.setTextureWH(mVideoWidth, mVideoHeight);
         mDisplayFilter.initFrameBufferOfTextureSize();
@@ -348,5 +376,21 @@ public class MediaExtractorActivity extends BaseActivity implements View.OnClick
 
         mDisplayImgFilter.setTextureWH(mVideoWidth, mVideoHeight);
         mDisplayImgFilter.onDrawFrame(i);
+
+        if (videoDecoder != null)
+        {
+            videoDecoder.nextFrame();
+        }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        if (videoDecoder != null)
+        {
+            videoDecoder.release();
+        }
+
+        super.onDestroy();
     }
 }

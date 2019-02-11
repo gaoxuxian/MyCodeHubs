@@ -56,4 +56,20 @@ public class ThreadUtil
             mHandler.removeCallbacksAndMessages(null);
         }
     }
+
+    public static void runOnHandler(Handler handler, Runnable runnable, long delay)
+    {
+        if (handler != null)
+        {
+            handler.postDelayed(runnable, delay);
+        }
+    }
+
+    public static void clearOnHandler(Handler handler)
+    {
+        if (handler != null)
+        {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
 }

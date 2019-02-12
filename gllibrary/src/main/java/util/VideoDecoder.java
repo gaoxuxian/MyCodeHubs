@@ -112,6 +112,12 @@ public class VideoDecoder extends Thread
 
             mListenerHandler = null;
             mListener = null;
+
+            if (mSurface != null)
+            {
+                mSurface.clear();
+                mSurface = null;
+            }
         }
     }
 
@@ -132,17 +138,22 @@ public class VideoDecoder extends Thread
 
             // extract basic information
             String sWidth = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-            String sHeight = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-            String sRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-            String sDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            String sFrameCount = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
-            retriever.release();
-
             mVideoWidth = Integer.parseInt(sWidth);
+
+            String sHeight = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
             mVideoHeight = Integer.parseInt(sHeight);
+
+            String sRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
             mVideoRotation = Integer.parseInt(sRotation);
+
+            String sDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             mVideoDuration = Integer.parseInt(sDuration);
-            mVideoFrameCount = Integer.parseInt(sFrameCount);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                String sFrameCount = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
+                mVideoFrameCount = Integer.parseInt(sFrameCount);
+            }
+            retriever.release();
 
             // start init extractor
             mMediaExtractor = new MediaExtractor();
@@ -248,6 +259,9 @@ public class VideoDecoder extends Thread
         final int TIME_OUT_ESC = 10000;
         boolean inputDone = false;
         boolean outputDone = false;
+
+//        long seekTimeUs = mVideoDuration * 1000L / 2L;
+//        extractor.seekTo(seekTimeUs, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
 
         while (!mRelease)
         {

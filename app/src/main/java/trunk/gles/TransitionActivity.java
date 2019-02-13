@@ -3,7 +3,7 @@ package trunk.gles;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import filter.GPUTransitionFilterType;
+import lib.gl.filter.GPUTransitionFilterType;
 import trunk.BaseActivity;
 import trunk.R;
 import trunk.gles.view.TransitionView;

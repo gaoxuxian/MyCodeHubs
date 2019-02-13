@@ -8,10 +8,10 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.common.DisplayImageFilter;
-import filter.innovation.SplitScreenFilterV3;
+import lib.gl.filter.common.DisplayImageFilter;
+import lib.gl.filter.innovation.SplitScreenFilterV3;
 import trunk.R;
-import util.GLUtil;
+import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx 菱形扩散转场滤镜效果

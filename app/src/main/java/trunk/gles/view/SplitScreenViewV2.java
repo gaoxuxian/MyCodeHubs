@@ -6,10 +6,10 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.common.BmpToTextureFilter;
-import filter.innovation.SplitScreenFilterV2;
+import lib.gl.filter.common.BmpToTextureFilter;
+import lib.gl.filter.innovation.SplitScreenFilterV2;
 import trunk.R;
-import util.GLUtil;
+import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx 四角分屏

@@ -21,9 +21,9 @@ public class AndroidActivity extends BaseActivity {
         mData = new ArrayList<>();
 
         SparseArray<Object> map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "MediaExtractor 试用");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "自制媒体播放器");
         Intent intent = new Intent();
-        Class cls = Class.forName(activity_package_path + "MediaExtractorActivity");
+        Class cls = Class.forName(activity_package_path + "MyMediaPlayerActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
@@ -43,12 +43,7 @@ public class AndroidActivity extends BaseActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(context, 3, RecyclerView.VERTICAL, false));
         params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         parent.addView(recyclerView, params);
-        adapter = new ActivityItemAdapter(mData, new ActivityItemAdapter.Listener() {
-            @Override
-            public void onClickItem(Intent intent) {
-                startActivity(intent);
-            }
-        });
+        adapter = new ActivityItemAdapter(mData, this::startActivity);
         recyclerView.setAdapter(adapter);
     }
 

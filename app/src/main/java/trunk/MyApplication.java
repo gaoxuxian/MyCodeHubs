@@ -1,9 +1,9 @@
 package trunk;
 
 import android.app.Application;
-import util.GLThreadPool;
+import lib.gl.util.GLThreadPool;
 import util.PxUtil;
-import util.SysConfig;
+import lib.gl.util.SysConfig;
 import util.ThreadUtil;
 
 /**

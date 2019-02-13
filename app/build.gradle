@@ -42,4 +42,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation project(':utillibrary')
     implementation project(':gllibrary')
+    implementation project(':widgetlibrary')
 }

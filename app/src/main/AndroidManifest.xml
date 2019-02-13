@@ -55,7 +55,7 @@
             android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".android.MediaExtractorActivity"
+            android:name=".android.MyMediaPlayerActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity

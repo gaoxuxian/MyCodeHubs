@@ -7,12 +7,12 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.GPUImageTransitionFilter;
-import filter.GPUTransitionFilterType;
-import filter.common.BmpToTextureFilter;
+import lib.gl.filter.GPUImageTransitionFilter;
+import lib.gl.filter.GPUTransitionFilterType;
+import lib.gl.filter.common.BmpToTextureFilter;
 import trunk.R;
-import util.FilterFactory;
-import util.GLUtil;
+import lib.gl.util.FilterFactory;
+import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx

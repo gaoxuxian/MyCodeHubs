@@ -1,1 +1,1 @@
-include ':app', ':utillibrary', ':gllibrary'
+include ':app', ':utillibrary', ':gllibrary', ':widgetlibrary'

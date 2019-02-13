@@ -35,10 +35,8 @@ public class PxUtil
     private static float sNonCompatDensity;
 
     private static float sCompat540dpDensity;
-    public static int sScreenWidth;
-    public static int sScreenHeight;
-    public static int sScreenRealWidth;
-    public static int sScreenRealHeight;
+    private static int sScreenRealWidth;
+    private static int sScreenRealHeight;
 
     public static void init(Context context)
     {
@@ -78,8 +76,6 @@ public class PxUtil
                     Method getDisplayInfo = aClass.getDeclaredMethod("getDisplayInfo", DisplayInfoClass);
                     getDisplayInfo.setAccessible(true);
                     getDisplayInfo.invoke(display, o);
-                    sScreenWidth = appWidth.getInt(o);
-                    sScreenHeight = appHeight.getInt(o);
                     sScreenRealWidth = logicalWidth.getInt(o);
                     sScreenRealHeight = logicalHeight.getInt(o);
                     initDisplayInfo = true;
@@ -95,24 +91,15 @@ public class PxUtil
             {
                 display.getMetrics(dm);
 
-                sScreenWidth = dm.widthPixels;
-                sScreenHeight = dm.heightPixels;
-                if (sScreenWidth > sScreenHeight)
-                {
-                    sScreenWidth += sScreenHeight;
-                    sScreenHeight = sScreenWidth - sScreenHeight;
-                    sScreenWidth -= sScreenHeight;
-                }
-
                 display.getRealMetrics(dm);
 
                 sScreenRealWidth = dm.widthPixels;
                 sScreenRealHeight = dm.heightPixels;
                 if (sScreenRealWidth > sScreenRealHeight)
                 {
-                    sScreenRealWidth += sScreenRealHeight;
+                    sScreenRealWidth = sScreenRealWidth + sScreenRealHeight;
                     sScreenRealHeight = sScreenRealWidth - sScreenRealHeight;
-                    sScreenRealWidth -= sScreenRealHeight;
+                    sScreenRealWidth = sScreenRealWidth - sScreenRealHeight;
                 }
             }
 
@@ -135,7 +122,7 @@ public class PxUtil
      */
     public static int sU_1080p(int px)
     {
-        float density = Density1080.width_px / Density1080.width_dp;
+        float density = (float) Density1080.width_px / Density1080.width_dp;
         float dp = px / density;
         return (int) (dp * sCompat540dpDensity + 0.5f);
     }
@@ -148,9 +135,9 @@ public class PxUtil
      */
     public static int sV_1080p(int px)
     {
-        float density = Density1080.height_px / Density1080.height_dp;
+        float density = (float) Density1080.height_px / Density1080.height_dp;
         float dp = px / density;
-        float compatDensity = sScreenRealHeight / Density1080.height_dp;
+        float compatDensity = (float) sScreenRealHeight / Density1080.height_dp;
         return (int) (dp * compatDensity + 0.5f);
     }
 }

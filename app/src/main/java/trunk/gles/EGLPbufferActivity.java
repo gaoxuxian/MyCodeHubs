@@ -1,14 +1,14 @@
 package trunk.gles;
 
-import egl.ComponentSizeChooser;
-import egl.ComponentSizeChooser14;
-import egl.EGLMgr;
-import egl.EGLMgr10;
-import egl.EGLMgr14;
-import filter.common.BmpToTextureFilter;
+import lib.gl.egl.ComponentSizeChooser;
+import lib.gl.egl.ComponentSizeChooser14;
+import lib.gl.egl.EGLMgr;
+import lib.gl.egl.EGLMgr10;
+import lib.gl.egl.EGLMgr14;
+import lib.gl.filter.common.BmpToTextureFilter;
 import trunk.BaseActivity;
 import trunk.R;
-import util.GLUtil;
+import lib.gl.util.GLUtil;
 import util.PxUtil;
 import util.ThreadUtil;
 

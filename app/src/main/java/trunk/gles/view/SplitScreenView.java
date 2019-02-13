@@ -6,11 +6,11 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import filter.common.BmpToTextureFilter;
-import filter.common.DisplayImageFilter;
-import filter.innovation.SplitScreenFilterV1;
+import lib.gl.filter.common.BmpToTextureFilter;
+import lib.gl.filter.common.DisplayImageFilter;
+import lib.gl.filter.innovation.SplitScreenFilterV1;
 import trunk.R;
-import util.GLUtil;
+import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx

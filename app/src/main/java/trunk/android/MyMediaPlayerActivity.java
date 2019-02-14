@@ -20,7 +20,8 @@ import util.PxUtil;
 public class MyMediaPlayerActivity extends BaseActivity implements View.OnClickListener {
     private Button btn;
     private MediaPlayer mMediaPlayer;
-    private boolean mPause;
+    private boolean mPause = true;
+    private boolean mRepeat;
 
     @Override
     public void onCreateBaseData() throws Exception {
@@ -42,7 +43,7 @@ public class MyMediaPlayerActivity extends BaseActivity implements View.OnClickL
         parent.addView(btn, params);
 
         Button nextFrame = new Button(context);
-        nextFrame.setText("test");
+        nextFrame.setText("暂停 or not");
         nextFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +56,21 @@ public class MyMediaPlayerActivity extends BaseActivity implements View.OnClickL
         });
         params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parent.addView(nextFrame, params);
+
+        Button repeat = new Button(context);
+        repeat.setText("重复");
+        repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRepeat = !mRepeat;
+                if (mMediaPlayer != null) {
+                    mMediaPlayer.setRepeatMode(mRepeat);
+                }
+            }
+        });
+        params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.END;
+        parent.addView(repeat, params);
     }
 
     @Override

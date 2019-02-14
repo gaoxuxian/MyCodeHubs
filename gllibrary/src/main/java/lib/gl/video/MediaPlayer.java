@@ -7,6 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Surface;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,7 +22,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
 
     private GLSurfaceView mSurfaceView;
-    private VideoDecoder mVideoDecoder;
+    private VideoDecoderThread mVideoDecoder;
     private SurfaceTexture mSurfaceTexture;
     private Surface mSurface;
     private int[] mSurfaceTextureID;
@@ -32,6 +33,8 @@ public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
 
     private boolean mUpdateTexture;
     private boolean mCanDraw;
+
+    private boolean mRelease;
 
     public MediaPlayer(@NonNull Context context) {
         super(context);
@@ -49,13 +52,13 @@ public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
     }
 
     public void setMediaPath(String path, boolean refitWH) {
-        mVideoDecoder = new VideoDecoder(path, mSurface);
-        mVideoDecoder.setDecodeListener(new Handler(Looper.getMainLooper()), new VideoDecodeListener() {
+        mVideoDecoder = new VideoDecoderThread(path, mSurface);
+        mVideoDecoder.getDecoder().setAsyncHandler(new Handler(Looper.getMainLooper()));
+        mVideoDecoder.getDecoder().setPrepareListener(new VideoDecoderPrepareListener() {
             @Override
-            public void onPrepareSucceed(VideoDecoder decoder) {
+            public void onPrepare(VideoDecoder decoder) {
                 mCanDraw = true;
-                if (refitWH)
-                {
+                if (refitWH) {
                     ViewGroup.LayoutParams layoutParams = mMediaPlayer.getLayoutParams();
                     if (layoutParams.width != decoder.getVideoWidth() || layoutParams.height != decoder.getVideoHeight()) {
                         layoutParams.width = decoder.getVideoWidth();
@@ -64,16 +67,43 @@ public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
                     }
                 }
             }
-
+        });
+        mVideoDecoder.getDecoder().setFirstFrameListener(new VideoDecoderFristFrameListener() {
             @Override
-            public void onFirstFrameAutoRender(VideoDecoder decoder) {
-                decoder.setPause(false);
+            public void onFirstFrameAvailable(VideoDecoder decoder) {
+                decoder.setPause(true);
                 decoder.nextFrame(true);
             }
-
+        });
+        mVideoDecoder.getDecoder().setDecodeEndListener(new VideoDecoderEndListener() {
             @Override
-            public void onEnd(VideoDecoder decoder) {
+            public void onDecodeEnd(VideoDecoder decoder) {
+                Log.d("xxx", "onDecodeEnd: ");
+            }
+        });
+        mVideoDecoder.getDecoder().setDestroyListener(new VideoDecoderDestroyListener() {
+            @Override
+            public void onDestroy() {
+                if (mSurfaceTexture != null) {
+                    mSurfaceTexture.setOnFrameAvailableListener(null);
+                    mSurfaceTexture.release();
+                }
 
+                if (mSurface != null && mSurface.isValid()) {
+                    mSurface.release();
+                }
+
+                if (mSurfaceTextureID != null) {
+                    GLES20.glDeleteTextures(mSurfaceTextureID.length, mSurfaceTextureID, 0);
+                }
+
+                if (mDisplayFilter != null) {
+                    mDisplayFilter.destroy();
+                }
+
+                if (mOESFilter != null) {
+                    mOESFilter.destroy();
+                }
             }
         });
         mVideoDecoder.start();
@@ -113,12 +143,14 @@ public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
         }
 
         if (mVideoDecoder != null) {
-            mVideoDecoder.readyForRender();
+            mVideoDecoder.getDecoder().readyForRender();
         }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        if (mRelease) return;
+
         if (mUpdateTexture) {
             mSurfaceTexture.updateTexImage();
             mUpdateTexture = false;
@@ -128,8 +160,8 @@ public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
             int width = 0;
             int height = 0;
             if (mVideoDecoder != null) {
-                width = mVideoDecoder.getVideoWidth();
-                height = mVideoDecoder.getVideoHeight();
+                width = mVideoDecoder.getDecoder().getVideoWidth();
+                height = mVideoDecoder.getDecoder().getVideoHeight();
             }
             mOESFilter.setTextureWH(width, height);
             mOESFilter.initFrameBufferOfTextureSize();
@@ -142,34 +174,21 @@ public class MediaPlayer extends FrameLayout implements GLSurfaceView.Renderer {
 
     public void pause(boolean pause) {
         if (mVideoDecoder != null) {
-            mVideoDecoder.setPause(pause);
+            mVideoDecoder.getDecoder().setPause(pause);
+        }
+    }
+
+    public void setRepeatMode(boolean repeat) {
+        if (mVideoDecoder != null) {
+            mVideoDecoder.getDecoder().setRepeat(repeat);
         }
     }
 
     public void destroy(){
+        mRelease = true;
+
         if (mVideoDecoder != null) {
             mVideoDecoder.release();
-        }
-
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
-        }
-
-        if (mSurface != null && mSurface.isValid()) {
-            mSurface.release();
-        }
-
-        if (mSurfaceTextureID != null)
-        {
-            GLES20.glDeleteTextures(mSurfaceTextureID.length, mSurfaceTextureID, 0);
-        }
-
-        if (mDisplayFilter != null) {
-            mDisplayFilter.destroy();
-        }
-
-        if (mOESFilter != null) {
-            mOESFilter.destroy();
         }
     }
 }

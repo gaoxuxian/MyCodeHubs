@@ -88,27 +88,12 @@ public class EglCore extends Object {
 
         // 3: 获取 想要的 EGL framebuffer 配置
         int[] num_config = new int[1];
-        // 3-1: 根据外部指定的 config 获取符合条件的 EGL config list size
-        if (!EGL14.eglChooseConfig(mEglDisplay, mAttributeValue, 0, null, 0, 0, num_config, 0)) {
-            mEglDisplay = EGL14.EGL_NO_DISPLAY;
-            throw new RuntimeException("initEglContext() chooseConfig failed");
-        }
-
-        if (num_config[0] <= 0) {
-            mEglDisplay = EGL14.EGL_NO_DISPLAY;
-            throw new RuntimeException("initEglContext() no configs match configSpec");
-        }
-
-        // 3-2: 根据获取到的 size 获取具体 config list
-        EGLConfig[] configs = new EGLConfig[num_config[0]];
-
-        if (!EGL14.eglChooseConfig(mEglDisplay, mAttributeValue, 0, configs, 0, num_config[0], num_config, 0)) {
+        EGLConfig[] configs = new EGLConfig[1];
+        if (!EGL14.eglChooseConfig(mEglDisplay, mAttributeValue, 0, configs, 0, num_config.length, num_config, 0)) {
             mEglDisplay = EGL14.EGL_NO_DISPLAY;
             throw new RuntimeException("initEglContext() chooseConfig failed #2");
         }
-
-        // 3-3: 根据子类的需要, 筛选出最适合的 config
-        mEglConfig = getFitConfig(mEglDisplay, configs);
+        mEglConfig = configs[0];
 
         if (mEglConfig == null) {
             mEglDisplay = EGL14.EGL_NO_DISPLAY;
@@ -127,31 +112,6 @@ public class EglCore extends Object {
             mEglConfig = null;
             throw new RuntimeException("initEglContext() create egl context failure");
         }
-    }
-
-    private EGLConfig getFitConfig(EGLDisplay display, EGLConfig[] config_arr) {
-        for (EGLConfig config : config_arr) {
-            int d = findConfigAttribute(display, config, EGL14.EGL_DEPTH_SIZE, 0);
-            int s = findConfigAttribute(display, config, EGL14.EGL_STENCIL_SIZE, 0);
-
-            if ((d >= mDepthSize) && (s >= mStencilSize)) {
-                int r = findConfigAttribute(display, config, EGL14.EGL_RED_SIZE, 0);
-                int g = findConfigAttribute(display, config, EGL14.EGL_GREEN_SIZE, 0);
-                int b = findConfigAttribute(display, config, EGL14.EGL_BLUE_SIZE, 0);
-                int a = findConfigAttribute(display, config, EGL14.EGL_ALPHA_SIZE, 0);
-                if ((r == mRedSize) && (g == mGreenSize) && (b == mBlueSize) && (a == mAlphaSize)) {
-                    return config;
-                }
-            }
-        }
-        return null;
-    }
-
-    private int findConfigAttribute(EGLDisplay display, EGLConfig config, int attribute, int defaultValue) {
-        if (EGL14.eglGetConfigAttrib(display, config, attribute, mAttributeValue, 0)) {
-            return mAttributeValue[0];
-        }
-        return defaultValue;
     }
 
     /**

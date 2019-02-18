@@ -27,6 +27,7 @@ public class Encoder {
         MediaFormat format = MediaFormat.createVideoFormat("video/avc", width, height);
 
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
+//        format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatRGBAFlexible);
         format.setInteger(MediaFormat.KEY_BIT_RATE, bitrate);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
@@ -62,11 +63,12 @@ public class Encoder {
             encoder.signalEndOfInputStream();
         }
 
-        int outputBufferIndex = encoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
-
         while (true) {
+            int outputBufferIndex = encoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
             if (outputBufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER){
                 if (!endOfStream) {
+                    break;
+                } else if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                     break;
                 }
             } else if (outputBufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {

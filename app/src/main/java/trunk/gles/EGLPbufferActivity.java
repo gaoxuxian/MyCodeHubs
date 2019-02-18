@@ -1,10 +1,6 @@
 package trunk.gles;
 
-import lib.gl.egl.ComponentSizeChooser;
-import lib.gl.egl.ComponentSizeChooser14;
-import lib.gl.egl.EGLMgr;
-import lib.gl.egl.EGLMgr10;
-import lib.gl.egl.EGLMgr14;
+import lib.gl.egl.*;
 import lib.gl.filter.common.BmpToTextureFilter;
 import trunk.BaseActivity;
 import trunk.R;
@@ -24,6 +20,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 public class EGLPbufferActivity extends BaseActivity
@@ -57,20 +55,12 @@ public class EGLPbufferActivity extends BaseActivity
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
 
-            EGLMgr eglMgr = null;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            {
-                EGLMgr14 mgr = new EGLMgr14();
-                mgr.setUpEglBackgroundEnvironment(glesVersion, new ComponentSizeChooser14(glesVersion, 8, 8, 8, 8, 0, 0), width, height);
-                eglMgr = mgr;
-            }
-            else
-            {
-                EGLMgr10 mgr = new EGLMgr10();
-                mgr.setUpEglBackgroundEnvironment(glesVersion, new ComponentSizeChooser(glesVersion, 8, 8, 8, 8, 0, 0), width, height);
-                eglMgr = mgr;
-            }
+            EglCore egl = new EglCore();
+            egl.setConfig(ctx, 8, 8, 8, 8, 0, 0, false);
+            egl.initEglContext(null);
+            EglSurfaceBase eglSurfaceBase = new EglSurfaceBase(egl);
+            eglSurfaceBase.createPbufferSurface(width, height);
+            eglSurfaceBase.makeCurrent();
 
             BmpToTextureFilter filter = new BmpToTextureFilter(ctx);
             filter.onSurfaceCreated(null);
@@ -78,22 +68,11 @@ public class EGLPbufferActivity extends BaseActivity
             filter.setBitmapRes(bitmap);
             filter.onDrawFrame(0);
 
-            int[] iat = new int[width * height];
-            IntBuffer byteBuffer = IntBuffer.allocate(width * height);
-            GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
-
-            int[] array = byteBuffer.array();
-
-            for (int i = 0; i < height; i++)
-            {
-                System.arraycopy(array, i * width, iat, (height - i - 1) * width, width);
-            }
-
-            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            out.copyPixelsFromBuffer(IntBuffer.wrap(iat));
+            Bitmap out = eglSurfaceBase.getOutputBitmapFromFrame();
 
             filter.destroy();
-            eglMgr.destroy();
+            eglSurfaceBase.releaseEglSurface();
+            egl.release();
 
             ThreadUtil.runOnUiThread(() ->
             {

@@ -1,4 +1,4 @@
-package lib.gl.video;
+package lib.gl.decode;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;

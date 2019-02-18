@@ -1,4 +1,4 @@
-package lib.gl.video;
+package lib.gl.decode;
 
 public interface AbsDecoder extends Runnable{
     void setPause(boolean pause);

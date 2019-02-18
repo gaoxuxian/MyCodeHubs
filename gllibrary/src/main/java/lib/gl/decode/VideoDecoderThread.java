@@ -1,4 +1,4 @@
-package lib.gl.video;
+package lib.gl.decode;
 
 import android.util.Log;
 import android.view.Surface;

@@ -1,5 +1,6 @@
 package trunk.android;
 
+import android.media.MediaCodecInfo;
 import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
@@ -54,38 +55,24 @@ public class EncodeActivity extends BaseActivity {
 
         String encoderForFormat = list.findEncoderForFormat(videoFormat);
 
-//        MediaCodec encoder = null;
-//        MediaCodec encoderByType = null;
-//        try
-//        {
-//            encoder = MediaCodec.createByCodecName(encoderForFormat);
-//            encoderByType = MediaCodec.createEncoderByType("video/avc");
-//
-//            encoder.createInputSurface();
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        MediaCodecInfo[] codecInfos = list.getCodecInfos();
-//
-//        for (MediaCodecInfo info : codecInfos)
-//        {
-//            if (!info.isEncoder())
-//            {
-//                continue;
-//            }
-//
-//            Log.d("xxx", "onCreateFinish: Encoder MediaCodecInfo name is : " + info.getName() + "\n");
-//
-//            String[] supportedTypes = info.getSupportedTypes();
-//
-//            for (String supportType : supportedTypes)
-//            {
-//                Log.d("xxx", "onCreateFinish: Encoder MediaCodecInfo support : " + supportType + "\n");
-//            }
-//        }
+        MediaCodecInfo[] codecInfos = list.getCodecInfos();
+
+        for (MediaCodecInfo info : codecInfos)
+        {
+            if (!info.isEncoder())
+            {
+                continue;
+            }
+
+            Log.d("xxx", "onCreateFinish: Encoder MediaCodecInfo name is : " + info.getName() + "\n");
+
+            String[] supportedTypes = info.getSupportedTypes();
+
+            for (String supportType : supportedTypes)
+            {
+                Log.d("xxx", "onCreateFinish: Encoder MediaCodecInfo support : " + supportType + "\n");
+            }
+        }
     }
 
     public void startToEncode(){
@@ -95,7 +82,7 @@ public class EncodeActivity extends BaseActivity {
                 Context context = EncodeActivity.this;
                 int width = 720;
                 int height = 720;
-                int bitrate = (int) (width * height * 4 * 8 * 0.001f * 30 * 0.25f);
+                int bitrate = (int) (width * height * 4 * 8 /** 0.001f*/ * 30 * 0.25f);
                 Encoder encoder = new Encoder(width, height, bitrate, new File(getFilesDir(), "test_encode.mp4"));
                 EglCore egl = new EglCore();
                 egl.setConfig(context, 8, 8, 8, 8, 0, 0, true);
@@ -124,8 +111,9 @@ public class EncodeActivity extends BaseActivity {
                 displayImageFilter.onSurfaceChanged(width, height);
                 displayImageFilter.setTextureWH(width, height);
 
-                for (int i = 0; i < bmp_res.length; i++) {
-                    bmpToTextureFilter.setBitmapRes(bmp_res[i]);
+                for (int i = 0; i < 20; i++) {
+                    int index = i % 5;
+                    bmpToTextureFilter.setBitmapRes(bmp_res[index]);
                     int textureID = bmpToTextureFilter.onDrawBuffer(0);
 
                     for (int k = 0; k < 30; k++) {

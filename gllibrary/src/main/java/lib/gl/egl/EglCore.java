@@ -12,14 +12,7 @@ import lib.gl.util.GLUtil;
 public class EglCore extends Object {
     private static final int EGL_RECORDABLE_ANDROID = 0x3142;
 
-    private int mRedSize;
-    private int mGreenSize;
-    private int mBlueSize;
-    private int mAlphaSize;
-    private int mDepthSize;
-    private int mStencilSize;
     private int[] mAttributeValue;
-
     private int mEglContextVersion;
 
     private EGLDisplay mEglDisplay;
@@ -34,13 +27,6 @@ public class EglCore extends Object {
             mEglContextVersion = 3;
             render_type = EGLExt.EGL_OPENGL_ES3_BIT_KHR;
         }
-
-        mRedSize = redSize;
-        mGreenSize = greenSize;
-        mBlueSize = blueSize;
-        mAlphaSize = alphaSize;
-        mDepthSize = depthSize;
-        mStencilSize = stencilSize;
 
         mAttributeValue = new int[]{
                 EGL14.EGL_RED_SIZE, redSize, // r 通道大小

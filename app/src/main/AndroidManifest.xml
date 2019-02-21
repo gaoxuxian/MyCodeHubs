@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="trunk"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="trunk">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
 
     <application
-        android:name=".MyApplication"
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+            android:name=".MyApplication"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="false"
+            android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".MainActivity"
+                android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,47 +26,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AndroidActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".AndroidActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".OpenGLActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".OpenGLActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.SplitScreenActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.SplitScreenActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.SplitScreenV2Activity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.SplitScreenV2Activity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.SplitScreenV3Activity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.SplitScreenV3Activity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.FuzzyActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.FuzzyActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.GhostingActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.GhostingActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.TransitionActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.TransitionActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".android.MyMediaPlayerActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".android.MyMediaPlayerActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".gles.EGLPbufferActivity"
-            android:theme="@style/AppTheme.FullScreen">
+                android:name=".gles.EGLPbufferActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity android:name=".android.EncodeActivity"
-                  android:theme="@style/AppTheme.FullScreen">
+        <activity
+                android:name=".android.EncodeActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.AudioActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.SoundRecordActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
     </application>
 

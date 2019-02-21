@@ -40,6 +40,7 @@ public class ActivityItemAdapter extends RecyclerView.Adapter implements View.On
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Button item = new Button(parent.getContext());
+        item.setAllCaps(false);
         item.setOnClickListener(this);
         item.setGravity(Gravity.CENTER);
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(360), PxUtil.sV_1080p(300));

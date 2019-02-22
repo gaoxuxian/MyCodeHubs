@@ -19,3 +19,6 @@
   答：单个采样数据全部声道所用的字节数 --> 32 / 8 * 4 = 16 (字节:byte)
       10秒内，采样数据的总量 --> 48000 * 10 = 480000 (个);
       总量占内存 --> 480000 * 16 = 7680000 (字节:byte) --> size = 7680000 / 1024 / 1024 = 7.32 (Mb)
+
+7、AudioRecord 录音时，需要写入 MediaFormat.KEY_AAC_PROFILE --> MediaCodecInfo.CodecProfileLevel.AACObjectLC
+                      并且使用 AudioRecord 读取数据时，需要跟音频编码区分，使用两个线程管理，确保不阻塞数据读取

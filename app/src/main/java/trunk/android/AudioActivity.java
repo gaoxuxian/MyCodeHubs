@@ -2,6 +2,7 @@ package trunk.android;
 
 import android.content.Context;
 import android.media.*;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,9 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onCreateBaseData() throws Exception {
-        mPath = getFilesDir() + "/music_test_1.mp3";
+//        mPath = getFilesDir() + "/music_test_1.mp3";
 //        mPath = getFilesDir() + "/test_record_voice.aac";
+        mPath = getFilesDir() + "/test_record_audio_v2.aac";
     }
 
     @Override
@@ -170,6 +172,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                                         if (bufferInfo.size > 0) {
                                             mAudioTrack.write(outputBuffer, bufferInfo.size, AudioTrack.WRITE_BLOCKING);
                                             mAudioTrack.play();
+                                            Log.d("xxx", "播放时间 == " + bufferInfo.presentationTimeUs);
                                         }
 
                                         decoder.releaseOutputBuffer(outputBufferIndex, false);

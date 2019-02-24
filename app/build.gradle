@@ -43,4 +43,5 @@ dependencies {
     implementation project(':utillibrary')
     implementation project(':gllibrary')
     implementation project(':widgetlibrary')
+    implementation project(':clibrary')
 }

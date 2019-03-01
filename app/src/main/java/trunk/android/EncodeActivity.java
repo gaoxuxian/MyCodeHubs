@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+import dalvik.system.DexClassLoader;
 import lib.gl.egl.EglCore;
 import lib.gl.egl.EglSurfaceBase;
 import lib.gl.encode.Encoder;
@@ -22,6 +23,11 @@ import android.widget.FrameLayout;
 import trunk.R;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 
 public class EncodeActivity extends BaseActivity {
 
@@ -111,7 +117,7 @@ public class EncodeActivity extends BaseActivity {
                 displayImageFilter.onSurfaceChanged(width, height);
                 displayImageFilter.setTextureWH(width, height);
 
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 10; i++) {
                     int index = i % 5;
                     bmpToTextureFilter.setBitmapRes(bmp_res[index]);
                     int textureID = bmpToTextureFilter.onDrawBuffer(0);
@@ -120,6 +126,30 @@ public class EncodeActivity extends BaseActivity {
                         encoder.drainEncoder(false);
                         displayImageFilter.onDrawFrame(textureID);
                         surfaceBase.setPresentationTime((i * 30 + k % 30) * 1000000000L / 30);
+//                        surfaceBase.setPresentationTime(System.nanoTime());
+                        surfaceBase.swapBuffers();
+                    }
+                }
+                encoder.drainEncoder(true);
+
+                encoder.reset(getFilesDir() + "/test_encode_reset.mp4");
+                inputSurface.release();
+                surfaceBase.releaseEglSurface();
+                inputSurface = encoder.getInputSurface();
+                surfaceBase = new EglSurfaceBase(egl);
+                surfaceBase.createWindowSurface(inputSurface);
+                surfaceBase.makeCurrent();
+
+                for (int i = 0; i < 10; i++) {
+                    int index = i % 5;
+                    bmpToTextureFilter.setBitmapRes(bmp_res[index]);
+                    int textureID = bmpToTextureFilter.onDrawBuffer(0);
+
+                    for (int k = 0; k < 30; k++) {
+                        encoder.drainEncoder(false);
+                        displayImageFilter.onDrawFrame(textureID);
+                        surfaceBase.setPresentationTime((i * 30 + k % 30) * 1000000000L / 30);
+//                        surfaceBase.setPresentationTime(System.nanoTime());
                         surfaceBase.swapBuffers();
                     }
                 }

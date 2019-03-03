@@ -51,6 +51,14 @@ public class AndroidActivity extends BaseActivity {
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 LiveData");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "LiveDataActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

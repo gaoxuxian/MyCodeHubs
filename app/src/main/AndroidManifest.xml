@@ -77,6 +77,11 @@
                 android:name=".android.SoundRecordActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
+
+        <activity
+                android:name=".android.LiveDataActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
     </application>
 
 </manifest>

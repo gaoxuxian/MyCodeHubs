@@ -280,6 +280,9 @@ public class VideoDecoder implements AbsDecoder {
         boolean outputDone = false;
         boolean startExtract = true;
 
+        long currentFrameTime = 0;
+        boolean playBack = false;
+
         while (!outputDone) {
             synchronized (this) {
                 if (mPause) {
@@ -295,6 +298,13 @@ public class VideoDecoder implements AbsDecoder {
                     extractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
                     mPauseDuration = 0; // 暂停时间需要清零
                     startExtract = false;
+                } else if (!playBack && currentFrameTime > 7 * 1000 * 1000) {
+                    decoder.flush();
+                    extractor.seekTo(5 * 1000 * 1000, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
+                    playBack = true;
+                    mPauseDuration = 0;
+                    firstFrameTime = 0;
+                    Log.d(TAG, "doExtract: currentFrameTime == " + currentFrameTime);
                 }
                 int inputBufferIndex = decoder.dequeueInputBuffer(TIME_OUT_ESC);
 
@@ -355,12 +365,16 @@ public class VideoDecoder implements AbsDecoder {
                         if (mPause && !render) {
                             continue;
                         }
-
-                        long dNs = outputBufferInfo.presentationTimeUs * 1000L - (System.nanoTime() - mPauseDuration - firstFrameTime);
+                        long dNs = 0;
+                        if (playBack) {
+                            dNs = outputBufferInfo.presentationTimeUs * 1000L / 2 - (System.nanoTime() - mPauseDuration - firstFrameTime + 5L * 1000 * 1000 * 1000);
+                        } else {
+                            dNs = outputBufferInfo.presentationTimeUs * 1000L - (System.nanoTime() - mPauseDuration - firstFrameTime);
+                        }
                         long millis = dNs / 1000000L;
                         int nanos = (int) (dNs & 1000L);
 
-                        if (millis >= 0 && nanos >= 0) {
+                        if (millis > 0 && nanos > 0) {
                             try {
                                 Thread.sleep(millis, nanos);
                             } catch (InterruptedException e) {
@@ -371,6 +385,8 @@ public class VideoDecoder implements AbsDecoder {
                         if (mRelease) {
                             break;
                         }
+
+                        currentFrameTime = outputBufferInfo.presentationTimeUs;
                     }
 
                     decoder.releaseOutputBuffer(outputBufferIndex, render);

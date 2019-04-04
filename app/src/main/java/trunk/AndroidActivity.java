@@ -67,6 +67,38 @@ public class AndroidActivity extends BaseActivity {
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 MotionEvent");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "EventTestActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 rewind 视频");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "RewindTestActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 Service");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "ServiceTestActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 Window");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "WindowTestActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

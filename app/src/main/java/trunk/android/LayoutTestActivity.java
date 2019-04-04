@@ -1,6 +1,7 @@
 package trunk.android;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -75,6 +76,18 @@ public class LayoutTestActivity extends BaseActivity {
             btn3.setId(View.generateViewId());
             btn3.setAllCaps(false);
             btn3.setText("button_3");
+            btn3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Test test1 = null;
+                    Test test2 = null;
+                    test1 = new Test();
+                    test2 = test1;
+                    test1 = new Test();
+                    Log.d("xxx", "onClick: test1 = " + test1);
+                    Log.d("xxx", "onClick: test2 = " + test2);
+                }
+            });
             cllp = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             cllp.bottomToTop = btn1.getId();
             cllp.leftToLeft = btn2.getId();
@@ -85,5 +98,15 @@ public class LayoutTestActivity extends BaseActivity {
     @Override
     public void onCreateFinish() {
 
+    }
+
+    public static class Test {
+        public static final ObjectTest LOCK = new ObjectTest();
+    }
+
+    public static class ObjectTest {
+        public ObjectTest() {
+            Log.d("xxx", "ObjectTest: ");
+        }
     }
 }

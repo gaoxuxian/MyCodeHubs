@@ -2,6 +2,7 @@ package trunk.android;
 
 import android.content.Context;
 import android.media.*;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -32,7 +33,8 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     public void onCreateBaseData() throws Exception {
 //        mPath = getFilesDir() + "/music_test_1.mp3";
 //        mPath = getFilesDir() + "/test_record_voice.aac";
-        mPath = getFilesDir() + "/test_record_audio_v2.aac";
+//        mPath = getFilesDir() + "/test_record_audio_v2.aac";
+        mPath = Environment.getExternalStorageDirectory() + "/test_music.aac";
     }
 
     @Override

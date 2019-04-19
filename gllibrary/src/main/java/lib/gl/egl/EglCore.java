@@ -224,6 +224,14 @@ public class EglCore extends Object {
         mEglConfig = null;
     }
 
+    public EGLConfig getEglConfig() {
+        return mEglConfig;
+    }
+
+    public int getError() {
+        return EGL14.eglGetError();
+    }
+
     @Override
     protected void finalize() throws Throwable {
         try {

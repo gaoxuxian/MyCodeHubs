@@ -155,11 +155,11 @@ public class GPUImageTransitionFilter extends AbsFilter<GPUTransitionFilterType>
         draw(frontTextureID, backTextureID, false);
     }
 
-    public int onDrawBuffer(int lastTextureID, int frontTextureID, int backTextureID)
+    public int onDrawBuffer(int frontTextureID, int backTextureID)
     {
         if (!GLES20.glIsProgram(getProgram()))
         {
-            return lastTextureID;
+            return frontTextureID;
         }
 
         if (mFrameBufferMgr != null)
@@ -174,7 +174,7 @@ public class GPUImageTransitionFilter extends AbsFilter<GPUTransitionFilterType>
             return mFrameBufferMgr.getCurrentTextureId();
         }
 
-        return lastTextureID;
+        return frontTextureID;
     }
 
     public void setStartTimeValue(long start)

@@ -14,6 +14,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="false"
             android:theme="@style/AppTheme">
+        <activity android:name=".gles.GLCustomViewActivity">
+        </activity>
         <activity android:name=".android.RhythmTestActivity">
         </activity>
         <activity android:name=".android.WindowTestActivity">

@@ -34,16 +34,22 @@ public class EglSurfaceBase {
      *
      * @param surface May be a Surface or SurfaceTexture.
      */
-    public void createWindowSurface(Surface surface) {
-        if (mEGLSurface != EGL14.EGL_NO_SURFACE) {
-            throw new IllegalStateException("surface already created");
-        }
+    public boolean createWindowSurface(Surface surface) {
+//        if (mEGLSurface != EGL14.EGL_NO_SURFACE) {
+//            throw new IllegalStateException("surface already created");
+//        }
+        releaseEglSurface();
         mEGLSurface = mEglCore.createWindowSurface(surface);
+
+        if (mEGLSurface == null || mEGLSurface == EGL14.EGL_NO_SURFACE) {
+            return false;
+        }
 
         // Don't cache width/height here, because the size of the underlying surface can change
         // out from under us (see e.g. HardwareScalerActivity).
         //mWidth = mEglCore.querySurface(mEGLSurface, EGL14.EGL_WIDTH);
         //mHeight = mEglCore.querySurface(mEGLSurface, EGL14.EGL_HEIGHT);
+        return true;
     }
 
     /**
@@ -56,6 +62,10 @@ public class EglSurfaceBase {
         mEGLSurface = mEglCore.createPbufferSurface(width, height);
         mWidth = width;
         mHeight = height;
+    }
+
+    public boolean isCreatedSurface() {
+        return mEGLSurface != EGL14.EGL_NO_SURFACE;
     }
 
     /**
@@ -113,12 +123,13 @@ public class EglSurfaceBase {
      *
      * @return false on failure
      */
-    public boolean swapBuffers() {
+    public int swapBuffers() {
         boolean result = mEglCore.swapBuffers(mEGLSurface);
         if (!result) {
             Log.d(TAG, "WARNING: swapBuffers() failed");
+            return mEglCore.getError();
         }
-        return result;
+        return EGL14.EGL_SUCCESS;
     }
 
     /**

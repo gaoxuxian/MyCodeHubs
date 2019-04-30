@@ -1,8 +1,8 @@
 package lib.gl.fbo;
 
 import android.content.Context;
-
 import lib.gl.util.GLUtil;
+
 
 /**
  * @author Gxx
@@ -96,5 +96,10 @@ public class FrameBufferMgr extends AbsFboMgr
             mMgr.destroy();
             mMgr = null;
         }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return mMgr != null;
     }
 }

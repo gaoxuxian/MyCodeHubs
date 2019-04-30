@@ -53,6 +53,11 @@ public class GLCustomViewActivity extends BaseActivity {
                 GLES20.glClearColor(0.5f, 1*dt, 0, 1);
                 GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             }
+
+            @Override
+            public void onDrawSucceed() {
+
+            }
         });
         view.setRenderMode(MyRenderView.RENDERMODE_WHEN_DIRTY);
         params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

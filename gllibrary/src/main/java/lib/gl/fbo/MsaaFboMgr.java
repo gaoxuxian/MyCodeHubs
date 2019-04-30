@@ -220,8 +220,7 @@ class MsaaFboMgr extends AbsFboMgr
     @Override
     public boolean bindNext(int textureID)
     {
-        throw new RuntimeException("当前手机 OpenGL ES 支持版本在 3.0 以上,"+
-                "但 MsaaFboMgr 暂不支持直接挂载纹理作为颜色附着, " + "如需绑定, 请使用 bindNext() 绑定已定义的颜色附着, 并将纹理绘制到fbo");
+        throw new RuntimeException("当前手机 OpenGL ES 支持版本在 3.0 以上," + "但 MsaaFboMgr 暂不支持直接挂载纹理作为颜色附着, " + "如需必要, 请使用 bindNext() 绑定已定义的颜色附着, 并将纹理绘制到fbo");
     }
 
     private boolean bindByIndex(int index)
@@ -256,8 +255,8 @@ class MsaaFboMgr extends AbsFboMgr
 
             GLES30.glBlitFramebuffer(0, 0, mBufferWidth, mBufferHeight, 0, 0, mBufferWidth, mBufferHeight, GLES30.GL_COLOR_BUFFER_BIT, GLES30.GL_LINEAR);
 
-            GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER,0);
-            GLES30.glBindFramebuffer(GLES30.GL_DRAW_FRAMEBUFFER,0);
+            GLES30.glBindFramebuffer(GLES30.GL_READ_FRAMEBUFFER, 0);
+            GLES30.glBindFramebuffer(GLES30.GL_DRAW_FRAMEBUFFER, 0);
             GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
 
             return mTexture2dArr[index];
@@ -325,5 +324,10 @@ class MsaaFboMgr extends AbsFboMgr
             GLES30.glDeleteRenderbuffers(size, mDepthStencilRenderBufferArr, 0);
             mDepthStencilRenderBufferArr = null;
         }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return mFrameBufferArr != null;
     }
 }

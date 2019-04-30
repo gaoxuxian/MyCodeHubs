@@ -22,7 +22,7 @@ class TextureFboMgr20 extends AbsFboMgr
         {
             throw new RuntimeException("Open GL ES2.0 不能在同一个 FrameBuffer 上同时挂载深度和模板缓冲区 \n" +
                     "(原因: fbo 同时挂载深度、模板rbo, 需要的格式是 GLES30.GL_DEPTH24_STENCIL8) \n" +
-                    "如需同时挂载, 请使用 TextureFboMgr30, 使用前请确保手机支持 Open GL ES 3.0或以上 \n " +
+                    "如需必要, 请使用 TextureFboMgr30, 使用前请确保手机支持 Open GL ES 3.0或以上 \n " +
                     "详情请参考: https://www.khronos.org/opengl/wiki/Common_Mistakes");
         }
 
@@ -249,5 +249,10 @@ class TextureFboMgr20 extends AbsFboMgr
             GLES20.glDeleteRenderbuffers(size, mDepthStencilRenderBufferArr, 0);
             mDepthStencilRenderBufferArr = null;
         }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return mFrameBufferArr != null;
     }
 }

@@ -258,4 +258,9 @@ class TextureFboMgr30 extends AbsFboMgr
             mDepthStencilRenderBufferArr = null;
         }
     }
+
+    @Override
+    public boolean isAvailable() {
+        return mFrameBufferArr != null;
+    }
 }

@@ -155,4 +155,7 @@ public abstract class AbsFboMgr
     public abstract int getPreviousTextureId();
 
     public abstract void destroy();
+
+    public abstract boolean isAvailable();
+
 }

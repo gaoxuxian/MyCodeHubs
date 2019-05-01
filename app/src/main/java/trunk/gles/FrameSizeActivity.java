@@ -27,10 +27,14 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     private Button pauseBtn;
     private Button fullInBtn;
     private Button notFullInBtn;
+    private Button showSizeBtn;
+    private Button unshowSizeBtn;
+    private Button rotationBtn;
 
     ArrayList<FrameSizeInfo> mFrameSizeData;
 
     boolean mCanDraw;
+    final float DEGREE = 45;
 
     @Override
     public void onCreateBaseData() throws Exception {
@@ -80,6 +84,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PxUtil.sU_1080p(200));
             cl.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
             cl.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+            cl.topMargin = PxUtil.sU_1080p(100);
             layout.addView(mFrameSizeListView, cl);
 
             MyAdapter adapter = new MyAdapter();
@@ -165,6 +170,51 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             cl.topToBottom = pauseBtn.getId();
             cl.leftToRight = fullInBtn.getId();
             layout.addView(notFullInBtn, cl);
+
+            showSizeBtn = new Button(context);
+            showSizeBtn.setId(View.generateViewId());
+            showSizeBtn.setAllCaps(false);
+            showSizeBtn.setText("cut frame size");
+            showSizeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setCutFrameSize(true);
+                }
+            });
+            cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            cl.topToBottom = fullInBtn.getId();
+            cl.leftToLeft = fullInBtn.getId();
+            layout.addView(showSizeBtn, cl);
+
+            unshowSizeBtn = new Button(context);
+            unshowSizeBtn.setId(View.generateViewId());
+            unshowSizeBtn.setAllCaps(false);
+            unshowSizeBtn.setText("uncut frame size");
+            unshowSizeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setCutFrameSize(false);
+                }
+            });
+            cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            cl.topToBottom = notFullInBtn.getId();
+            cl.leftToRight = showSizeBtn.getId();
+            layout.addView(unshowSizeBtn, cl);
+
+            rotationBtn = new Button(context);
+            rotationBtn.setId(View.generateViewId());
+            rotationBtn.setAllCaps(false);
+            rotationBtn.setText("add "+ DEGREE + "°");
+            rotationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDegree += DEGREE;
+                }
+            });
+            cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            cl.topToBottom = showSizeBtn.getId();
+            cl.leftToLeft = showSizeBtn.getId();
+            layout.addView(rotationBtn, cl);
         }
     }
 
@@ -173,7 +223,28 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
     }
 
-    int mFrameSize = FrameSizeType.size_1_1;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mGlView != null) {
+            mGlView.onPause();
+        }
+
+        if (mBmpToTextureFilter != null) {
+            mBmpToTextureFilter.destroy();
+        }
+
+        if (mFrameSizeFilter != null) {
+            mFrameSizeFilter.destroy();
+        }
+
+        if (mDisplayFilter != null) {
+            mDisplayFilter.destroy();
+        }
+    }
+
+    int mFrameSize = FrameSizeType.size_3_4;
 
     private void setFrameSize(int size) {
         mFrameSize = size;
@@ -185,6 +256,14 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     private void setScaleFullIn(boolean fullIn) {
         mScaleFullIn = fullIn;
     }
+
+    boolean mCutFrameSize = true;
+
+    private void setCutFrameSize(boolean cut) {
+        mCutFrameSize = cut;
+    }
+
+    float mDegree;
 
     TextureFilter mBmpToTextureFilter;
     FrameSizeFilter mFrameSizeFilter;
@@ -221,9 +300,12 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
             if (mFrameSizeFilter != null) {
                 mFrameSizeFilter.setVideoFrameSize(mFrameSize);
+                mFrameSizeFilter.setFrameSizeCut(!mCutFrameSize);
                 mFrameSizeFilter.setScaleFullIn(mScaleFullIn);
+                mFrameSizeFilter.setRotation(mDegree);
                 mFrameSizeFilter.setTextureWH(mBmpToTextureFilter.getTextureW(), mBmpToTextureFilter.getTextureH());
                 texture = mFrameSizeFilter.onDrawBuffer(texture);
+                mDisplayFilter.setTextureWH(mFrameSizeFilter.getTextureW(), mFrameSizeFilter.getTextureH());
             }
 
             mDisplayFilter.onDrawFrame(texture);

@@ -49,10 +49,24 @@ public class DisplayFilter extends GPUImageFilter {
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
-        matrix.frustum(-1, 1, -1, 1, 3, 7);
+        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
+        matrix.frustum(-1, 1, -vs, vs, 3, 7);
 
         matrix.pushMatrix();
+        float x_scale = 1f;
+        float y_scale = getTextureH() != 0 && getTextureW() != 0 ? (float) getTextureH() / getTextureW() : 1f;
+
+        float scale = Math.min(1f, vs / y_scale);
+        matrix.scale(x_scale * scale, y_scale * scale, 1f);
+
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
+    }
+
+    @Override
+    public void onDrawFrame(int textureID) {
+        GLES20.glClearColor(0, 0, 0, 1);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        super.onDrawFrame(textureID);
     }
 }

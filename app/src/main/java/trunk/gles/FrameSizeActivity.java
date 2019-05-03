@@ -305,6 +305,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                         public void onAnimationUpdate(ValueAnimator animation) {
                             float value = (float) animation.getAnimatedValue();
                             float degree = mUIDegree;
+                            requestToDoScaleAnim(FrameSizeHelper.scale_type_full_in, value);
                             requestToRotateAnim(mUIDegree + DEGREE, degree +  DEGREE * value, value);
                         }
                     });
@@ -313,6 +314,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                         public void onAnimationEnd(Animator animation) {
                             mUIDegree += DEGREE;
                             setRotation(mUIDegree);
+                            setScaleType(FrameSizeHelper.scale_type_full_in);
 
                         }
                     });

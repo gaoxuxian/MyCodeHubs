@@ -174,8 +174,8 @@ public class FrameSizeFilter extends GPUImageFilter {
         }
     }
 
-    private int mNextScaleType;
-    private int mCurrentScaleType;
+    private volatile int mNextScaleType;
+    private volatile int mCurrentScaleType;
 
     public void requestToDoScaleAnim(int nextScaleType, float factor) {
         mNextScaleType = nextScaleType;
@@ -211,7 +211,7 @@ public class FrameSizeFilter extends GPUImageFilter {
     }
 
     // 记录当前旋转角度
-    private float mDegree;
+    private volatile float mDegree;
 
     /**
      * 顺时针方向为正，不能为负数
@@ -231,7 +231,7 @@ public class FrameSizeFilter extends GPUImageFilter {
         }
     }
 
-    private boolean mCutFrameSize;
+    private volatile boolean mCutFrameSize;
 
     /**
      * 设置是否需要裁剪画幅区域

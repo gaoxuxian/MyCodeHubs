@@ -67,25 +67,19 @@ public class FrameSizeFilter extends GPUImageFilter {
         // 根据画幅, 调整纹理的顶点坐标
         performFrameSizeCalculation();
 
-        if (mDegree == 90 || mDegree == 270) {
-            int tempW = getTextureW();
-            int tempH = getTextureH();
-            tempW = tempH + tempW;
-            tempH = tempW - tempH;
-            tempW = tempW - tempH;
-            setTextureWH(tempW, tempH);
-        }
+        int textureW = getTextureW();
+        int textureH = getTextureH();
 
         matrix.pushMatrix();
-        float x_scale = getTextureW() >= getTextureH() ? 1f : (float) getTextureW() / getTextureH();
-        float y_scale = getTextureH() > getTextureW() ? 1f : (float) getTextureH() / getTextureW();
+        float x_scale = textureW >= textureH ? 1f : (float) textureW / textureH;
+        float y_scale = textureH > textureW ? 1f : (float) textureH / textureW;
         // 根据画幅的近平面的顶点坐标, 计算纹理顶点坐标的缩放比例
         /*
         逻辑：顶点坐标的范围，就是纹理在三维坐标世界的绘制区域，那么换一个角度想，顶点与顶点之间的距离，就是纹理在三维坐标世界的宽高，
             所以这里的缩放关系是，### 原纹理的区域 要缩放到 近平面的区域 ###
          */
-        float scale =  mHelper.handleScaleFullInAnimation(getFrameSizeW(), getFrameSizeH(), 
-                getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType);
+        float scale = mHelper.handleScaleFullInAnimation(getFrameSizeW(), getFrameSizeH(),
+                getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType, mDegree, mNextDegree);
         // GL 矩阵是前乘关系（粗暴理解，后写的代码先执行），旋转要考虑缩放问题
         /*
         逻辑：如何理解旋转要考虑缩放问题？要清楚旋转之前，纹理的宽高缩放比例是基于什么角度的！！！
@@ -101,13 +95,8 @@ public class FrameSizeFilter extends GPUImageFilter {
             matrix.rotate();
             matrix.scale();
          */
-        if (mDegree == 90 || mDegree == 270) {
-            matrix.scale(x_scale * scale, y_scale * scale, 1f);
-            matrix.rotate(-mDegree, 0, 0, 1);
-        } else {
-            matrix.rotate(-mDegree, 0, 0, 1);
-            matrix.scale(x_scale * scale, y_scale * scale, 1f);
-        }
+        matrix.rotate(-mDegree, 0, 0, 1);
+        matrix.scale(x_scale * scale, y_scale * scale, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }
@@ -165,7 +154,8 @@ public class FrameSizeFilter extends GPUImageFilter {
      * 在比例不相等的情况下，无法直接绘制
      */
     @Override
-    public void onDrawFrame(int textureID) {}
+    public void onDrawFrame(int textureID) {
+    }
 
     @Override
     protected boolean needInitMsaaFbo() {
@@ -196,8 +186,8 @@ public class FrameSizeFilter extends GPUImageFilter {
 
     /**
      * 设置图片缩放方式
-     *
-//     * @param fullIn true-铺满(最短边顶边适配)，false-居中(最长边顶边适配)
+     * <p>
+     * //     * @param fullIn true-铺满(最短边顶边适配)，false-居中(最长边顶边适配)
      */
     public void setScaleType(int type) {
         mCurrentScaleType = type;
@@ -228,12 +218,24 @@ public class FrameSizeFilter extends GPUImageFilter {
      */
     public void setRotation(@FloatRange(from = 0) float degree) {
         mDegree = (degree % 360f);
+        mNextDegree = mDegree;
+    }
+
+    private volatile float mNextDegree;
+
+    public void requestToRotateAnim(float nextDegree, float currentDegree, float factor) {
+        mNextDegree = (nextDegree % 360f);
+        mDegree = (currentDegree % 360f);
+        if (mHelper != null) {
+            mHelper.setAnimFactor(factor);
+        }
     }
 
     private boolean mCutFrameSize;
 
     /**
      * 设置是否需要裁剪画幅区域
+     *
      * @param needToCut true --> 根据画幅, 裁剪出具体区域, false -->
      */
     public void setFrameSizeCut(boolean needToCut) {
@@ -271,7 +273,6 @@ public class FrameSizeFilter extends GPUImageFilter {
     }
 
     /**
-     *
      * @return 画幅宽
      */
     private int getFrameSizeW() {
@@ -279,7 +280,6 @@ public class FrameSizeFilter extends GPUImageFilter {
     }
 
     /**
-     *
      * @return 画幅高
      */
     private int getFrameSizeH() {

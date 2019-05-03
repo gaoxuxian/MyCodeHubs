@@ -18,29 +18,6 @@ public class FrameSizeHelper {
         mMatrix = new Matrix();
     }
 
-    private int mViewportWidth;
-    private int mViewportHeight;
-
-    /**
-     * 设置视口
-     * @param width
-     * @param height
-     */
-    public void setViewport(int width, int height) {
-        mViewportWidth = width;
-        mViewportHeight = height;
-    }
-
-    private int mFrameSizeType;
-
-    /**
-     * 设置画幅类型
-     * @param sizeType
-     */
-    public void setFrameSize(int sizeType) {
-        mFrameSizeType = sizeType;
-    }
-
     private PointF mLTPoint = new PointF();
     private PointF mRTPoint = new PointF();
     private PointF mLBPoint = new PointF();
@@ -127,6 +104,40 @@ public class FrameSizeHelper {
         } else {
             return 1f;
         }
+    }
+
+    public float handleScaleFullInAnimation(int viewportW, int viewportH, int textureW, int textureH, int frameSizeType,
+                                            int currentScaleType, int nextScaleType, float currentDegree, float nextDegree) {
+
+        int width = textureW;
+        int height = textureH;
+
+        int tempW = width;
+        int tempH = height;
+
+        if ((currentDegree >= 90 && currentDegree < 180) || currentDegree >= 270) {
+            tempW = tempW + tempH;
+            tempH = tempW - tempH;
+            tempW = tempW - tempH;
+        }
+
+        float currentDegreeScale = handleScaleFullInAnimation(viewportW, viewportH, tempW, tempH, frameSizeType, currentScaleType, nextScaleType);
+
+        if (currentDegree != nextDegree) {
+            tempW = width;
+            tempH = height;
+            if (nextDegree == 90 || nextDegree == 270) {
+                tempW = tempW + tempH;
+                tempH = tempW - tempH;
+                tempW = tempW - tempH;
+            }
+
+            float nextDegreeScale = handleScaleFullInAnimation(viewportW, viewportH, tempW, tempH, frameSizeType, currentScaleType, nextScaleType);
+
+            return currentDegreeScale + (nextDegreeScale - currentDegreeScale) * mAnimFactor;
+        }
+
+        return currentDegreeScale;
     }
 
     public float getScaleX() {

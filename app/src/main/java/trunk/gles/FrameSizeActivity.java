@@ -299,22 +299,24 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             rotationBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ValueAnimator animator = ValueAnimator.ofFloat(0, DEGREE);
+                    ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
                     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
                             float value = (float) animation.getAnimatedValue();
                             float degree = mUIDegree;
-                            mDegree = degree + value;
+                            requestToRotateAnim(mUIDegree + DEGREE, degree +  DEGREE * value, value);
                         }
                     });
                     animator.addListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             mUIDegree += DEGREE;
+                            setRotation(mUIDegree);
+
                         }
                     });
-                    animator.setDuration(200);
+                    animator.setDuration(250);
                     animator.start();
 
 //                    mDegree += DEGREE;
@@ -372,7 +374,13 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
         mFrameSizeFilter.setFrameSizeCut(!cut);
     }
 
-    float mDegree;
+    private void requestToRotateAnim(float nextDegree, float currentDegree, float factor) {
+        mFrameSizeFilter.requestToRotateAnim(nextDegree, currentDegree, factor);
+    }
+
+    private void setRotation(float degree) {
+        mFrameSizeFilter.setRotation(degree);
+    }
 
     TextureFilter mBmpToTextureFilter;
     FrameSizeFilter mFrameSizeFilter;
@@ -386,6 +394,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
         mFrameSizeFilter = new FrameSizeFilter(this);
         mFrameSizeFilter.onSurfaceCreated(null);
         mFrameSizeFilter.setScaleType(FrameSizeHelper.scale_type_full_in);
+        mFrameSizeFilter.setRotation(0);
 
         mDisplayFilter = new DisplayFilter(this);
         mDisplayFilter.onSurfaceCreated(null);
@@ -404,13 +413,12 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     @Override
     public void onDrawFrame(GL10 gl) {
         if (mCanDraw) {
-            int texture = mBmpToTextureFilter.createGlTexture(R.drawable.open_test_9);
+            int texture = mBmpToTextureFilter.createGlTexture(R.drawable.open_test_6);
             mBmpToTextureFilter.initFrameBufferOfTextureSize(); // FIXME: 2019/4/30 调整纹理尺寸, 调整成图片一半，或者指定大小
             texture = mBmpToTextureFilter.onDrawBuffer(texture);
 
             if (mFrameSizeFilter != null) {
                 mFrameSizeFilter.setVideoFrameSize(mFrameSize);
-                mFrameSizeFilter.setRotation(mDegree);
                 mFrameSizeFilter.setTextureWH(mBmpToTextureFilter.getTextureW(), mBmpToTextureFilter.getTextureH());
                 texture = mFrameSizeFilter.onDrawBuffer(texture);
                 mDisplayFilter.setTextureWH(mFrameSizeFilter.getTextureW(), mFrameSizeFilter.getTextureH());

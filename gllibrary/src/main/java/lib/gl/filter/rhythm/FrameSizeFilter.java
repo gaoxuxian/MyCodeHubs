@@ -13,6 +13,7 @@ import lib.gl.util.GlMatrixTools;
 public class FrameSizeFilter extends GPUImageFilter {
 
     private int[] mFrameSizeTextureID;
+    private FrameSizeHelper mHelper;
 
     public FrameSizeFilter(Context context) {
         super(context);
@@ -32,6 +33,8 @@ public class FrameSizeFilter extends GPUImageFilter {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mFrameSizeTextureID[0]);
         GLUtil.bindTexture2DParams();
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+
+        mHelper = new FrameSizeHelper();
     }
 
     @Override
@@ -55,17 +58,15 @@ public class FrameSizeFilter extends GPUImageFilter {
         matrix.frustum(-1, 1, -vs, vs, 3, 7);
 
         // 根据画幅, 调整纹理的顶点坐标
-        float us = 1f; // uv坐标的u scale
-        vs = 1f; // uv 坐标的v scale
         performFrameSizeCalculation();
-        int width = getFrameSizeW();
-        int height = getFrameSizeH();
 
-        // 确认画幅近平面的三维区域
-        if (height <= width) {
-            vs = (float) height / width;
-        } else {
-            us = (float) width / height;
+        if (mDegree == 90 || mDegree == 270) {
+            int tempW = getTextureW();
+            int tempH = getTextureH();
+            tempW = tempH + tempW;
+            tempH = tempW - tempH;
+            tempW = tempW - tempH;
+            setTextureWH(tempW, tempH);
         }
 
         matrix.pushMatrix();
@@ -76,7 +77,7 @@ public class FrameSizeFilter extends GPUImageFilter {
         逻辑：顶点坐标的范围，就是纹理在三维坐标世界的绘制区域，那么换一个角度想，顶点与顶点之间的距离，就是纹理在三维坐标世界的宽高，
             所以这里的缩放关系是，### 原纹理的区域 要缩放到 近平面的区域 ###
          */
-        float scale = mScaleFullIn ? Math.max(us, vs / y_scale) : Math.min(us, vs / y_scale);
+        float scale =  mHelper.handleScaleFullInAnimation(getFrameSizeW(), getFrameSizeH(), getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType);
         // GL 矩阵是前乘关系（粗暴理解，后写的代码先执行），旋转要考虑缩放问题
         /*
         逻辑：如何理解旋转要考虑缩放问题？要清楚旋转之前，纹理的宽高缩放比例是基于什么角度的！！！
@@ -92,8 +93,13 @@ public class FrameSizeFilter extends GPUImageFilter {
             matrix.rotate();
             matrix.scale();
          */
-        matrix.rotate(-mDegree, 0, 0, 1);
-        matrix.scale(x_scale * scale, y_scale * scale, 1f);
+        if (mDegree == 90 || mDegree == 270) {
+            matrix.scale(x_scale * scale, y_scale * scale, 1f);
+            matrix.rotate(-mDegree, 0, 0, 1);
+        } else {
+            matrix.rotate(-mDegree, 0, 0, 1);
+            matrix.scale(x_scale * scale, y_scale * scale, 1f);
+        }
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }
@@ -170,16 +176,24 @@ public class FrameSizeFilter extends GPUImageFilter {
         }
     }
 
-    // 记录是否铺满显示
-    private boolean mScaleFullIn;
+    private int mNextScaleType;
+    private int mCurrentScaleType;
+
+    public void requestToDoScaleAnim(int nextScaleType, float factor) {
+        mNextScaleType = nextScaleType;
+        if (mHelper != null) {
+            mHelper.setAnimFactor(factor);
+        }
+    }
 
     /**
      * 设置图片缩放方式
      *
-     * @param fullIn true-铺满(最短边顶边适配)，false-居中(最长边顶边适配)
+//     * @param fullIn true-铺满(最短边顶边适配)，false-居中(最长边顶边适配)
      */
-    public void setScaleFullIn(boolean fullIn) {
-        mScaleFullIn = fullIn;
+    public void setScaleType(int type) {
+        mCurrentScaleType = type;
+        mNextScaleType = type;
     }
 
     // 记录当前画幅比例

@@ -1,13 +1,25 @@
 package trunk.gles;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import lib.gl.filter.rhythm.*;
@@ -23,6 +35,7 @@ import java.util.ArrayList;
 public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Renderer {
     RecyclerView mFrameSizeListView;
     GLSurfaceView mGlView;
+    MyFrameSizeView mFrameSizeView;
     private Button startBtn;
     private Button pauseBtn;
     private Button fullInBtn;
@@ -34,7 +47,8 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     ArrayList<FrameSizeInfo> mFrameSizeData;
 
     boolean mCanDraw;
-    final float DEGREE = 45;
+    final float DEGREE = 90;
+    float mUIDegree;
 
     @Override
     public void onCreateBaseData() throws Exception {
@@ -93,6 +107,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                 @Override
                 public void onClick(FrameSizeInfo info) {
                     setFrameSize(info.frameSizeType);
+                    mFrameSizeView.setFrameSize(info.frameSizeType);
                 }
             });
             mFrameSizeListView.setAdapter(adapter);
@@ -107,6 +122,52 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             cl.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
             layout.addView(mGlView, cl);
 
+            mFrameSizeView = new MyFrameSizeView(context);
+            mFrameSizeView.setId(View.generateViewId());
+            mFrameSizeView.setFrameSize(mFrameSize);
+            mFrameSizeView.setGestureDetector(new GestureDetector(context, new GestureDetector.OnGestureListener() {
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onShowPress(MotionEvent e) {
+
+                }
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                    Log.d("xxx", "onScroll: ======================================");
+                    Log.d("xxx", "onScroll: e1 == " + e1);
+                    Log.d("xxx", "onScroll: e2 == " + e2);
+                    Log.d("xxx", "onScroll: distanceX == " + distanceX);
+                    Log.d("xxx", "onScroll: distanceY == " + distanceY);
+
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    return false;
+                }
+            }));
+            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1080));
+            cl.topToTop = mGlView.getId();
+            cl.leftToLeft = mGlView.getId();
+            cl.rightToRight = mGlView.getId();
+            layout.addView(mFrameSizeView, cl);
+
             startBtn = new Button(context);
             startBtn.setId(View.generateViewId());
             startBtn.setAllCaps(false);
@@ -120,7 +181,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                 }
             });
             cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            cl.topToBottom = mGlView.getId();
+            cl.topToBottom = mFrameSizeView.getId();
             cl.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
             cl.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
             layout.addView(startBtn, cl);
@@ -137,7 +198,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                 }
             });
             cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            cl.topToBottom = mGlView.getId();
+            cl.topToBottom = mFrameSizeView.getId();
             cl.leftToRight = startBtn.getId();
             layout.addView(pauseBtn, cl);
 
@@ -148,7 +209,22 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             fullInBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setScaleFullIn(true);
+                    ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+                    animator.setDuration(250);
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float value = (float) animation.getAnimatedValue();
+                            requestToDoScaleAnim(FrameSizeHelper.scale_type_full_in, value);
+                        }
+                    });
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            setScaleType(FrameSizeHelper.scale_type_full_in);
+                        }
+                    });
+                    animator.start();
                 }
             });
             cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -163,7 +239,22 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             notFullInBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setScaleFullIn(false);
+                    ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+                    animator.setDuration(250);
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float value = (float) animation.getAnimatedValue();
+                            requestToDoScaleAnim(FrameSizeHelper.scale_type_not_full_in, value);
+                        }
+                    });
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            setScaleType(FrameSizeHelper.scale_type_not_full_in);
+                        }
+                    });
+                    animator.start();
                 }
             });
             cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -208,7 +299,25 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             rotationBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mDegree += DEGREE;
+                    ValueAnimator animator = ValueAnimator.ofFloat(0, DEGREE);
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float value = (float) animation.getAnimatedValue();
+                            float degree = mUIDegree;
+                            mDegree = degree + value;
+                        }
+                    });
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mUIDegree += DEGREE;
+                        }
+                    });
+                    animator.setDuration(200);
+                    animator.start();
+
+//                    mDegree += DEGREE;
                 }
             });
             cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -248,19 +357,19 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
     private void setFrameSize(int size) {
         mFrameSize = size;
-        setScaleFullIn(true);
+        setScaleType(FrameSizeHelper.scale_type_full_in);
     }
 
-    boolean mScaleFullIn = true;
-
-    private void setScaleFullIn(boolean fullIn) {
-        mScaleFullIn = fullIn;
+    private void setScaleType(int type) {
+        mFrameSizeFilter.setScaleType(type);
     }
 
-    boolean mCutFrameSize = true;
+    private void requestToDoScaleAnim(int nextScaleType, float factor) {
+        mFrameSizeFilter.requestToDoScaleAnim(nextScaleType, factor);
+    }
 
     private void setCutFrameSize(boolean cut) {
-        mCutFrameSize = cut;
+        mFrameSizeFilter.setFrameSizeCut(!cut);
     }
 
     float mDegree;
@@ -276,6 +385,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
         mFrameSizeFilter = new FrameSizeFilter(this);
         mFrameSizeFilter.onSurfaceCreated(null);
+        mFrameSizeFilter.setScaleType(FrameSizeHelper.scale_type_full_in);
 
         mDisplayFilter = new DisplayFilter(this);
         mDisplayFilter.onSurfaceCreated(null);
@@ -300,8 +410,6 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
             if (mFrameSizeFilter != null) {
                 mFrameSizeFilter.setVideoFrameSize(mFrameSize);
-                mFrameSizeFilter.setFrameSizeCut(!mCutFrameSize);
-                mFrameSizeFilter.setScaleFullIn(mScaleFullIn);
                 mFrameSizeFilter.setRotation(mDegree);
                 mFrameSizeFilter.setTextureWH(mBmpToTextureFilter.getTextureW(), mBmpToTextureFilter.getTextureH());
                 texture = mFrameSizeFilter.onDrawBuffer(texture);
@@ -366,6 +474,71 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             if (mListener != null) {
                 mListener.onClick(info);
             }
+        }
+    }
+
+    private static class MyFrameSizeView extends View {
+
+        Rect mRect;
+        Paint mPaint;
+
+        public MyFrameSizeView(Context context) {
+            super(context);
+            mRect = new Rect();
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setColor(ColorUtils.setAlphaComponent(Color.RED, (int) (255*0.3f)));
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            float aspectRatio = FrameSizeType.getAspectRatio(mFrameSize);
+
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+
+            int frameW = width;
+            int frameH = (int) (width / aspectRatio);
+            if (frameH > height) {
+                frameW = (int) (height * aspectRatio);
+                frameH = height;
+            }
+
+            if (frameW == width) {
+                mRect.setEmpty();
+                mRect.set(0, 0, frameW, (height - frameH)/2);
+                canvas.drawRect(mRect, mPaint);
+
+                mRect.setEmpty();
+                mRect.set(0, (height + frameH) / 2, frameW, height);
+                canvas.drawRect(mRect, mPaint);
+            } else {
+                mRect.setEmpty();
+                mRect.set(0, 0, (width - frameW)/2, height);
+                canvas.drawRect(mRect, mPaint);
+
+                mRect.setEmpty();
+                mRect.set((width + frameW)/2, 0, width, height);
+                canvas.drawRect(mRect, mPaint);
+            }
+        }
+
+        GestureDetector mGestureDetector;
+
+        public void setGestureDetector(GestureDetector detector) {
+            mGestureDetector = detector;
+        }
+
+        int mFrameSize;
+
+        public void setFrameSize(int size) {
+            mFrameSize = size;
+            invalidate();
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+//            return super.onTouchEvent(event);
+            return mGestureDetector.onTouchEvent(event);
         }
     }
 }

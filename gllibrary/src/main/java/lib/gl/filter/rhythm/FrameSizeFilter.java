@@ -78,8 +78,18 @@ public class FrameSizeFilter extends GPUImageFilter {
         逻辑：顶点坐标的范围，就是纹理在三维坐标世界的绘制区域，那么换一个角度想，顶点与顶点之间的距离，就是纹理在三维坐标世界的宽高，
             所以这里的缩放关系是，### 原纹理的区域 要缩放到 近平面的区域 ###
          */
-        float scale = mHelper.handleScaleFullInAnimation(getFrameSizeW(), getFrameSizeH(),
-                getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType, mDegree, mNextDegree);
+        float scale = 1f;
+        if (mRequestAnim) {
+            scale = mHelper.handleScaleFullInAnimation(getFrameBufferW(), getFrameBufferH(),
+                    getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType, mDegree, mNextDegree);
+        } else if (mRequestGesture) {
+            mHelper.handleGesture(getFrameBufferW(), getFrameBufferH(), getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mDegree, mTempGestureScale, 0, 0);
+            scale = mHelper.getTempGestureScale();
+        } else {
+            scale = mHelper.handleStaticScale(getFrameBufferW(), getFrameBufferH(),
+                    getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mDegree);
+        }
+
         // GL 矩阵是前乘关系（粗暴理解，后写的代码先执行），旋转要考虑缩放问题
         /*
         逻辑：如何理解旋转要考虑缩放问题？要清楚旋转之前，纹理的宽高缩放比例是基于什么角度的！！！
@@ -178,6 +188,7 @@ public class FrameSizeFilter extends GPUImageFilter {
     private volatile int mCurrentScaleType;
 
     public void requestToDoScaleAnim(int nextScaleType, float factor) {
+        mRequestAnim = true;
         mNextScaleType = nextScaleType;
         if (mHelper != null) {
             mHelper.setAnimFactor(factor);
@@ -210,6 +221,9 @@ public class FrameSizeFilter extends GPUImageFilter {
         }
     }
 
+    private volatile boolean mRequestAnim;
+    private volatile boolean mRequestGesture;
+
     // 记录当前旋转角度
     private volatile float mDegree;
 
@@ -224,11 +238,36 @@ public class FrameSizeFilter extends GPUImageFilter {
     private volatile float mNextDegree;
 
     public void requestToRotateAnim(float nextDegree, float currentDegree, float factor) {
+        mRequestAnim = true;
         mNextDegree = (nextDegree % 360f);
         mDegree = (currentDegree % 360f);
         if (mHelper != null) {
             mHelper.setAnimFactor(factor);
         }
+    }
+
+    public void releaseAnim() {
+        mRequestAnim = false;
+    }
+
+    public void requestGesture() {
+        mRequestGesture = true;
+    }
+
+    private volatile float mTempGestureScale = 1f;
+
+    public void updateGestureData(float scale, float transX, float transY) {
+        mTempGestureScale = scale;
+    }
+
+    public void releaseGesture() {
+        mRequestGesture = false;
+    }
+
+    public void syncGestureData() {
+        // TODO: 2019/5/3 更新手势处理后的数据, 方便下次使用
+        mHelper.syncGestureHandledData();
+        setScaleType(FrameSizeHelper.scale_type_gesture);
     }
 
     private volatile boolean mCutFrameSize;

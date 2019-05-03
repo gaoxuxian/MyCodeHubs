@@ -26,6 +26,7 @@ import lib.gl.filter.rhythm.*;
 import lib.gl.util.GLUtil;
 import trunk.BaseActivity;
 import trunk.R;
+import util.ImageUtils;
 import util.PxUtil;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -49,6 +50,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     boolean mCanDraw;
     final float DEGREE = 90;
     float mUIDegree;
+
+    private boolean mDoingAnim;
+    private boolean mPointerTouch;
 
     @Override
     public void onCreateBaseData() throws Exception {
@@ -125,43 +129,46 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             mFrameSizeView = new MyFrameSizeView(context);
             mFrameSizeView.setId(View.generateViewId());
             mFrameSizeView.setFrameSize(mFrameSize);
-            mFrameSizeView.setGestureDetector(new GestureDetector(context, new GestureDetector.OnGestureListener() {
+            mFrameSizeView.setGestureDetector(new MyFrameSizeView.GestureListener() {
                 @Override
-                public boolean onDown(MotionEvent e) {
-                    return true;
-                }
-
-                @Override
-                public void onShowPress(MotionEvent e) {
+                public void onDown() {
 
                 }
 
                 @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
+                public void onFingersDown() {
+                    mPointerTouch = true;
                 }
 
                 @Override
-                public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                    Log.d("xxx", "onScroll: ======================================");
-                    Log.d("xxx", "onScroll: e1 == " + e1);
-                    Log.d("xxx", "onScroll: e2 == " + e2);
-                    Log.d("xxx", "onScroll: distanceX == " + distanceX);
-                    Log.d("xxx", "onScroll: distanceY == " + distanceY);
-
-                    return true;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
+                public void onMove(float transX, float transY) {
 
                 }
 
                 @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    return false;
+                public void onZoom(float scale) {
+                    if (!mDoingAnim) {
+                        requestToGesture();
+                        updateGestureData(scale, 0, 0);
+                    }
                 }
-            }));
+
+                @Override
+                public void onUp() {
+                    if (!mDoingAnim) {
+                        releaseToGesture(true);
+                    }
+                }
+
+                @Override
+                public void onFingersUp() {
+                    if (!mDoingAnim) {
+                        releaseToGesture(true);
+                    }
+
+                    mPointerTouch = false;
+                }
+            });
             cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1080));
             cl.topToTop = mGlView.getId();
             cl.leftToLeft = mGlView.getId();
@@ -220,8 +227,18 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                     });
                     animator.addListener(new AnimatorListenerAdapter() {
                         @Override
+                        public void onAnimationStart(Animator animation) {
+                            mDoingAnim = true;
+                            releaseToGesture(false);
+                        }
+
+                        @Override
                         public void onAnimationEnd(Animator animation) {
                             setScaleType(FrameSizeHelper.scale_type_full_in);
+                            if (mPointerTouch) {
+                                mFrameSizeView.updatePointer();
+                            }
+                            mDoingAnim = false;
                         }
                     });
                     animator.start();
@@ -250,8 +267,18 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                     });
                     animator.addListener(new AnimatorListenerAdapter() {
                         @Override
+                        public void onAnimationStart(Animator animation) {
+                            mDoingAnim = true;
+                            releaseToGesture(false);
+                        }
+
+                        @Override
                         public void onAnimationEnd(Animator animation) {
                             setScaleType(FrameSizeHelper.scale_type_not_full_in);
+                            if (mPointerTouch) {
+                                mFrameSizeView.updatePointer();
+                            }
+                            mDoingAnim = false;
                         }
                     });
                     animator.start();
@@ -311,10 +338,20 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                     });
                     animator.addListener(new AnimatorListenerAdapter() {
                         @Override
+                        public void onAnimationStart(Animator animation) {
+                            mDoingAnim = true;
+                            releaseToGesture(false);
+                        }
+
+                        @Override
                         public void onAnimationEnd(Animator animation) {
                             mUIDegree += DEGREE;
                             setRotation(mUIDegree);
                             setScaleType(FrameSizeHelper.scale_type_full_in);
+                            if (mPointerTouch) {
+                                mFrameSizeView.updatePointer();
+                            }
+                            mDoingAnim = false;
 
                         }
                     });
@@ -366,6 +403,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
     private void setScaleType(int type) {
         mFrameSizeFilter.setScaleType(type);
+        mFrameSizeFilter.releaseAnim();
     }
 
     private void requestToDoScaleAnim(int nextScaleType, float factor) {
@@ -382,6 +420,22 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
     private void setRotation(float degree) {
         mFrameSizeFilter.setRotation(degree);
+        mFrameSizeFilter.releaseAnim();
+    }
+
+    private void requestToGesture() {
+        mFrameSizeFilter.requestGesture();
+    }
+
+    private void updateGestureData(float scale, float transX, float transY) {
+        mFrameSizeFilter.updateGestureData(scale, transX, transY);
+    }
+
+    private void releaseToGesture(boolean sync) {
+        mFrameSizeFilter.releaseGesture();
+        if (sync) {
+            mFrameSizeFilter.syncGestureData();
+        }
     }
 
     TextureFilter mBmpToTextureFilter;
@@ -492,6 +546,20 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
         Rect mRect;
         Paint mPaint;
 
+        public interface GestureListener {
+            void onDown();
+
+            void onFingersDown();
+
+            void onMove(float transX, float transY);
+
+            void onZoom(float scale);
+
+            void onUp();
+
+            void onFingersUp();
+        }
+
         public MyFrameSizeView(Context context) {
             super(context);
             mRect = new Rect();
@@ -532,9 +600,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             }
         }
 
-        GestureDetector mGestureDetector;
+        GestureListener mGestureDetector;
 
-        public void setGestureDetector(GestureDetector detector) {
+        public void setGestureDetector(GestureListener detector) {
             mGestureDetector = detector;
         }
 
@@ -545,10 +613,94 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             invalidate();
         }
 
+        private float mDownX;
+        private float mDownY;
+
+        private float mPointerDownX;
+        private float mPointerDownY;
+
+        private boolean mResetPointer;
+
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-//            return super.onTouchEvent(event);
-            return mGestureDetector.onTouchEvent(event);
+            boolean out = false;
+
+            switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                case MotionEvent.ACTION_DOWN: {
+                    mDownX = event.getX();
+                    mDownY = event.getY();
+                    if (mGestureDetector != null) {
+                        mGestureDetector.onDown();
+                    }
+                    out = true;
+                    break;
+                }
+
+                case MotionEvent.ACTION_POINTER_DOWN: {
+                    mDownX = event.getX(0);
+                    mDownY = event.getY(0);
+                    mPointerDownX = event.getX(1);
+                    mPointerDownY = event.getY(1);
+                    if (mGestureDetector != null) {
+                        mGestureDetector.onFingersDown();
+                    }
+                    out = true;
+                    break;
+                }
+
+                case MotionEvent.ACTION_MOVE: {
+                    if (event.getPointerCount() >= 2) {
+                        if (mUpdatePointer) {
+                            mDownX = event.getX(0);
+                            mDownY = event.getY(0);
+                            mPointerDownX = event.getX(1);
+                            mPointerDownY = event.getY(1);
+                            mUpdatePointer = false;
+                        }
+                        float x1 = event.getX(0);
+                        float y1 = event.getY(0);
+                        float x2 = event.getX(1);
+                        float y2 = event.getY(1);
+
+                        float moveSpacing = ImageUtils.Spacing(x2 - x1, y2 - y1);
+                        float downSpacing = ImageUtils.Spacing(mPointerDownX - mDownX, mPointerDownY - mDownY);
+                        if (mGestureDetector != null) {
+                            mGestureDetector.onZoom(moveSpacing / downSpacing);
+                        }
+                    } else {
+
+                    }
+                    out = true;
+                    break;
+                }
+
+                case MotionEvent.ACTION_UP: {
+                    out = true;
+                    if (mGestureDetector != null) {
+                        mGestureDetector.onUp();
+                    }
+                    break;
+                }
+
+                case MotionEvent.ACTION_POINTER_UP: {
+                    mDownX = event.getX();
+                    mDownY = event.getY();
+                    if (mGestureDetector != null) {
+                        mGestureDetector.onFingersUp();
+                    }
+                    out = true;
+                    break;
+                }
+            }
+
+            return out || onTrackballEvent(event);
+        }
+
+        boolean mUpdatePointer;
+
+        public void updatePointer() {
+            mUpdatePointer = true;
         }
     }
 }

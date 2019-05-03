@@ -86,24 +86,30 @@ public class FrameSizeHelper {
                                            int currentScaleType, int nextScaleType) {
 
         float frameSizeAspectRatio = FrameSizeType.getAspectRatio(frameSizeType);
-        // 计算画幅宽高
         int frameSizeW = viewportW;
-        int frameSizeH = (int) (viewportW / frameSizeAspectRatio);
-        if (frameSizeH > viewportH) {
-            frameSizeW = (int) (viewportH * frameSizeAspectRatio);
-            frameSizeH = viewportH;
-        }
+        int frameSizeH = viewportH;
         // 由于画幅永远都在viewport范围内，同步画幅在三维世界的坐标
         float frameSizeUS = 1f;
-        float frameSizeVS = 1f;
-        if (frameSizeH > frameSizeW) {
-            frameSizeUS = (float) frameSizeW / frameSizeH;
-        } else {
-            frameSizeVS = (float) frameSizeH / frameSizeW;
+        float frameSizeVS = (float) viewportH / viewportW;
+
+        if (frameSizeAspectRatio != 0) {
+            // 计算画幅宽高
+            int tempH = (int) (viewportW / frameSizeAspectRatio);
+            if (tempH > frameSizeH) {
+                frameSizeW = (int) (viewportH * frameSizeAspectRatio);
+                frameSizeH = viewportH;
+            }
+
+            frameSizeVS = 1f;
+            if (frameSizeH > frameSizeW) {
+                frameSizeUS = (float) frameSizeW / frameSizeH;
+            } else {
+                frameSizeVS = (float) frameSizeH / frameSizeW;
+            }
         }
 
-        float textureUS = 1f;
-        float textureVS = (float) textureH / textureW;
+        float textureUS = textureW >= textureH ? 1f : (float) textureW / textureH;
+        float textureVS = textureH > textureW ? 1f : (float) textureH / textureW;
 
         // 铺满的缩放比例
         float fullinScale = Math.max(frameSizeUS / textureUS, frameSizeVS / textureVS);
@@ -116,8 +122,10 @@ public class FrameSizeHelper {
             return unfullInScale + (fullinScale - unfullInScale) * mAnimFactor;
         } else if (currentScaleType == scale_type_full_in && nextScaleType == scale_type_full_in) {
             return fullinScale;
-        } else {
+        } else if (currentScaleType == scale_type_not_full_in && nextScaleType == scale_type_not_full_in) {
             return unfullInScale;
+        } else {
+            return 1f;
         }
     }
 

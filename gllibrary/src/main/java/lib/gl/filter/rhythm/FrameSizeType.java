@@ -13,6 +13,8 @@ public class FrameSizeType {
 
     public static float getAspectRatio(int type) {
         switch (type) {
+            case size_1_1: return 1;
+
             case size_3_4: return 3f/4f;
 
             case size_4_3: return 4f/3f;
@@ -23,6 +25,6 @@ public class FrameSizeType {
 
             case size_9_16: return 9f/16f;
         }
-        return 1;
+        return 0;
     }
 }

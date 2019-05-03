@@ -54,8 +54,15 @@ public class FrameSizeFilter extends GPUImageFilter {
         GlMatrixTools matrix = getMatrix();
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
 
-        float vs = (float) getFrameBufferH() / getFrameBufferW();
-        matrix.frustum(-1, 1, -vs, vs, 3, 7);
+        int width = getFrameBufferW();
+        int height = getFrameBufferH();
+        if (width >= height) {
+            float vs = (float) height / width;
+            matrix.frustum(-1, 1, -vs, vs, 3, 7);
+        } else {
+            float us = (float) width / height;
+            matrix.frustum(-us, us, -1, 1, 3, 7);
+        }
 
         // 根据画幅, 调整纹理的顶点坐标
         performFrameSizeCalculation();
@@ -70,14 +77,15 @@ public class FrameSizeFilter extends GPUImageFilter {
         }
 
         matrix.pushMatrix();
-        float x_scale = 1f;
-        float y_scale = getTextureH() != 0 && getTextureW() != 0 ? (float) getTextureH() / getTextureW() : 1f;
+        float x_scale = getTextureW() >= getTextureH() ? 1f : (float) getTextureW() / getTextureH();
+        float y_scale = getTextureH() > getTextureW() ? 1f : (float) getTextureH() / getTextureW();
         // 根据画幅的近平面的顶点坐标, 计算纹理顶点坐标的缩放比例
         /*
         逻辑：顶点坐标的范围，就是纹理在三维坐标世界的绘制区域，那么换一个角度想，顶点与顶点之间的距离，就是纹理在三维坐标世界的宽高，
             所以这里的缩放关系是，### 原纹理的区域 要缩放到 近平面的区域 ###
          */
-        float scale =  mHelper.handleScaleFullInAnimation(getFrameSizeW(), getFrameSizeH(), getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType);
+        float scale =  mHelper.handleScaleFullInAnimation(getFrameSizeW(), getFrameSizeH(), 
+                getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType);
         // GL 矩阵是前乘关系（粗暴理解，后写的代码先执行），旋转要考虑缩放问题
         /*
         逻辑：如何理解旋转要考虑缩放问题？要清楚旋转之前，纹理的宽高缩放比例是基于什么角度的！！！

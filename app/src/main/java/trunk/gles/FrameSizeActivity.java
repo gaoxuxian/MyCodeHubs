@@ -138,11 +138,15 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                 @Override
                 public void onFingersDown() {
                     mPointerTouch = true;
+                    if (!mDoingAnim) {
+                        releaseToGesture(true);
+                    }
                 }
 
                 @Override
                 public void onMove(float transX, float transY) {
-
+                    requestToGesture();
+                    updateGestureData(1f, transX, transY);
                 }
 
                 @Override
@@ -155,6 +159,8 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
                 @Override
                 public void onUp() {
+                    // FIXME: 2019/5/4 onFingersUp 和 onUp 同时触发，画面会飘，触发了两次数据同步
+                    // FIXME: 2019/5/4 试下加锁
                     if (!mDoingAnim) {
                         releaseToGesture(true);
                     }
@@ -229,7 +235,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                         @Override
                         public void onAnimationStart(Animator animation) {
                             mDoingAnim = true;
-                            releaseToGesture(false);
+                            if (mPointerTouch) {
+                                releaseToGesture(true);
+                            }
                         }
 
                         @Override
@@ -269,7 +277,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                         @Override
                         public void onAnimationStart(Animator animation) {
                             mDoingAnim = true;
-                            releaseToGesture(false);
+                            if (mPointerTouch) {
+                                releaseToGesture(true);
+                            }
                         }
 
                         @Override
@@ -340,7 +350,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                         @Override
                         public void onAnimationStart(Animator animation) {
                             mDoingAnim = true;
-                            releaseToGesture(false);
+                            if (mPointerTouch) {
+                                releaseToGesture(true);
+                            }
                         }
 
                         @Override
@@ -397,8 +409,8 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     int mFrameSize = FrameSizeType.size_3_4;
 
     private void setFrameSize(int size) {
-        mFrameSize = size;
         setScaleType(FrameSizeHelper.scale_type_full_in);
+        mFrameSizeFilter.setVideoFrameSize(size);
     }
 
     private void setScaleType(int type) {
@@ -449,6 +461,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
         mFrameSizeFilter = new FrameSizeFilter(this);
         mFrameSizeFilter.onSurfaceCreated(null);
+        mFrameSizeFilter.setVideoFrameSize(mFrameSize);
         mFrameSizeFilter.setScaleType(FrameSizeHelper.scale_type_full_in);
         mFrameSizeFilter.setRotation(0);
 
@@ -474,7 +487,6 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             texture = mBmpToTextureFilter.onDrawBuffer(texture);
 
             if (mFrameSizeFilter != null) {
-                mFrameSizeFilter.setVideoFrameSize(mFrameSize);
                 mFrameSizeFilter.setTextureWH(mBmpToTextureFilter.getTextureW(), mBmpToTextureFilter.getTextureH());
                 texture = mFrameSizeFilter.onDrawBuffer(texture);
                 mDisplayFilter.setTextureWH(mFrameSizeFilter.getTextureW(), mFrameSizeFilter.getTextureH());
@@ -669,7 +681,11 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                             mGestureDetector.onZoom(moveSpacing / downSpacing);
                         }
                     } else {
-
+                        float x = event.getX();
+                        float y = event.getY();
+                        if (mGestureDetector != null) {
+                            mGestureDetector.onMove(2*(x-mDownX)/getMeasuredWidth(), 2*(y-mDownY)/getMeasuredHeight());
+                        }
                     }
                     out = true;
                     break;

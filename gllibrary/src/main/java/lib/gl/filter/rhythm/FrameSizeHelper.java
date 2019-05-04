@@ -1,22 +1,31 @@
 package lib.gl.filter.rhythm;
 
 import android.graphics.Matrix;
-import android.graphics.PointF;
-import android.graphics.RectF;
+import androidx.annotation.FloatRange;
 
 /**
  * 额外做缩放、平移处理的类
  */
-public class FrameSizeHelper {
+public final class FrameSizeHelper {
 
     public static final int scale_type_full_in = 9999;
     public static final int scale_type_not_full_in = 8888;
     public static final int scale_type_gesture = 7777;
 
     private Matrix mMatrix;
+    private FrameSizeInfo mFrameSizeInfo;
+
+    private static final float DEFAULT_MAX_SCALE_FACTOR = 1.5f;
+
+    private float mMaxScaleFactor = DEFAULT_MAX_SCALE_FACTOR;
 
     public FrameSizeHelper() {
         mMatrix = new Matrix();
+        mFrameSizeInfo = new FrameSizeInfo();
+    }
+
+    public void setMaxScaleFactor(@FloatRange(from = 1f) float factor) {
+        mMaxScaleFactor = factor;
     }
 
     private volatile float mAnimFactor;
@@ -28,28 +37,10 @@ public class FrameSizeHelper {
     public float handleStaticScale(int viewportW, int viewportH, int textureW, int textureH, int frameSizeType,
                                    int currentScaleType, float currentDegree) {
 
-        float frameSizeAspectRatio = FrameSizeType.getAspectRatio(frameSizeType);
-        int frameSizeW = viewportW;
-        int frameSizeH = viewportH;
+        mFrameSizeInfo.frameSizeCalculation(viewportW, viewportH, frameSizeType);
         // 由于画幅永远都在viewport范围内，同步画幅在三维世界的坐标
-        float frameSizeUS = 1f;
-        float frameSizeVS = (float) viewportH / viewportW;
-
-        if (frameSizeAspectRatio != 0) {
-            // 计算画幅宽高
-            int tempH = (int) (viewportW / frameSizeAspectRatio);
-            if (tempH > frameSizeH) {
-                frameSizeW = (int) (viewportH * frameSizeAspectRatio);
-                frameSizeH = viewportH;
-            }
-
-            frameSizeVS = 1f;
-            if (frameSizeH > frameSizeW) {
-                frameSizeUS = (float) frameSizeW / frameSizeH;
-            } else {
-                frameSizeVS = (float) frameSizeH / frameSizeW;
-            }
-        }
+        float frameSizeUS = mFrameSizeInfo.vertexUs;
+        float frameSizeVS = mFrameSizeInfo.vertexVs;
 
         int textureWidth = textureW;
         int textureHeight = textureH;
@@ -78,31 +69,37 @@ public class FrameSizeHelper {
         }
     }
 
-    public float handleScaleFullInAnimation(int viewportW, int viewportH, int textureW, int textureH, int frameSizeType,
+    public float handleStaticTranslationX(int currentScaleType) {
+        if (currentScaleType == scale_type_full_in) {
+            return 0;
+        } else if (currentScaleType == scale_type_not_full_in) {
+            return 0;
+        } else if (currentScaleType == scale_type_gesture) {
+            return mTranslationX;
+        } else {
+            return 1f;
+        }
+    }
+
+    public float handleStaticTranslationY(int currentScaleType) {
+        if (currentScaleType == scale_type_full_in) {
+            return 0;
+        } else if (currentScaleType == scale_type_not_full_in) {
+            return 0;
+        } else if (currentScaleType == scale_type_gesture) {
+            return mTranslationY;
+        } else {
+            return 1f;
+        }
+    }
+
+    private float handleScaleFullInAnimation(int viewportW, int viewportH, int textureW, int textureH, int frameSizeType,
                                            int currentScaleType, int nextScaleType) {
 
-        float frameSizeAspectRatio = FrameSizeType.getAspectRatio(frameSizeType);
-        int frameSizeW = viewportW;
-        int frameSizeH = viewportH;
+        mFrameSizeInfo.frameSizeCalculation(viewportW, viewportH, frameSizeType);
         // 由于画幅永远都在viewport范围内，同步画幅在三维世界的坐标
-        float frameSizeUS = 1f;
-        float frameSizeVS = (float) viewportH / viewportW;
-
-        if (frameSizeAspectRatio != 0) {
-            // 计算画幅宽高
-            int tempH = (int) (viewportW / frameSizeAspectRatio);
-            if (tempH > frameSizeH) {
-                frameSizeW = (int) (viewportH * frameSizeAspectRatio);
-                frameSizeH = viewportH;
-            }
-
-            frameSizeVS = 1f;
-            if (frameSizeH > frameSizeW) {
-                frameSizeUS = (float) frameSizeW / frameSizeH;
-            } else {
-                frameSizeVS = (float) frameSizeH / frameSizeW;
-            }
-        }
+        float frameSizeUS = mFrameSizeInfo.vertexUs;
+        float frameSizeVS = mFrameSizeInfo.vertexVs;
 
         float textureUS = textureW >= textureH ? 1f : (float) textureW / textureH;
         float textureVS = textureH > textureW ? 1f : (float) textureH / textureW;
@@ -132,11 +129,8 @@ public class FrameSizeHelper {
     public float handleScaleFullInAnimation(int viewportW, int viewportH, int textureW, int textureH, int frameSizeType,
                                             int currentScaleType, int nextScaleType, float currentDegree, float nextDegree) {
 
-        int width = textureW;
-        int height = textureH;
-
-        int tempW = width;
-        int tempH = height;
+        int tempW = textureW;
+        int tempH = textureH;
 
         if ((currentDegree >= 90 && currentDegree < 180) || currentDegree >= 270) {
             tempW = tempW + tempH;
@@ -147,8 +141,8 @@ public class FrameSizeHelper {
         float currentDegreeScale = handleScaleFullInAnimation(viewportW, viewportH, tempW, tempH, frameSizeType, currentScaleType, nextScaleType);
 
         if (currentDegree != nextDegree) {
-            tempW = width;
-            tempH = height;
+            tempW = textureW;
+            tempH = textureH;
             if (nextDegree == 90 || nextDegree == 270) {
                 tempW = tempW + tempH;
                 tempH = tempW - tempH;
@@ -167,28 +161,10 @@ public class FrameSizeHelper {
                               int currentScaleType, float currentDegree,
                               float gestureScale, float gestureTransX, float gestureTransY) {
 
-        float frameSizeAspectRatio = FrameSizeType.getAspectRatio(frameSizeType);
-        int frameSizeW = viewportW;
-        int frameSizeH = viewportH;
+        mFrameSizeInfo.frameSizeCalculation(viewportW, viewportH, frameSizeType);
         // 由于画幅永远都在viewport范围内，同步画幅在三维世界的坐标
-        float frameSizeUS = 1f;
-        float frameSizeVS = (float) viewportH / viewportW;
-
-        if (frameSizeAspectRatio != 0) {
-            // 计算画幅宽高
-            int tempH = (int) (viewportW / frameSizeAspectRatio);
-            if (tempH > frameSizeH) {
-                frameSizeW = (int) (viewportH * frameSizeAspectRatio);
-                frameSizeH = viewportH;
-            }
-
-            frameSizeVS = 1f;
-            if (frameSizeH > frameSizeW) {
-                frameSizeUS = (float) frameSizeW / frameSizeH;
-            } else {
-                frameSizeVS = (float) frameSizeH / frameSizeW;
-            }
-        }
+        float frameSizeUS = mFrameSizeInfo.vertexUs;
+        float frameSizeVS = mFrameSizeInfo.vertexVs;
 
         int textureWidth = textureW;
         int textureHeight = textureH;
@@ -206,7 +182,7 @@ public class FrameSizeHelper {
         // 不铺满的缩放比例
         float unfullInScale = Math.min(frameSizeUS / textureUS, frameSizeVS / textureVS);
 
-        float maxScale = fullinScale * 1.5f;
+        float maxScale = fullinScale * mMaxScaleFactor;
         float minScale = unfullInScale;
         float scale = mGestureScale;
         if (currentScaleType == scale_type_full_in) {
@@ -225,7 +201,57 @@ public class FrameSizeHelper {
 
         mTempGestureScale = scale;
 
-//        mMatrix.postScale(scale, scale, 0, 0);
+        float[] leftTop = new float[]{-textureUS * scale, textureVS * scale};
+        float[] rightBottom = new float[]{textureUS * scale, -textureVS * scale};
+
+        float width = rightBottom[0];
+        float height = leftTop[1];
+
+        float x = mTranslationX + gestureTransX;
+        float y = mTranslationY - gestureTransY;
+
+        mMatrix.reset();
+        mMatrix.postTranslate(x, y);
+
+        mMatrix.mapPoints(leftTop);
+        mMatrix.mapPoints(rightBottom);
+
+        float left = leftTop[0];
+        float top = leftTop[1];
+        float right = rightBottom[0];
+        float bottom = rightBottom[1];
+
+        // 可以左右滑
+        if (width > frameSizeUS) {
+            // 控制边界
+            if (x > 0 && left > -frameSizeUS) {
+                mTempGestureTransX = (x - (left + frameSizeUS));
+            } else if (x < 0 && right < frameSizeUS) {
+                mTempGestureTransX = (x - (right - frameSizeUS));
+            } else {
+                mTempGestureTransX = x;
+            }
+        } else {
+            // 判断点是否在区域内, 居中显示
+            float t = (left + right) / 2f;
+            mTempGestureTransX = (x - t);
+        }
+
+        // 可以上下滑
+        if (height > frameSizeVS) {
+            // 控制边界
+            if (y < 0 && top < frameSizeVS) {
+                mTempGestureTransY = (y - (top - frameSizeVS));
+            } else if (y > 0 && bottom > -frameSizeVS) {
+                mTempGestureTransY = (y - (bottom + frameSizeVS));
+            } else {
+                mTempGestureTransY = y;
+            }
+        } else {
+            // 判断点是否在区域内, 居中显示
+            float t = (top + bottom) / 2f;
+            mTempGestureTransY = (y - t);
+        }
     }
 
     public float getTempGestureScale() {
@@ -234,11 +260,19 @@ public class FrameSizeHelper {
 
     public void syncGestureHandledData() {
         mGestureScale = mTempGestureScale;
+        mTranslationX = mTempGestureTransX;
+        mTranslationY = mTempGestureTransY;
     }
 
-    public void clearGestureData() {
-        mGestureScale = 1f;
-        mTempGestureScale = 1f;
+    private float mTempGestureTransX;
+    private float mTempGestureTransY;
+
+    public float getTempGestureTransX() {
+        return mTempGestureTransX;
+    }
+
+    public float getTempGestureTransY() {
+        return mTempGestureTransY;
     }
 
     private float mTempGestureScale = 1f;
@@ -248,8 +282,41 @@ public class FrameSizeHelper {
     private float mTranslationX;
     private float mTranslationY;
 
-    public void setTranslation(float x, float y) {
-        mTranslationX = x;
-        mTranslationY = y;
+    private static class FrameSizeInfo {
+        int width; // 真实宽
+        int height; // 真实高
+        float vertexUs; // 顶点坐标x轴位置
+        float vertexVs; // 顶点坐标y轴位置
+
+        public void frameSizeCalculation(int viewportW, int viewportH, int frameSizeType) {
+            float frameSizeAspectRatio = FrameSizeType.getAspectRatio(frameSizeType);
+            int frameSizeW = viewportW;
+            int frameSizeH = viewportH;
+            // 由于画幅永远都在viewport范围内，同步画幅在三维世界的坐标
+            float frameSizeUS = 1f;
+            float frameSizeVS = (float) viewportH / viewportW;
+
+            if (frameSizeAspectRatio != 0) {
+                // 计算画幅宽高
+                int tempH = (int) (viewportW / frameSizeAspectRatio);
+                if (tempH > frameSizeH) {
+                    frameSizeW = (int) (viewportH * frameSizeAspectRatio);
+                } else {
+                    frameSizeH = tempH;
+                }
+
+                frameSizeVS = 1f;
+                if (frameSizeH > frameSizeW) {
+                    frameSizeUS = (float) frameSizeW / frameSizeH;
+                } else {
+                    frameSizeVS = (float) frameSizeH / frameSizeW;
+                }
+            }
+
+            this.width = frameSizeW;
+            this.height = frameSizeH;
+            this.vertexUs = frameSizeUS;
+            this.vertexVs = frameSizeVS;
+        }
     }
 }

@@ -79,15 +79,22 @@ public class FrameSizeFilter extends GPUImageFilter {
             所以这里的缩放关系是，### 原纹理的区域 要缩放到 近平面的区域 ###
          */
         float scale = 1f;
+        float transX = 0f;
+        float transY = 0f;
         if (mRequestAnim) {
             scale = mHelper.handleScaleFullInAnimation(getFrameBufferW(), getFrameBufferH(),
                     getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mNextScaleType, mDegree, mNextDegree);
         } else if (mRequestGesture) {
-            mHelper.handleGesture(getFrameBufferW(), getFrameBufferH(), getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mDegree, mTempGestureScale, 0, 0);
+            mHelper.handleGesture(getFrameBufferW(), getFrameBufferH(), getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mDegree,
+                    mTempGestureScale, mTempGestureTransX, mTempGestureTransY);
             scale = mHelper.getTempGestureScale();
+            transX = mHelper.getTempGestureTransX();
+            transY = mHelper.getTempGestureTransY();
         } else {
             scale = mHelper.handleStaticScale(getFrameBufferW(), getFrameBufferH(),
                     getTextureW(), getTextureH(), mVideoFrameSize, mCurrentScaleType, mDegree);
+            transX = mHelper.handleStaticTranslationX(mCurrentScaleType);
+            transY = mHelper.handleStaticTranslationY(mCurrentScaleType);
         }
 
         // GL 矩阵是前乘关系（粗暴理解，后写的代码先执行），旋转要考虑缩放问题
@@ -105,6 +112,7 @@ public class FrameSizeFilter extends GPUImageFilter {
             matrix.rotate();
             matrix.scale();
          */
+        matrix.translate(transX, transY, 0);
         matrix.rotate(-mDegree, 0, 0, 1);
         matrix.scale(x_scale * scale, y_scale * scale, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
@@ -255,9 +263,13 @@ public class FrameSizeFilter extends GPUImageFilter {
     }
 
     private volatile float mTempGestureScale = 1f;
+    private volatile float mTempGestureTransX = 0f;
+    private volatile float mTempGestureTransY = 0f;
 
     public void updateGestureData(float scale, float transX, float transY) {
         mTempGestureScale = scale;
+        mTempGestureTransX = transX;
+        mTempGestureTransY = transY;
     }
 
     public void releaseGesture() {

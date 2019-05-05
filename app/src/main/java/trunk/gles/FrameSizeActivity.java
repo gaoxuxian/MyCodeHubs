@@ -138,24 +138,32 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                 @Override
                 public void onFingersDown() {
                     mPointerTouch = true;
-                    if (!mDoingAnim) {
-                        releaseToGesture(true);
-                    }
+//                    if (!mDoingAnim) {
+//                        releaseToGesture(true);
+//                    }
                 }
 
                 @Override
-                public void onMove(float transX, float transY) {
-                    requestToGesture();
-                    updateGestureData(1f, transX, transY);
-                }
-
-                @Override
-                public void onZoom(float scale) {
+                public void onMove(float scale, float transX, float transY) {
                     if (!mDoingAnim) {
+                        updateGestureData(scale, transX, transY);
                         requestToGesture();
-                        updateGestureData(scale, 0, 0);
                     }
                 }
+
+//                @Override
+//                public void onMove(float transX, float transY) {
+//                    requestToGesture();
+//                    updateGestureData(1f, transX, transY);
+//                }
+//
+//                @Override
+//                public void onZoom(float scale) {
+//                    if (!mDoingAnim) {
+//                        requestToGesture();
+//                        updateGestureData(scale, 0, 0);
+//                    }
+//                }
 
                 @Override
                 public void onUp() {
@@ -563,9 +571,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
             void onFingersDown();
 
-            void onMove(float transX, float transY);
+            void onMove(float scale, float transX, float transY);
 
-            void onZoom(float scale);
+//            void onZoom(float scale);
 
             void onUp();
 
@@ -662,6 +670,9 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
                 }
 
                 case MotionEvent.ACTION_MOVE: {
+                    float scale = 1f;
+                    float x = 0;
+                    float y = 0;
                     if (event.getPointerCount() >= 2) {
                         if (mUpdatePointer) {
                             mDownX = event.getX(0);
@@ -677,16 +688,19 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
 
                         float moveSpacing = ImageUtils.Spacing(x2 - x1, y2 - y1);
                         float downSpacing = ImageUtils.Spacing(mPointerDownX - mDownX, mPointerDownY - mDownY);
-                        if (mGestureDetector != null) {
-                            mGestureDetector.onZoom(moveSpacing / downSpacing);
-                        }
+                        scale = moveSpacing / downSpacing;
+
+//                        x = ((x1 + x2) * 0.5f - (mPointerDownX + mDownX) * 0.5f) * 2 / getMeasuredWidth();
+//                        y = ((y1 + y2) * 0.5f - (mPointerDownY + mDownY) * 0.5f) * 2 / getMeasuredHeight();
+
                     } else {
-                        float x = event.getX();
-                        float y = event.getY();
-                        if (mGestureDetector != null) {
-                            mGestureDetector.onMove(2*(x-mDownX)/getMeasuredWidth(), 2*(y-mDownY)/getMeasuredHeight());
-                        }
+                        x = (event.getX() - mDownX) * 2 / getMeasuredWidth();
+                        y = (event.getY() - mDownY) * 2 / getMeasuredHeight();
                     }
+                    if (mGestureDetector != null) {
+                        mGestureDetector.onMove(scale,x, y);
+                    }
+
                     out = true;
                     break;
                 }

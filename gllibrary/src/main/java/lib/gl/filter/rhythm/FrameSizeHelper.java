@@ -59,8 +59,10 @@ public final class FrameSizeHelper {
         float unfullInScale = Math.min(frameSizeUS / textureUS, frameSizeVS / textureVS);
 
         if (currentScaleType == scale_type_full_in) {
+            mGestureScale = fullinScale;
             return fullinScale;
         } else if (currentScaleType == scale_type_not_full_in) {
+            mGestureScale = unfullInScale;
             return unfullInScale;
         } else if (currentScaleType == scale_type_gesture) {
             return mGestureScale;

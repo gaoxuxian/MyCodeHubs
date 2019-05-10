@@ -48,7 +48,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     ArrayList<FrameSizeInfo> mFrameSizeData;
 
     boolean mCanDraw;
-    final float DEGREE = 90;
+    final float DEGREE = -90;
     float mUIDegree;
 
     private boolean mDoingAnim;
@@ -584,7 +584,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
             super(context);
             mRect = new Rect();
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setColor(ColorUtils.setAlphaComponent(Color.RED, (int) (255*0.3f)));
+            mPaint.setColor(0x991a1a1a);
         }
 
         @Override

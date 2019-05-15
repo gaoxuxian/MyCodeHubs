@@ -17,6 +17,9 @@
         <activity android:name=".gles.FrameSizeActivity"
                   android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity android:name=".gles.FrameSizeV2Activity"
+                  android:theme="@style/AppTheme.FullScreen">
+        </activity>
         <activity android:name=".gles.TextureOrientationActivity">
         </activity>
         <activity android:name=".gles.GLCustomViewActivity">

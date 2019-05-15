@@ -99,6 +99,8 @@ public class FrameSizeFilterV2 extends GPUImageFilter {
             mFrameBufferMgr.clearColor(true, true, true, true, true);
             mFrameBufferMgr.clearDepth(true, true);
             mFrameBufferMgr.clearStencil(true, true);
+            GLES20.glClearColor(1, 1, 1, 1);
+            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
             draw(textureID, true);
             // 需要裁剪画幅

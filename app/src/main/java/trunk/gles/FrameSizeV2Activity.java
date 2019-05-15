@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.opengl.GLSurfaceView;
@@ -16,6 +17,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import lib.gl.filter.rhythm.*;
@@ -41,6 +43,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
     private Button unshowSizeBtn;
     private Button rotationBtn;
     private Button changeImageBtn;
+    private Button fullScreenBtn;
 
     ArrayList<FrameSizeInfo> mFrameSizeData;
 
@@ -137,8 +140,11 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
             mGlView.setEGLContextClientVersion(GLUtil.getGlSupportVersionInt(context));
             mGlView.setRenderer(this);
             mGlView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1240));
+            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(720), PxUtil.sU_1080p(1280));
+//            cl.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+//            cl.topMargin = PxUtil.sU_1080p(300);
             cl.topToBottom = mFrameSizeListView.getId();
+            cl.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
             cl.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
             layout.addView(mGlView, cl);
 
@@ -188,7 +194,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                     }
                 }
             });
-            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1240));
+            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(720), PxUtil.sU_1080p(1280));
             cl.topToTop = mGlView.getId();
             cl.leftToLeft = mGlView.getId();
             cl.rightToRight = mGlView.getId();
@@ -412,6 +418,21 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
             cl.topToBottom = showSizeBtn.getId();
             cl.leftToRight = rotationBtn.getId();
             layout.addView(changeImageBtn, cl);
+
+            fullScreenBtn = new Button(context);
+            fullScreenBtn.setId(View.generateViewId());
+            fullScreenBtn.setAllCaps(false);
+            fullScreenBtn.setText("全屏");
+            fullScreenBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setFullScreen();
+                }
+            });
+            cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            cl.topToBottom = showSizeBtn.getId();
+            cl.rightToLeft = rotationBtn.getId();
+            layout.addView(fullScreenBtn, cl);
         }
     }
 
@@ -483,6 +504,41 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 
     private void releaseToGesture(boolean sync) {
 
+    }
+
+    private float degree;
+    private void setFullScreen() {
+//        ValueAnimator animator = ValueAnimator.ofFloat(degree, degree + 90);
+//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                float value = (float) animation.getAnimatedValue();
+//                mGlView.setRotation(value);
+//                mFrameSizeView.setRotation(value);
+//                mDisplayFilter.setDegree(value);
+//            }
+//        });
+//        animator.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                degree += 90;
+//            }
+//        });
+//        animator.setDuration(2000);
+//        animator.start();
+
+        ViewGroup.LayoutParams layoutParams = mGlView.getLayoutParams();
+        layoutParams.width = PxUtil.sU_1080p(1080);
+        layoutParams.height = PxUtil.sV_1080p(720);
+        mGlView.requestLayout();
+
+        layoutParams = mFrameSizeView.getLayoutParams();
+        layoutParams.width = PxUtil.sU_1080p(1080);
+        layoutParams.height = PxUtil.sV_1080p(720);
+        mFrameSizeView.requestLayout();
+        mGlView.setRotation(90);
+        mFrameSizeView.setRotation(90);
+        mDisplayFilter.setDegree(90);
     }
 
     TextureFilter mBmpToTextureFilter;
@@ -619,6 +675,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
             mRect = new Rect();
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setColor(0x991a1a1a);
+            mPaint.setColor(ColorUtils.setAlphaComponent(Color.RED, (int) (255 * 0.3f)));
         }
 
         @Override

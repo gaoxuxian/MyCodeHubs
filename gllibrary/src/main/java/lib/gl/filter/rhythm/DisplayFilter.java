@@ -46,6 +46,7 @@ public class DisplayFilter extends GPUImageFilter {
 
         // 视口区域大小(归一化映射范围)
         GLES20.glViewport(0, 0, drawBuffer ? getFrameBufferW() : getSurfaceW(), drawBuffer ? getFrameBufferH() : getSurfaceH());
+
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
@@ -56,9 +57,9 @@ public class DisplayFilter extends GPUImageFilter {
         float x_scale = 1f;
         float y_scale = getTextureH() != 0 && getTextureW() != 0 ? (float) getTextureH() / getTextureW() : 1f;
 
-        float scale = Math.min(1f, vs / y_scale);
+        float scale = Math.min(1f / x_scale, vs / y_scale);
         matrix.scale(x_scale * scale, y_scale * scale, 1f);
-
+        matrix.rotate(-mDegree, 0, 0, 1);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }
@@ -68,5 +69,11 @@ public class DisplayFilter extends GPUImageFilter {
         GLES20.glClearColor(0, 0, 0, 1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         super.onDrawFrame(textureID);
+    }
+
+    private float mDegree;
+
+    public void setDegree(float degree) {
+        mDegree = degree;
     }
 }

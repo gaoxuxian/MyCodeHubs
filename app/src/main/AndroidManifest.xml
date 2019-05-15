@@ -14,8 +14,9 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="false"
             android:theme="@style/AppTheme">
-        <activity android:name=".gles.FrameSizeActivity"
-                  android:theme="@style/AppTheme.FullScreen">
+        <activity
+                android:name=".gles.FrameSizeActivity"
+                android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity android:name=".gles.FrameSizeV2Activity"
                   android:theme="@style/AppTheme.FullScreen">
@@ -54,6 +55,9 @@
         <activity
                 android:name=".OpenGLActivity"
                 android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity android:name=".KotlinActivity"
+                  android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
                 android:name=".gles.SplitScreenActivity"

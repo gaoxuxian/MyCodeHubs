@@ -148,55 +148,44 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
             mFrameSizeView.setGestureDetector(new MyFrameSizeView.GestureListener() {
                 @Override
                 public void onDown() {
-
+                    if (mLogicExecutor != null) {
+                        mLogicExecutor.requestGesture();
+                    }
                 }
 
                 @Override
                 public void onFingersDown() {
-                    mPointerTouch = true;
-//                    if (!mDoingAnim) {
-//                        releaseToGesture(true);
-//                    }
-                }
-
-                @Override
-                public void onMove(float scale, float transX, float transY) {
-                    if (!mDoingAnim) {
-                        updateGestureData(scale, transX, transY);
-                        requestToGesture();
+                    if (mLogicExecutor != null) {
+                        mLogicExecutor.syncGestureTranslation(images.get(mImageIndex).frame);
                     }
                 }
 
-//                @Override
-//                public void onMove(float transX, float transY) {
-//                    requestToGesture();
-//                    updateGestureData(1f, transX, transY);
-//                }
-//
-//                @Override
-//                public void onZoom(float scale) {
-//                    if (!mDoingAnim) {
-//                        requestToGesture();
-//                        updateGestureData(scale, 0, 0);
-//                    }
-//                }
+                @Override
+                public void onMove(float transX, float transY) {
+                    if (mLogicExecutor != null) {
+                        mLogicExecutor.updateGestureTranslation(transX, transY);
+                    }
+                }
+
+                @Override
+                public void onScale(float scale) {
+                    if (mLogicExecutor != null) {
+                        mLogicExecutor.updateGestureScale(scale);
+                    }
+                }
 
                 @Override
                 public void onUp() {
-                    // FIXME: 2019/5/4 onFingersUp 和 onUp 同时触发，画面会飘，触发了两次数据同步
-                    // FIXME: 2019/5/4 试下加锁
-                    if (!mDoingAnim) {
-                        releaseToGesture(true);
+                    if (mLogicExecutor != null) {
+                        mLogicExecutor.releaseGesture(true, images.get(mImageIndex).frame);
                     }
                 }
 
                 @Override
                 public void onFingersUp() {
-                    if (!mDoingAnim) {
-                        releaseToGesture(true);
+                    if (mLogicExecutor != null) {
+                        mLogicExecutor.syncGestureScale(images.get(mImageIndex).frame);
                     }
-
-                    mPointerTouch = false;
                 }
             });
             cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1240));
@@ -270,9 +259,6 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             setScaleType(FrameBase.scale_type_full_in);
-                            if (mPointerTouch) {
-                                mFrameSizeView.updatePointer();
-                            }
                             if (mImageInfo != null) {
                                 mImageInfo.frame.setScaleType(FrameBase.scale_type_full_in);
                             }
@@ -318,9 +304,6 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            if (mPointerTouch) {
-                                mFrameSizeView.updatePointer();
-                            }
                             if (mImageInfo != null) {
                                 mImageInfo.frame.setScaleType(FrameBase.scale_type_not_full_in);
                             }
@@ -395,9 +378,6 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            if (mPointerTouch) {
-                                mFrameSizeView.updatePointer();
-                            }
                             if (mImageInfo != null) {
                                 mImageInfo.frame.setScaleType(FrameBase.scale_type_full_in);
                                 mImageInfo.frame.setDegree(mImageInfo.frame.getDegree() + DEGREE);
@@ -625,9 +605,9 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 
             void onFingersDown();
 
-            void onMove(float scale, float transX, float transY);
+            void onMove(float transX, float transY);
 
-//            void onZoom(float scale);
+            void onScale(float scale);
 
             void onUp();
 
@@ -693,15 +673,19 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
         private float mPointerDownX;
         private float mPointerDownY;
 
-        private boolean mResetPointer;
+        private int mFirstPointerId;
+        private int mSecondPointerId;
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             boolean out = false;
 
+            int actionIndex = event.getActionIndex();
+
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                 case MotionEvent.ACTION_DOWN: {
+                    mFirstPointerId = event.getPointerId(actionIndex);
                     mDownX = event.getX();
                     mDownY = event.getY();
                     if (mGestureDetector != null) {
@@ -712,10 +696,11 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                 }
 
                 case MotionEvent.ACTION_POINTER_DOWN: {
-                    mDownX = event.getX(0);
-                    mDownY = event.getY(0);
-                    mPointerDownX = event.getX(1);
-                    mPointerDownY = event.getY(1);
+                    mSecondPointerId = event.getPointerId(actionIndex);
+                    mDownX = event.getX(event.findPointerIndex(mFirstPointerId));
+                    mDownY = event.getY(event.findPointerIndex(mFirstPointerId));
+                    mPointerDownX = event.getX(event.findPointerIndex(mSecondPointerId));
+                    mPointerDownY = event.getY(event.findPointerIndex(mSecondPointerId));
                     if (mGestureDetector != null) {
                         mGestureDetector.onFingersDown();
                     }
@@ -724,35 +709,23 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                 }
 
                 case MotionEvent.ACTION_MOVE: {
-                    float scale = 1f;
-                    float x = 0;
-                    float y = 0;
                     if (event.getPointerCount() >= 2) {
-                        if (mUpdatePointer) {
-                            mDownX = event.getX(0);
-                            mDownY = event.getY(0);
-                            mPointerDownX = event.getX(1);
-                            mPointerDownY = event.getY(1);
-                            mUpdatePointer = false;
-                        }
-                        float x1 = event.getX(0);
-                        float y1 = event.getY(0);
-                        float x2 = event.getX(1);
-                        float y2 = event.getY(1);
+                        float x1 = event.getX(event.findPointerIndex(mFirstPointerId));
+                        float y1 = event.getY(event.findPointerIndex(mFirstPointerId));
+                        float x2 = event.getX(event.findPointerIndex(mSecondPointerId));
+                        float y2 = event.getY(event.findPointerIndex(mSecondPointerId));
 
                         float moveSpacing = ImageUtils.Spacing(x2 - x1, y2 - y1);
                         float downSpacing = ImageUtils.Spacing(mPointerDownX - mDownX, mPointerDownY - mDownY);
-                        scale = moveSpacing / downSpacing;
-
-//                        x = ((x1 + x2) * 0.5f - (mPointerDownX + mDownX) * 0.5f) * 2 / getMeasuredWidth();
-//                        y = ((y1 + y2) * 0.5f - (mPointerDownY + mDownY) * 0.5f) * 2 / getMeasuredHeight();
-
+                        if (mGestureDetector != null) {
+                            mGestureDetector.onScale(moveSpacing / downSpacing);
+                        }
                     } else {
-                        x = (event.getX() - mDownX) * 2 / getMeasuredWidth();
-                        y = (event.getY() - mDownY) * 2 / getMeasuredHeight();
-                    }
-                    if (mGestureDetector != null) {
-                        mGestureDetector.onMove(scale,x, y);
+                        float x = (event.getX() - mDownX) * 2 / getMeasuredWidth();
+                        float y = (event.getY() - mDownY) * 2 / getMeasuredHeight();
+                        if (mGestureDetector != null) {
+                            mGestureDetector.onMove(x, y);
+                        }
                     }
 
                     out = true;
@@ -768,11 +741,23 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                 }
 
                 case MotionEvent.ACTION_POINTER_UP: {
-                    mDownX = event.getX();
-                    mDownY = event.getY();
-                    if (mGestureDetector != null) {
-                        mGestureDetector.onFingersUp();
+                    int firstPointerIndex = event.findPointerIndex(mFirstPointerId);
+                    int secondPointerIndex = event.findPointerIndex(mSecondPointerId);
+
+                    if (actionIndex == firstPointerIndex) {
+                        mFirstPointerId = event.getPointerId(secondPointerIndex);
+                        if (mGestureDetector != null) {
+                            mGestureDetector.onFingersUp();
+                        }
+                    } else if (actionIndex == secondPointerIndex) {
+                        mSecondPointerId = -1;
+                        if (mGestureDetector != null) {
+                            mGestureDetector.onFingersUp();
+                        }
                     }
+
+                    mDownX = event.getX(event.findPointerIndex(mFirstPointerId));
+                    mDownY = event.getY(event.findPointerIndex(mFirstPointerId));
                     out = true;
                     break;
                 }
@@ -781,10 +766,8 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
             return out || onTrackballEvent(event);
         }
 
-        boolean mUpdatePointer;
-
-        public void updatePointer() {
-            mUpdatePointer = true;
+        public void destroy() {
+            mGestureDetector = null;
         }
     }
 }

@@ -29,13 +29,23 @@ public class FrameLogicExecutor {
      * @param baseInfo  当前纹理的额外信息，ex 旋转角度、手势处理数据
      */
     public void executeLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo) {
+        handleAnimScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo);
+        handleGestureScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo, mGestureScale, mGestureTransX, mGestureTransY);
+        handleStaticScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo);
+    }
+
+    private void handleAnimScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo) {
         if (mRequestAnim) {
             float primitiveDegree = baseInfo.getDegree();
             float newDegree = primitiveDegree + mAnimSweptAngle;
             int primitiveScaleType = baseInfo.getScaleType();
             int newScaleType = mAnimNextScaleType == 0 ? baseInfo.getScaleType() : mAnimNextScaleType;
-
-            float primitiveScale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, primitiveDegree, primitiveScaleType);
+            float primitiveScale;
+            if (primitiveScaleType == FrameBase.scale_type_gesture) {
+                primitiveScale = baseInfo.getScale(); // FIXME: 2019/5/15 涉及手势处理的，需要重新计算
+            } else {
+                primitiveScale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, primitiveDegree, primitiveScaleType);
+            }
             float newScale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, newDegree, newScaleType);
 
             float factor = mAnimFactor;
@@ -43,12 +53,47 @@ public class FrameLogicExecutor {
             mTempTranslationX = 0;
             mTempTranslationY = 0;
             mTempDegree = primitiveDegree + (newDegree - primitiveDegree) * factor;
-        } else {
+        }
+    }
+
+    private void handleGestureScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo,
+                                         float gestureScale, float gestureTransX, float gestureTransY) {
+        if (mRequestGesture) {
+            /*
+            逻辑流程：
+                1、计算出原图基于画幅的最大、最小缩放比例
+                2、根据 baseInfo 记录的以往手势数据 + 当前的手势数据，重新计算位置
+             */
+
+            // step one
+            float degree = baseInfo.getDegree();
+            int scaleType = FrameBase.scale_type_not_full_in;
+            float min = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
+            scaleType = FrameBase.scale_type_full_in;
+            float max = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
+
+            // step two
+            float requestScale = baseInfo.getScale() * gestureScale;
+            float requestTranslationX = baseInfo.getTranslationX() + gestureTransX;
+            float requestTranslationY = baseInfo.getTranslationY() + gestureTransY;
+
+            // 由于FrameBase 是默认铺满, 每次的手势缩放比例，都是基于铺满来计算的
+
+        }
+    }
+
+    private void handleStaticScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo) {
+        if (!mRequestGesture && !mRequestAnim) {
             float degree = baseInfo.getDegree();
             int scaleType = baseInfo.getScaleType();
             float translationX = baseInfo.getTranslationX();
             float translationY = baseInfo.getTranslationY();
-            float scale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
+            float scale;
+            if (scaleType == FrameBase.scale_type_gesture) {
+                scale = baseInfo.getScale(); // FIXME: 2019/5/15 涉及手势处理的，需要重新计算
+            } else {
+                scale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
+            }
             mTempScale = scale;
             mTempTranslationX = translationX;
             mTempTranslationY = translationY;
@@ -59,8 +104,8 @@ public class FrameLogicExecutor {
     private float performScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, float degree, int scaleType) {
         /*
         逻辑流程：
-            1、计算原图基于 viewport 的缩放比例，基于纹理长边缩放 St1
-            2、计算原图在 baseInfo 的旋转角度下的宽高
+            1、计算原图基于 viewport 的缩放比例，基于纹理长边缩放 St1 （目的是为了建立一个基准）
+            2、计算原图在 baseInfo 的旋转角度下的宽高 （旋转后，铺满与不铺满变换的关键操作）
             3、计算画幅大小，同时计算画幅基于 viewport 的缩放比例，基于长边缩放 Sf
             4、基于步骤3的状态下，再计算纹理缩放到画幅区域的比例 St3
             5、汇总原图在步骤3、5之后的总缩放量 St = St1 * St3
@@ -146,14 +191,6 @@ public class FrameLogicExecutor {
 
     public void releaseAnim() {
         mRequestAnim = false;
-
-//        synchronized (object_lock) {
-//            if (mFrameBase != null) {
-//                mFrameBase.setDegree((mFrameBase.getDegree() + mAnimSweptAngle) % 360f);
-//                mFrameBase.setScaleType(mAnimNextScaleType);
-//            }
-//        }
-
         mAnimSweptAngle = 0;
     }
 
@@ -173,6 +210,66 @@ public class FrameLogicExecutor {
      */
     public void setScaleType(int type) {
         mAnimNextScaleType = type;
+    }
+
+    private volatile float mGestureTransX;
+    private volatile float mGestureTransY;
+    private volatile float mGestureScale = 1f;
+
+    public void updateGestureScale(float scale) {
+        mGestureScale = scale;
+    }
+
+    public void updateGestureTranslation(float transX, float transY) {
+        mGestureTransX = transX;
+        mGestureTransY = transY;
+    }
+
+    private volatile boolean mRequestGesture;
+
+    public void requestGesture() {
+        mRequestGesture = true;
+    }
+
+    public void syncGestureScale(FrameBase base) {
+        if (mRequestGesture) {
+            synchronized (object_lock) {
+                if (base != null) {
+                    base.setScale(mTempScale);
+                    base.setScaleType(FrameBase.scale_type_gesture);
+                }
+                mGestureScale = 1f;
+            }
+        }
+    }
+
+    public void syncGestureTranslation(FrameBase base) {
+        if (mRequestGesture) {
+            synchronized (object_lock) {
+                if (base != null) {
+                    base.setTranslation(mTempTranslationX, mTempTranslationY);
+                    base.setScaleType(FrameBase.scale_type_gesture);
+                }
+                mGestureTransX = 0;
+                mGestureTransY = 0;
+            }
+        }
+    }
+
+    public void releaseGesture(boolean sync, FrameBase base) {
+        synchronized (object_lock) {
+            if (sync) {
+                if (base != null) {
+                    base.setTranslation(mTempTranslationX, mTempTranslationY);
+                    base.setScale(mTempScale);
+                    base.setScaleType(FrameBase.scale_type_gesture);
+                }
+                mGestureScale = 1f;
+                mGestureTransX = 0;
+                mGestureTransY = 0;
+            }
+            mRequestGesture = false;
+        }
     }
 
     /**

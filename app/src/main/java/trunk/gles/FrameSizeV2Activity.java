@@ -117,31 +117,31 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 
             mFrameSizeListView = new RecyclerView(context);
             mFrameSizeListView.setId(View.generateViewId());
-            mFrameSizeListView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
-            cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PxUtil.sU_1080p(200));
-            cl.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-            cl.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
-            cl.topMargin = PxUtil.sU_1080p(100);
-            layout.addView(mFrameSizeListView, cl);
-
-            MyAdapter adapter = new MyAdapter();
-            adapter.setData(mFrameSizeData);
-            adapter.setListener(new MyAdapter.Listener() {
-                @Override
-                public void onClick(FrameSizeInfo info) {
-                    setFrameSize(info.frameSizeType);
-                    mFrameSizeView.setFrameSize(info.frameSizeType);
-                }
-            });
-            mFrameSizeListView.setAdapter(adapter);
+//            mFrameSizeListView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+//            cl = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PxUtil.sU_1080p(200));
+//            cl.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+//            cl.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+//            cl.topMargin = PxUtil.sU_1080p(100);
+//            layout.addView(mFrameSizeListView, cl);
+//
+//            MyAdapter adapter = new MyAdapter();
+//            adapter.setData(mFrameSizeData);
+//            adapter.setListener(new MyAdapter.Listener() {
+//                @Override
+//                public void onClick(FrameSizeInfo info) {
+//                    setFrameSize(info.frameSizeType);
+//                    mFrameSizeView.setFrameSize(info.frameSizeType);
+//                }
+//            });
+//            mFrameSizeListView.setAdapter(adapter);
 
             mGlView = new GLSurfaceView(context);
             mGlView.setId(View.generateViewId());
             mGlView.setEGLContextClientVersion(GLUtil.getGlSupportVersionInt(context));
             mGlView.setRenderer(this);
             mGlView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(720), PxUtil.sU_1080p(1280));
-//            cl.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(720), PxUtil.sU_1080p(1080));
+            cl.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
 //            cl.topMargin = PxUtil.sU_1080p(300);
             cl.topToBottom = mFrameSizeListView.getId();
             cl.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
@@ -194,10 +194,11 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                     }
                 }
             });
-            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(720), PxUtil.sU_1080p(1280));
+            cl = new ConstraintLayout.LayoutParams(PxUtil.sU_1080p(720), PxUtil.sU_1080p(1080));
             cl.topToTop = mGlView.getId();
             cl.leftToLeft = mGlView.getId();
             cl.rightToRight = mGlView.getId();
+            cl.bottomToBottom = mGlView.getId();
             layout.addView(mFrameSizeView, cl);
 
             startBtn = new Button(context);
@@ -462,7 +463,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
         }
     }
 
-    int mFrameSize = FrameSizeType.size_3_4;
+    int mFrameSize = FrameSizeType.size_1_1;
     private ImageInfo mImageInfo;
 
     private void setFrameSize(int size) {
@@ -528,13 +529,18 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 //        animator.start();
 
         ViewGroup.LayoutParams layoutParams = mGlView.getLayoutParams();
-        layoutParams.width = PxUtil.sU_1080p(1080);
-        layoutParams.height = PxUtil.sV_1080p(720);
+        layoutParams.width = PxUtil.sU_1080p(2160);
+        layoutParams.height = PxUtil.sU_1080p(1080);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) layoutParams;
+        params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
         mGlView.requestLayout();
 
         layoutParams = mFrameSizeView.getLayoutParams();
-        layoutParams.width = PxUtil.sU_1080p(1080);
-        layoutParams.height = PxUtil.sV_1080p(720);
+        layoutParams.width = PxUtil.sU_1080p(2160);
+        layoutParams.height = PxUtil.sU_1080p(1080);
         mFrameSizeView.requestLayout();
         mGlView.setRotation(90);
         mFrameSizeView.setRotation(90);

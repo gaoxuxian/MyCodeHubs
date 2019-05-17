@@ -99,8 +99,8 @@ public class FrameSizeFilterV2 extends GPUImageFilter {
             mFrameBufferMgr.clearColor(true, true, true, true, true);
             mFrameBufferMgr.clearDepth(true, true);
             mFrameBufferMgr.clearStencil(true, true);
-            GLES20.glClearColor(1, 1, 1, 1);
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+//            GLES20.glClearColor(1, 1, 1, 1);
+//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
             draw(textureID, true);
             // 需要裁剪画幅
@@ -154,6 +154,13 @@ public class FrameSizeFilterV2 extends GPUImageFilter {
                 mFrameSizeTextureID[0] = GLES20.GL_NONE;
             }
         }
+    }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+        super.onSurfaceChanged(width, height);
+
+        mRecopy = true;
     }
 
     // 记录当前画幅比例

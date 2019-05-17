@@ -50,16 +50,29 @@ public class DisplayFilter extends GPUImageFilter {
         // 矩阵变换
         GlMatrixTools matrix = getMatrix();
         matrix.setCamera(0, 0, 3, 0, 0, 0, 0, 1, 0);
-        float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
-        matrix.frustum(-1, 1, -vs, vs, 3, 7);
+        int sw = getSurfaceW();
+        int sh = getSurfaceH();
+        float vs = (float) sh / sw;
+        matrix.frustum(-1, 1, -vs, vs, 3, 5);
 
-        matrix.pushMatrix();
+        float degree = Math.abs(-mDegree) % 360;
+        boolean change = (degree >= 90 && degree < 180) || degree >= 270;
+
+        if (change) {
+            sw = getSurfaceH();
+            sh = getSurfaceW();
+            vs = (float) sh / sw;
+            matrix.frustum(-1, 1, -vs, vs, 3, 5);
+        }
+
         float x_scale = 1f;
-        float y_scale = getTextureH() != 0 && getTextureW() != 0 ? (float) getTextureH() / getTextureW() : 1f;
-
+        float y_scale = change ? (float) getTextureW() / getTextureH() : (float) getTextureH() / getTextureW();
         float scale = Math.min(1f / x_scale, vs / y_scale);
+        matrix.pushMatrix();
+
         matrix.scale(x_scale * scale, y_scale * scale, 1f);
         matrix.rotate(-mDegree, 0, 0, 1);
+
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }

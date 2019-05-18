@@ -7,10 +7,10 @@ package lib.gl.filter.rhythm;
 public final class GLFrame implements FrameBase {
 
     private static final long serialVersionUID = -5761530516027594902L;
-    private float mDegree = 90;
+    private float mDegree = 0;
     private float mTranslationX = 0;
     private float mTranslationY = 0;
-    private float mScale = 1;
+    private float mGestureScale = 1;
 
     private int mScaleType = scale_type_full_in;
 
@@ -35,28 +35,35 @@ public final class GLFrame implements FrameBase {
     }
 
     @Override
-    public void setScale(float scale) {
-        mScale = scale;
+    public void setGestureScale(float scale) {
+        mGestureScale = scale;
     }
 
     @Override
-    public float getScale() {
-        return mScale;
+    public float getGestureScale() {
+        return mGestureScale;
     }
 
     @Override
-    public void setTranslation(float x, float y) {
+    public void setGestureTranslation(float x, float y) {
         mTranslationX = x;
         mTranslationY = y;
     }
 
     @Override
-    public float getTranslationX() {
+    public float getGestureTranslationX() {
         return mTranslationX;
     }
 
     @Override
-    public float getTranslationY() {
+    public float getGestureTranslationY() {
         return mTranslationY;
+    }
+
+    @Override
+    public void resetGestureParams() {
+        mGestureScale = 1f;
+        mTranslationX = 0;
+        mTranslationY = 0;
     }
 }

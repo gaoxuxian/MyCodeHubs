@@ -5,7 +5,6 @@ import java.io.Serializable;
 public interface FrameBase extends Serializable {
     int scale_type_full_in = 1;
     int scale_type_not_full_in = 2;
-    int scale_type_gesture = 3;
 
     void setDegree(float degree);
 
@@ -15,13 +14,15 @@ public interface FrameBase extends Serializable {
 
     void setScaleType(int type);
 
-    void setScale(float scale);
+    void setGestureScale(float scale);
 
-    float getScale();
+    float getGestureScale();
 
-    void setTranslation(float x, float y);
+    void setGestureTranslation(float x, float y);
 
-    float getTranslationX();
+    float getGestureTranslationX();
 
-    float getTranslationY();
+    float getGestureTranslationY();
+
+    void resetGestureParams();
 }

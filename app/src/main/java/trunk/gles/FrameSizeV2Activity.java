@@ -129,6 +129,9 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
             adapter.setListener(new MyAdapter.Listener() {
                 @Override
                 public void onClick(FrameSizeInfo info) {
+                    for (ImageInfo imageInfo : images) {
+                        imageInfo.frame.resetGestureParams();
+                    }
                     setFrameSize(info.frameSizeType);
                     mFrameSizeView.setFrameSize(info.frameSizeType);
                 }
@@ -267,6 +270,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                             setScaleType(FrameBase.scale_type_full_in);
                             if (mImageInfo != null) {
                                 mImageInfo.frame.setScaleType(FrameBase.scale_type_full_in);
+                                mImageInfo.frame.resetGestureParams();
                             }
                             releaseAnim();
                             mDoingAnim = false;
@@ -312,6 +316,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                         public void onAnimationEnd(Animator animation) {
                             if (mImageInfo != null) {
                                 mImageInfo.frame.setScaleType(FrameBase.scale_type_not_full_in);
+                                mImageInfo.frame.resetGestureParams();
                             }
                             releaseAnim();
                             mDoingAnim = false;
@@ -387,6 +392,7 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
                             if (mImageInfo != null) {
                                 mImageInfo.frame.setScaleType(FrameBase.scale_type_full_in);
                                 mImageInfo.frame.setDegree(mImageInfo.frame.getDegree() + DEGREE);
+                                mImageInfo.frame.resetGestureParams();
                             }
                             releaseAnim();
                             mDoingAnim = false;
@@ -528,8 +534,8 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
 //        animator.start();
 
         ViewGroup.LayoutParams layoutParams = mGlView.getLayoutParams();
-        layoutParams.width = PxUtil.sU_1080p(1080);
-        layoutParams.height = PxUtil.sU_1080p(2160);
+        layoutParams.width = PxUtil.sU_1080p(2160);
+        layoutParams.height = PxUtil.sU_1080p(1080);
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) layoutParams;
         params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
         params.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
@@ -538,12 +544,12 @@ public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.R
         mGlView.requestLayout();
 
         layoutParams = mFrameSizeView.getLayoutParams();
-        layoutParams.width = PxUtil.sU_1080p(1080);
-        layoutParams.height = PxUtil.sU_1080p(2160);
+        layoutParams.width = PxUtil.sU_1080p(2160);
+        layoutParams.height = PxUtil.sU_1080p(1080);
         mFrameSizeView.requestLayout();
-//        mGlView.setRotation(90);
-//        mFrameSizeView.setRotation(90);
-//        mDisplayFilter.setDegree(90);
+        mGlView.setRotation(90);
+        mFrameSizeView.setRotation(90);
+        mDisplayFilter.setDegree(90);
     }
 
     TextureFilter mBmpToTextureFilter;

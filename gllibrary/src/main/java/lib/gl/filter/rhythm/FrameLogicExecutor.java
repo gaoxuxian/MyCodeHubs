@@ -1,9 +1,11 @@
 package lib.gl.filter.rhythm;
 
+import android.graphics.Matrix;
 import androidx.annotation.FloatRange;
 
 public class FrameLogicExecutor {
 
+    // 提供给 filter 绘制的临时参数
     private float mTempScale = 1f;
     private float mTempTranslationX;
     private float mTempTranslationY;
@@ -17,6 +19,7 @@ public class FrameLogicExecutor {
     public FrameLogicExecutor() {
         mTextureInfo = new TextureInfo();
         mFrameInfo = new FrameInfo();
+        mMatrix2 = new Matrix();
     }
 
     /**
@@ -30,34 +33,45 @@ public class FrameLogicExecutor {
      */
     public void executeLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo) {
         handleAnimScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo);
-        handleGestureScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo, mGestureScale, mGestureTransX, mGestureTransY);
+        handleGestureScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo);
         handleStaticScaleLogic(viewportW, viewportH, textureW, textureH, frameType, baseInfo);
     }
 
     private void handleAnimScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo) {
         if (mRequestAnim) {
-            float primitiveDegree = baseInfo.getDegree();
-            float newDegree = primitiveDegree + mAnimSweptAngle;
             int primitiveScaleType = baseInfo.getScaleType();
+            float primitiveDegree = baseInfo.getDegree();
+            float primitiveGestureOrgScale = baseInfo.getGestureScale();
+            float primitiveGestureTranslationX = baseInfo.getGestureTranslationX();
+            float primitiveGestureTranslationY = baseInfo.getGestureTranslationY();
+
+            float primitiveScale = performScaleLogicV2(viewportW, viewportH, textureW, textureH, frameType,
+                    primitiveScaleType, primitiveDegree, primitiveGestureOrgScale, 1f);
+            float[] primitiveTrans = performTranslationLogic(viewportW, viewportH, textureW, textureH, frameType, primitiveDegree,
+                    primitiveScale, primitiveGestureTranslationX, 0,
+                    primitiveGestureTranslationY, 0);
+
+            float newDegree = primitiveDegree + mAnimSweptAngle;
             int newScaleType = mAnimNextScaleType == 0 ? baseInfo.getScaleType() : mAnimNextScaleType;
-            float primitiveScale;
-            if (primitiveScaleType == FrameBase.scale_type_gesture) {
-                primitiveScale = baseInfo.getScale(); // FIXME: 2019/5/15 涉及手势处理的，需要重新计算
-            } else {
-                primitiveScale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, primitiveDegree, primitiveScaleType);
-            }
-            float newScale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, newDegree, newScaleType);
+            float newGestureOrgScale = 1f;
+            float newGestureTranslationX = -primitiveGestureTranslationX;
+            float newGestureTranslationY = -primitiveGestureTranslationY;
+
+            float newScale = performScaleLogicV2(viewportW, viewportH, textureW, textureH, frameType,
+                    newScaleType, newDegree, newGestureOrgScale, 1f);
+            float[] newTrans = performTranslationLogic(viewportW, viewportH, textureW, textureH, frameType,
+                    newDegree, newScale, primitiveGestureTranslationX, newGestureTranslationX,
+                    primitiveGestureTranslationY, newGestureTranslationY);
 
             float factor = mAnimFactor;
             mTempScale = primitiveScale + (newScale - primitiveScale) * factor;
-            mTempTranslationX = 0;
-            mTempTranslationY = 0;
+            mTempTranslationX = primitiveTrans[0] + (newTrans[0] - primitiveTrans[0]) * factor;
+            mTempTranslationY = primitiveTrans[1] + (newTrans[1] - primitiveTrans[1]) * factor;
             mTempDegree = primitiveDegree + (newDegree - primitiveDegree) * factor;
         }
     }
 
-    private void handleGestureScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo,
-                                         float gestureScale, float gestureTransX, float gestureTransY) {
+    private void handleGestureScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, FrameBase baseInfo) {
         if (mRequestGesture) {
             /*
             逻辑流程：
@@ -65,20 +79,21 @@ public class FrameLogicExecutor {
                 2、根据 baseInfo 记录的以往手势数据 + 当前的手势数据，重新计算位置
              */
 
-            // step one
+            float gestureUpdateScale = mGestureScale;
+            float gestureTransX = mGestureTransX;
+            float gestureTransY = mGestureTransY;
+
+            int scaleType = baseInfo.getScaleType();
             float degree = baseInfo.getDegree();
-            int scaleType = FrameBase.scale_type_not_full_in;
-            float min = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
-            scaleType = FrameBase.scale_type_full_in;
-            float max = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
-
-            // step two
-            float requestScale = baseInfo.getScale() * gestureScale;
-            float requestTranslationX = baseInfo.getTranslationX() + gestureTransX;
-            float requestTranslationY = baseInfo.getTranslationY() + gestureTransY;
-
-            // 由于FrameBase 是默认铺满, 每次的手势缩放比例，都是基于铺满来计算的
-
+            float gestureOrgScale = baseInfo.getGestureScale();
+            float gestureOrgTranslationX = baseInfo.getGestureTranslationX();
+            float gestureOrgTranslationY = baseInfo.getGestureTranslationY();
+            mTempScale = performScaleLogicV2(viewportW, viewportH, textureW, textureH, frameType, scaleType,
+                    degree, gestureOrgScale, gestureUpdateScale);
+            float[] trans = performTranslationLogic(viewportW, viewportH, textureW, textureH, frameType,
+                    degree, mTempScale, gestureOrgTranslationX, gestureTransX, gestureOrgTranslationY, gestureTransY);
+            mTempTranslationX = trans[0];
+            mTempTranslationY = trans[1];
         }
     }
 
@@ -86,22 +101,26 @@ public class FrameLogicExecutor {
         if (!mRequestGesture && !mRequestAnim) {
             float degree = baseInfo.getDegree();
             int scaleType = baseInfo.getScaleType();
-            float translationX = baseInfo.getTranslationX();
-            float translationY = baseInfo.getTranslationY();
-            float scale;
-            if (scaleType == FrameBase.scale_type_gesture) {
-                scale = baseInfo.getScale(); // FIXME: 2019/5/15 涉及手势处理的，需要重新计算
-            } else {
-                scale = performScaleLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scaleType);
-            }
+            float gestureOrgScale = baseInfo.getGestureScale();
+            float gestureTranslationX = baseInfo.getGestureTranslationX();
+            float gestureTranslationY = baseInfo.getGestureTranslationY();
+            float scale = performScaleLogicV2(viewportW, viewportH, textureW, textureH, frameType, scaleType,
+                    degree, gestureOrgScale, 1f);
+            float[] trans = performTranslationLogic(viewportW, viewportH, textureW, textureH, frameType, degree, scale,
+                    gestureTranslationX, 0, gestureTranslationY, 0);
             mTempScale = scale;
-            mTempTranslationX = translationX;
-            mTempTranslationY = translationY;
+            mTempTranslationX = trans[0];
+            mTempTranslationY = trans[1];
             mTempDegree = degree;
         }
     }
 
-    private float performScaleLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType, float degree, int scaleType) {
+    private Matrix mMatrix2;
+    // 最终需要被记录的手势缩放量
+    private float mDstGestureScale = 1;
+
+    private float performScaleLogicV2(int viewportW, int viewportH, int textureW, int textureH, int frameType, int scaleType,
+                                      float degree, float gestureOrgScale, float gestureUpdateScale) {
         /*
         逻辑流程：
             1、计算原图基于 viewport 的缩放比例，基于纹理长边缩放 St1 （目的是为了建立一个基准）
@@ -117,27 +136,22 @@ public class FrameLogicExecutor {
         mTextureInfo.setWidthHeight(textureW, textureH);
         float textureX = 1f;
         float textureY = mTextureInfo.getAspectRatio();
-        float primitiveTextureX = textureX;
-        float primitiveTextureY = textureY;
 
         float vx = 1f;
         float vy = (float) viewportH / viewportW;
 
-        float scale = 1f;
-        float st1 = Math.min(vx / textureX, vy / textureY);
-        scale *= st1;
-
         // step two
         degree = Math.abs(degree) % 360;
         if (degree == 90 || degree == 270) {
-            primitiveTextureX = textureY;
-            primitiveTextureY = textureX;
+            float x = textureX;
+            textureX = textureY;
+            textureY = x;
         }
 
         // step three
         mFrameInfo.frameSizeCalculation(viewportW, viewportH, frameType);
         float frameX = 1f;
-        float frameY = (float) mFrameInfo.height / mFrameInfo.width;
+        float frameY = mFrameInfo.getAspectRatio();
         float sf = Math.min(vx / frameX, vy / frameY);
 
         // step four
@@ -146,18 +160,118 @@ public class FrameLogicExecutor {
         frameX *= sf;
         frameY *= sf;
 
-        // 确定纹理区域
-        primitiveTextureX *= scale;
-        primitiveTextureY *= scale;
-
-        float min = Math.min(frameX / primitiveTextureX, frameY / primitiveTextureY);
-        float max = Math.max(frameX / primitiveTextureX, frameY / primitiveTextureY);
+        float min = Math.min(frameX / textureX, frameY / textureY);
+        float max = Math.max(frameX / textureX, frameY / textureY);
 
         if (scaleType == FrameBase.scale_type_full_in) {
-            out = scale * max;
+            out = max;
         } else if (scaleType == FrameBase.scale_type_not_full_in) {
-            out = scale * min;
+            out = min;
         }
+
+        // 额外缩放 -- 手势处理
+        mDstGestureScale = gestureOrgScale * gestureUpdateScale;
+        float temp = out * mDstGestureScale;
+        if (temp > max * 2f) {
+            out = max * 2f;
+            mDstGestureScale *= (max * 2f) / temp;
+        } else if (temp < min) {
+            out = min;
+            mDstGestureScale *= min / temp;
+        } else {
+            out = temp;
+        }
+        return out;
+    }
+
+    // 最终需要被记录的手势平移量
+    private float mDstGestureTransX;
+    private float mDstGestureTransY;
+
+    private float[] performTranslationLogic(int viewportW, int viewportH, int textureW, int textureH, int frameType,
+                                          float degree, float extraScale, float orgTransX, float extraTransX,
+                                            float orgTransY, float extraTransY) {
+        float[] out = new float[2];
+
+        float vx = 1f;
+        float vy = (float) viewportH / viewportW;
+
+        mFrameInfo.frameSizeCalculation(viewportW, viewportH, frameType);
+        float frameX = 1f;
+        float frameY = mFrameInfo.getAspectRatio();
+        float sf = Math.min(vx / frameX, vy / frameY);
+
+        // 确定画幅区域
+        frameX *= sf;
+        frameY *= sf;
+
+        mTextureInfo.setWidthHeight(textureW, textureH);
+        float textureX = 1f;
+        float textureY = mTextureInfo.getAspectRatio();
+
+        degree = Math.abs(degree) % 360;
+        if (degree == 90 || degree == 270) {
+            float x = textureX;
+            textureX = textureY;
+            textureY = x;
+        }
+
+        float x = textureX;
+        float y = textureY;
+
+        float[] leftTop = new float[]{-x, y};
+        float[] rightBottom = new float[]{x, -y};
+
+        float transX = orgTransX + extraTransX;
+        float transY = orgTransY + extraTransY;
+        float scale = extraScale;
+
+        mMatrix2.reset();
+        mMatrix2.postScale(scale, scale);
+        mMatrix2.postTranslate(transX, transY);
+        mMatrix2.mapPoints(leftTop);
+        mMatrix2.mapPoints(rightBottom);
+
+        float left = leftTop[0];
+        float top = leftTop[1];
+        float right = rightBottom[0];
+        float bottom = rightBottom[1];
+
+        float width = (right - left) / 2;
+        float height = (top - bottom) / 2;
+
+        if (width > frameX) {
+            // 控制边界
+            if (transX > 0 && left > -frameX) {
+                out[0] = (transX - (left + frameX));
+            } else if (transX < 0 && right < frameX) {
+                out[0] = (transX - (right - frameX));
+            } else {
+                out[0] = transX;
+            }
+        } else {
+            // 判断点是否在区域内, 居中显示
+            float t = (left + right) / 2f;
+            out[0] = (transX - t);
+        }
+
+        if (height > frameY) {
+            // 控制边界
+            if (transY < 0 && top < frameY) {
+                out[1] = (transY - (top - frameY));
+            } else if (transY > 0 && bottom > -frameY) {
+                out[1] = (transY - (bottom + frameY));
+            } else {
+                out[1] = transY;
+            }
+        } else {
+            // 判断点是否在区域内, 居中显示
+            float t = (top + bottom) / 2f;
+            out[1] = (transY - t);
+        }
+
+        mDstGestureTransX = out[0];
+        mDstGestureTransY = out[1];
         return out;
     }
 
@@ -222,7 +336,7 @@ public class FrameLogicExecutor {
 
     public void updateGestureTranslation(float transX, float transY) {
         mGestureTransX = transX;
-        mGestureTransY = transY;
+        mGestureTransY = -transY; // android view touch y差值 和 gl y方向 相反
     }
 
     private volatile boolean mRequestGesture;
@@ -235,8 +349,7 @@ public class FrameLogicExecutor {
         if (mRequestGesture) {
             synchronized (object_lock) {
                 if (base != null) {
-                    base.setScale(mTempScale);
-                    base.setScaleType(FrameBase.scale_type_gesture);
+                    base.setGestureScale(mDstGestureScale);
                 }
                 mGestureScale = 1f;
             }
@@ -247,8 +360,7 @@ public class FrameLogicExecutor {
         if (mRequestGesture) {
             synchronized (object_lock) {
                 if (base != null) {
-                    base.setTranslation(mTempTranslationX, mTempTranslationY);
-                    base.setScaleType(FrameBase.scale_type_gesture);
+                    base.setGestureTranslation(mDstGestureTransX, mDstGestureTransY);
                 }
                 mGestureTransX = 0;
                 mGestureTransY = 0;
@@ -260,13 +372,16 @@ public class FrameLogicExecutor {
         synchronized (object_lock) {
             if (sync) {
                 if (base != null) {
-                    base.setTranslation(mTempTranslationX, mTempTranslationY);
-                    base.setScale(mTempScale);
-                    base.setScaleType(FrameBase.scale_type_gesture);
+                    base.setGestureTranslation(mDstGestureTransX, mDstGestureTransY);
+                    base.setGestureScale(mDstGestureScale);
                 }
                 mGestureScale = 1f;
                 mGestureTransX = 0;
                 mGestureTransY = 0;
+
+                mDstGestureScale = 1f;
+                mDstGestureTransX = 0;
+                mDstGestureTransY = 0;
             }
             mRequestGesture = false;
         }
@@ -280,12 +395,12 @@ public class FrameLogicExecutor {
         int width;
         int height;
 
-        public void setWidthHeight(int width, int height) {
+        void setWidthHeight(int width, int height) {
             this.width = width;
             this.height = height;
         }
 
-        public float getAspectRatio() {
+        float getAspectRatio() {
             if (width == 0 || height == 0) {
                 return 0;
             }
@@ -301,7 +416,7 @@ public class FrameLogicExecutor {
         int width; // 真实宽
         int height; // 真实高
 
-        public void frameSizeCalculation(int viewportW, int viewportH, int frameSizeType) {
+        void frameSizeCalculation(int viewportW, int viewportH, int frameSizeType) {
             this.width = viewportW;
             this.height = viewportH;
             float frameSizeAspectRatio = FrameSizeType.getAspectRatio(frameSizeType);
@@ -309,6 +424,14 @@ public class FrameLogicExecutor {
                 // 计算画幅宽高
                 height = (int) (viewportW / frameSizeAspectRatio);
             }
+        }
+
+        float getAspectRatio() {
+            if (width == 0 || height == 0) {
+                return 0;
+            }
+
+            return (float) height / width;
         }
     }
 }

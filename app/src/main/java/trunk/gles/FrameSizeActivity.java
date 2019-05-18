@@ -490,7 +490,7 @@ public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Ren
     @Override
     public void onDrawFrame(GL10 gl) {
         if (mCanDraw) {
-            int texture = mBmpToTextureFilter.createGlTexture(R.drawable.open_test_6);
+            int texture = mBmpToTextureFilter.createGlTexture(R.drawable.open_test_9);
             mBmpToTextureFilter.initFrameBufferOfTextureSize(); // FIXME: 2019/4/30 调整纹理尺寸, 调整成图片一半，或者指定大小
             texture = mBmpToTextureFilter.onDrawBuffer(texture);
 

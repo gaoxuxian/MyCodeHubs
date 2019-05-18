@@ -75,8 +75,9 @@ public class FrameSizeFilterV2 extends GPUImageFilter {
         float degree = -mHelper.getDegree();
 
         matrix.translate(transX, transY, 0);
+        matrix.scale(scale, scale, 1f);
         matrix.rotate(degree, 0, 0, 1);
-        matrix.scale(x_scale * scale, y_scale * scale, 1f);
+        matrix.scale(x_scale, y_scale, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }

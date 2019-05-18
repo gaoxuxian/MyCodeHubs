@@ -160,7 +160,6 @@ public class FrameSizeFilterV2 extends GPUImageFilter {
     @Override
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
-
         mRecopy = true;
     }
 

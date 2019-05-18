@@ -15,11 +15,21 @@ public class FrameLogicExecutor {
     private FrameInfo mFrameInfo;
 
     private final Object object_lock = new Object();
+    private final float DEFAULT_MAX_SCALE_FACTOR = 1f;
+    private float MAX_SCALE_FACTOR;
 
     public FrameLogicExecutor() {
         mTextureInfo = new TextureInfo();
         mFrameInfo = new FrameInfo();
         mMatrix2 = new Matrix();
+        MAX_SCALE_FACTOR = DEFAULT_MAX_SCALE_FACTOR;
+    }
+
+    public void setMaxScaleFactor(float factor) {
+        if (factor < DEFAULT_MAX_SCALE_FACTOR) {
+            factor = DEFAULT_MAX_SCALE_FACTOR;
+        }
+        MAX_SCALE_FACTOR = factor;
     }
 
     /**
@@ -172,9 +182,10 @@ public class FrameLogicExecutor {
         // 额外缩放 -- 手势处理
         mDstGestureScale = gestureOrgScale * gestureUpdateScale;
         float temp = out * mDstGestureScale;
-        if (temp > max * 2f) {
-            out = max * 2f;
-            mDstGestureScale *= (max * 2f) / temp;
+        float maxScale = max * MAX_SCALE_FACTOR;
+        if (temp > maxScale) {
+            out = maxScale;
+            mDstGestureScale *= (maxScale) / temp;
         } else if (temp < min) {
             out = min;
             mDstGestureScale *= min / temp;

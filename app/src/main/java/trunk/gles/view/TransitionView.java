@@ -3,16 +3,15 @@ package trunk.gles.view;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import com.xx.avlibrary.gl.util.FilterFactory;
+import com.xx.avlibrary.gl.util.GLUtil;
+import com.xx.avlibrary.gl.filter.GPUImageTransitionFilter;
+import com.xx.avlibrary.gl.filter.GPUTransitionFilterType;
+import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
+import trunk.R;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import lib.gl.filter.GPUImageTransitionFilter;
-import lib.gl.filter.GPUTransitionFilterType;
-import lib.gl.filter.common.BmpToTextureFilter;
-import trunk.R;
-import lib.gl.util.FilterFactory;
-import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx

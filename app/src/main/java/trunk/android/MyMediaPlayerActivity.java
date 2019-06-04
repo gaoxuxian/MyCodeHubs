@@ -1,7 +1,7 @@
 package trunk.android;
 
 import androidx.annotation.Nullable;
-import lib.gl.decode.MediaPlayer;
+import com.xx.avlibrary.gl.decode.MediaPlayer;
 import trunk.BaseActivity;
 
 import android.app.Activity;

@@ -1,28 +1,22 @@
 package trunk.gles;
 
-import lib.gl.egl.*;
-import lib.gl.filter.common.BmpToTextureFilter;
-import trunk.BaseActivity;
-import trunk.R;
-import lib.gl.util.GLUtil;
-import util.PxUtil;
-import util.ThreadUtil;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.opengl.GLES20;
-import android.os.Build;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import com.xx.avlibrary.gl.util.GLUtil;
+import com.xx.avlibrary.gl.egl.EglCore;
+import com.xx.avlibrary.gl.egl.EglSurfaceBase;
+import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
+import trunk.BaseActivity;
+import trunk.R;
+import util.PxUtil;
+import util.ThreadUtil;
 
 public class EGLPbufferActivity extends BaseActivity
 {

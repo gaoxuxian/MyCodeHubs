@@ -1,27 +1,27 @@
 package trunk.android;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.media.*;
-import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import lib.gl.egl.EglCore;
-import lib.gl.egl.EglSurfaceBase;
-import lib.gl.filter.common.BmpToTextureFilter;
-import lib.gl.filter.common.DisplayImageFilter;
-import lib.gl.util.GLUtil;
+import com.xx.avlibrary.gl.util.GLUtil;
+import com.xx.avlibrary.gl.egl.EglCore;
+import com.xx.avlibrary.gl.egl.EglSurfaceBase;
+import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
+import com.xx.avlibrary.gl.filter.common.DisplayImageFilter;
 import trunk.R;
 import util.PxUtil;
 
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.opengles.GL10;
 import java.io.File;
 import java.io.IOException;

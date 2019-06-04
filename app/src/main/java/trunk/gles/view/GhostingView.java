@@ -2,14 +2,13 @@ package trunk.gles.view;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import com.xx.avlibrary.gl.util.GLUtil;
+import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
+import com.xx.avlibrary.gl.filter.innovation.GhostingFilter;
+import trunk.R;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import lib.gl.filter.common.BmpToTextureFilter;
-import lib.gl.filter.innovation.GhostingFilter;
-import trunk.R;
-import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx

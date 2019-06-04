@@ -7,12 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-import dalvik.system.DexClassLoader;
-import lib.gl.egl.EglCore;
-import lib.gl.egl.EglSurfaceBase;
-import lib.gl.encode.Encoder;
-import lib.gl.filter.common.BmpToTextureFilter;
-import lib.gl.filter.common.DisplayImageFilter;
+import com.xx.avlibrary.gl.egl.EglCore;
+import com.xx.avlibrary.gl.egl.EglSurfaceBase;
+import com.xx.avlibrary.gl.encode.Encoder;
+import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
+import com.xx.avlibrary.gl.filter.common.DisplayImageFilter;
 import trunk.BaseActivity;
 
 import android.content.Context;
@@ -23,11 +22,6 @@ import android.widget.FrameLayout;
 import trunk.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 
 public class EncodeActivity extends BaseActivity {
 

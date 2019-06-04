@@ -2,14 +2,11 @@ package trunk.gles;
 
 import android.content.Context;
 import android.opengl.EGLConfig;
-import android.opengl.EGLContext;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import lib.gl.view.MyRenderView;
+import com.xx.avlibrary.MyRenderView;
 import trunk.BaseActivity;
 
 public class GLCustomViewActivity extends BaseActivity {

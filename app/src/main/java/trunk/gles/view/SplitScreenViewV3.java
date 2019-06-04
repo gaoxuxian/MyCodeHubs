@@ -4,14 +4,13 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import com.xx.avlibrary.gl.util.GLUtil;
+import com.xx.avlibrary.gl.filter.common.DisplayImageFilter;
+import com.xx.avlibrary.gl.filter.innovation.SplitScreenFilterV3;
+import trunk.R;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import lib.gl.filter.common.DisplayImageFilter;
-import lib.gl.filter.innovation.SplitScreenFilterV3;
-import trunk.R;
-import lib.gl.util.GLUtil;
 
 /**
  * @author Gxx 菱形扩散转场滤镜效果

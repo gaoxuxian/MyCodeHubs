@@ -25,14 +25,14 @@ public class RenderThread extends Thread {
 	private RenderHandler mRenderHandler;
 
 	@NonNull
-	private final WeakReference<PluginVideoView.Renderer> mRenderer;
+	private final WeakReference<PluginVideoView> mRendererViewWRF;
 
 	private volatile boolean isQuit;
 
-	RenderThread(PluginVideoView.Renderer renderer) {
+	RenderThread(PluginVideoView rendererView) {
 		super("Render Thread");
 
-		mRenderer = new WeakReference<>(renderer);
+		mRendererViewWRF = new WeakReference<>(rendererView);
 
 		mPriority = Process.THREAD_PRIORITY_DEFAULT;
 	}
@@ -42,7 +42,7 @@ public class RenderThread extends Thread {
 		isQuit = false;
 		Looper.prepare();
 		synchronized (this) {
-			mRenderHandler = new RenderHandler(mRenderer);
+			mRenderHandler = new RenderHandler(mRendererViewWRF);
 			notifyAll();
 		}
 		Process.setThreadPriority(mPriority);
@@ -76,13 +76,13 @@ public class RenderThread extends Thread {
 		}
 	}
 
-	public void requestRender() {
+	public void requestRender(PluginVideoView.DrawInfo info) {
 		if (Thread.currentThread() == this) {
-			mRenderHandler.requestRender();
+			mRenderHandler.requestRender(info);
 		} else {
 			mRenderHandler.removeMessages(MSG_REQUEST_RENDER);
 			if (!isQuit) {
-				Message.obtain(mRenderHandler, MSG_REQUEST_RENDER).sendToTarget();
+				Message.obtain(mRenderHandler, MSG_REQUEST_RENDER, info).sendToTarget();
 			}
 		}
 	}
@@ -108,7 +108,7 @@ public class RenderThread extends Thread {
 	public static class RenderHandler extends Handler {
 
 		@NonNull
-		private final WeakReference<PluginVideoView.Renderer> mRenderer;
+		private final WeakReference<PluginVideoView> mRendererViewWRF;
 
 		@Nullable
 		private EglCoreV2 mEglCore;
@@ -127,8 +127,8 @@ public class RenderThread extends Thread {
 
 		private boolean mPendingRender;
 
-		private RenderHandler(@NonNull WeakReference<PluginVideoView.Renderer> renderer) {
-			mRenderer = renderer;
+		private RenderHandler(@NonNull WeakReference<PluginVideoView> renderer) {
+			mRendererViewWRF = renderer;
 			mEglCore = new EglCoreV2(null, EglCoreV2.FLAG_RECORDABLE | EglCoreV2.FLAG_TRY_GLES3);
 		}
 
@@ -142,7 +142,7 @@ public class RenderThread extends Thread {
 					onSurfaceChanged(msg.arg1, msg.arg2);
 					break;
 				case MSG_REQUEST_RENDER:
-					requestRender();
+					requestRender((PluginVideoView.DrawInfo) msg.obj);
 					break;
 				case MSG_SURFACE_DESTROY:
 					onSurfaceDestroy();
@@ -175,7 +175,7 @@ public class RenderThread extends Thread {
 			}
 
 			mWindowSurface.makeCurrent();
-			PluginVideoView.Renderer renderer = mRenderer.get();
+			PluginVideoView.Renderer renderer = getRenderer();
 			if (renderer != null && !mWaitingSurface) {
 				renderer.onSurfaceCreated();
 				mShouldCallDestroy = true;
@@ -189,7 +189,7 @@ public class RenderThread extends Thread {
 
 			mWidth = width;
 			mHeight = height;
-			PluginVideoView.Renderer renderer = mRenderer.get();
+			PluginVideoView.Renderer renderer = getRenderer();
 			if (renderer != null && !mWaitingSurface) {
 				renderer.onSurfaceChanged(mWidth, mHeight);
 			}
@@ -197,15 +197,15 @@ public class RenderThread extends Thread {
 			final boolean doRender = mWaitingSurface || mPendingRender;
 			mWaitingSurface = false;
 			if (doRender) {
-				requestRender();
+				requestRender(null);
 			}
 		}
 
-		private void requestRender() {
+		private void requestRender(PluginVideoView.DrawInfo info) {
 			mPendingRender = false;
-			PluginVideoView.Renderer renderer = mRenderer.get();
+			PluginVideoView.Renderer renderer = getRenderer();
 			if (renderer != null && canRender()) {
-				renderer.onDrawFrame();
+				renderer.onDrawFrame(info);
 				if (mWindowSurface != null) {
 					mWindowSurface.swapBuffers();
 				}
@@ -224,7 +224,7 @@ public class RenderThread extends Thread {
 				mWaitingSurface = true;
 			} else {
 				// Meizu M5 Note 一定要释放 EGL 上下文
-				PluginVideoView.Renderer renderer = mRenderer.get();
+				PluginVideoView.Renderer renderer = getRenderer();
 				if (renderer != null && mShouldCallDestroy) {
 					mShouldCallDestroy = false;
 					renderer.onSurfaceDestroyed();
@@ -238,7 +238,7 @@ public class RenderThread extends Thread {
 		private void onRelease() {
 			removeCallbacksAndMessages(null);
 
-			PluginVideoView.Renderer renderer = mRenderer.get();
+			PluginVideoView.Renderer renderer = getRenderer();
 			if (renderer != null && mShouldCallDestroy) {
 				mShouldCallDestroy = false;
 				renderer.onSurfaceDestroyed();
@@ -247,6 +247,18 @@ public class RenderThread extends Thread {
 			releaseGL();
 
 			quitSafely();
+		}
+
+		private PluginVideoView.Renderer getRenderer() {
+			PluginVideoView.Renderer renderer = null;
+			PluginVideoView rendererView = mRendererViewWRF.get();
+			if (rendererView != null) {
+				IController controller = rendererView.getPlayerController();
+				if (controller != null) {
+					renderer = controller.getRenderer();
+				}
+			}
+			return renderer;
 		}
 
 		private void releaseSurface() {

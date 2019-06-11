@@ -1,4 +1,4 @@
-package com.xx.avlibrary;
+package com.xx.avlibrary.player.entry;
 
 public class AudioDecodeInfo {
     public byte[] data;

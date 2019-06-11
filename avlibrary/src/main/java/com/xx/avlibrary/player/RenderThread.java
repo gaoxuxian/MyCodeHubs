@@ -1,4 +1,4 @@
-package com.xx.avlibrary;
+package com.xx.avlibrary.player;
 
 import android.graphics.SurfaceTexture;
 import android.os.Handler;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.xx.avlibrary.gl.egl.EglCoreV2;
 import com.xx.avlibrary.gl.egl.WindowSurface;
+import com.xx.avlibrary.player.port.IControl;
 
 import java.lang.ref.WeakReference;
 
@@ -253,7 +254,7 @@ public class RenderThread extends Thread {
 			PluginVideoView.Renderer renderer = null;
 			PluginVideoView rendererView = mRendererViewWRF.get();
 			if (rendererView != null) {
-				IController controller = rendererView.getPlayerController();
+				IControl controller = rendererView.getPlayerController();
 				if (controller != null) {
 					renderer = controller.getRenderer();
 				}

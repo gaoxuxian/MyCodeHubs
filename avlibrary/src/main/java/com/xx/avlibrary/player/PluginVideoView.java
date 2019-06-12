@@ -23,10 +23,12 @@ import com.xx.avlibrary.player.port.decode.IVideoDecoder;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 public class PluginVideoView extends ConstraintLayout implements TextureView.SurfaceTextureListener, IPlayer {
-    private static final String prepare_key_audio_path = "audio_path";
-    private static final String prepare_key_video_path = "video_path";
+    public static final String prepare_key_audio_path = "audio_path";
+    public static final String prepare_key_video_path = "video_path";
     private final Object state_lock;
     private volatile Status mPlayerState;
     private volatile DrawInfo mDrawInfo;
@@ -37,10 +39,18 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
     private static final int handle_progress = 7778;
     private static final int handle_complete = 7779;
 
+    private final Object decode_lock;
+    private volatile boolean mVideoCompleted;
+    private volatile boolean mAudioCompleted;
+
+    private CyclicBarrier mPrepareBarrier;
+    private CyclicBarrier mPausedBarrier;
+
     public PluginVideoView(Context context) {
         super(context);
         state_lock = new Object();
-        init(context);
+        decode_lock = new Object();
+        initView(context);
     }
 
     private void setPlayerState(Status state) {
@@ -53,11 +63,10 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
         return mPlayerState;
     }
 
-    private void init(Context context) {
+    public void initPlayerRelated() {
         mDrawInfo = new DrawInfo();
         mAudioInfo = new AudioInfo();
-        initThread();
-        initView(context);
+        initThreadRelated();
     }
 
     private volatile RenderThread mRendererThread;
@@ -65,7 +74,17 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
     private AudioDecodeTask mAudioDecodeTask;
     private Handler mHandler;
 
-    private void initThread() {
+    private void initThreadRelated() {
+        mPrepareBarrier = new CyclicBarrier(2, () -> {
+            setPlayerState(Status.prepared);
+            Message.obtain(mHandler, handle_prepare).sendToTarget();
+        });
+
+        mPausedBarrier = new CyclicBarrier(2, () -> {
+            setPlayerState(Status.paused);
+            Message.obtain(mHandler, handle_pause).sendToTarget();
+        });
+
         mHandler = new Handler(msg -> {
             PlayerListener listener = accessPlayerListener();
             if (listener != null) {
@@ -83,7 +102,7 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
                         break;
                     }
                     case handle_complete: {
-                        listener.onPaused();
+                        listener.onCompleted();
                         break;
                     }
                 }
@@ -94,7 +113,7 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
         mVideoDecodeTask = new VideoDecodeTask(this, new DecodeListener<VideoDecodeInfo>() {
             @Override
             public void prepared() {
-                mVideoDecodeTask.play();
+                awaitCyclicBarrier(mPrepareBarrier);
             }
 
             @Override
@@ -104,21 +123,46 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
                     mDrawInfo.preFrame = info.preFrame;
                     mDrawInfo.curFrame = info.curFrame;
                     mDrawInfo.pts = info.pts;
+                    ITimestamp timestampMgr = accessTimestampMgr();
+                    if (timestampMgr != null) {
+                        long syncTime = timestampMgr.syncAVTimestamp(info.pts);
+                        if (syncTime > 30){ // 视频超前
+                            try {
+                                if ((syncTime - 30) > 5) {
+                                    Thread.sleep(syncTime - 30 - 5);
+                                } else {
+                                    Thread.sleep(syncTime - 30);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    requestRenderer(mDrawInfo);
                 }
-                requestRenderer(mDrawInfo);
                 mVideoDecodeTask.play();
             }
 
             @Override
             public void paused() {
+                awaitCyclicBarrier(mPausedBarrier);
+            }
 
+            @Override
+            public void completed() {
+                synchronized (decode_lock) {
+                    mVideoCompleted = true;
+                    if (mVideoCompleted && mAudioCompleted) {
+                        setPlayerState(Status.complete);
+                        Message.obtain(mHandler, handle_complete).sendToTarget();
+                    }
+                }
             }
         });
         mAudioDecodeTask = new AudioDecodeTask(this, new DecodeListener<AudioDecodeInfo>() {
             @Override
             public void prepared() {
-                setPlayerState(Status.prepared);
-                mAudioDecodeTask.play();
+                awaitCyclicBarrier(mPrepareBarrier);
             }
 
             @Override
@@ -129,14 +173,31 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
                     mAudioInfo.channels = info.channels;
                     mAudioInfo.sampleRate = info.sampleRate;
                     mAudioInfo.pts = info.pts;
+                    ITimestamp timestampMgr = accessTimestampMgr();
+                    if (timestampMgr != null) {
+                        timestampMgr.updateAudioTimestamp(info.pts);
+                    }
                     playAudio(mAudioInfo);
                 }
                 mAudioDecodeTask.play();
+                mHandler.removeMessages(handle_progress);
+                Message.obtain(mHandler, handle_progress, info != null ? info.pts : 0).sendToTarget();
             }
 
             @Override
             public void paused() {
+                awaitCyclicBarrier(mPausedBarrier);
+            }
 
+            @Override
+            public void completed() {
+                synchronized (decode_lock) {
+                    mAudioCompleted = true;
+                    if (mVideoCompleted && mAudioCompleted) {
+                        setPlayerState(Status.complete);
+                        Message.obtain(mHandler, handle_complete).sendToTarget();
+                    }
+                }
             }
         });
 
@@ -148,10 +209,30 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
         mRendererThread.start();
     }
 
+    private void awaitCyclicBarrier(CyclicBarrier cyclicBarrier) {
+        if (cyclicBarrier != null) {
+            try {
+                cyclicBarrier.await();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private PlayerListener accessPlayerListener() {
         IControl control = getPlayerController();
         if (control != null) {
             return control.getPlayerListener();
+        }
+        return null;
+    }
+
+    private ITimestamp accessTimestampMgr() {
+        IControl control = getPlayerController();
+        if (control != null) {
+            return control.getTimestampManager();
         }
         return null;
     }
@@ -224,6 +305,7 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
     @Override
     public void prepare(HashMap<String, Object> params) {
         if (params != null && canPrepare() && mPlayerController != null) {
+            mPrepareBarrier.reset();
             setPlayerState(Status.prepare);
             Object value;
             value = params.get(prepare_key_audio_path);
@@ -266,6 +348,7 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
     @Override
     public void pause() {
         if (canPause() && mPlayerController != null) {
+            mPausedBarrier.reset();
             mAudioDecodeTask.pause();
             mVideoDecodeTask.pause();
         }
@@ -322,10 +405,10 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
         void onSurfaceDestroyed();
     }
 
-    static class DrawInfo {
-        byte[] fgFrame;
-        byte[] preFrame;
-        byte[] curFrame;
+    public static class DrawInfo {
+        public byte[] fgFrame;
+        public byte[] preFrame;
+        public byte[] curFrame;
         int pts;
     }
 
@@ -363,7 +446,14 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
 
         @Override
         protected void handlePrepare(Message msg) {
-
+            IAudioDecoder decoder = accessDecoder();
+            if (decoder != null) {
+                decoder.prepare(msg.obj);
+            }
+            DecodeListener<AudioDecodeInfo> listener = mListener.get();
+            if (listener != null) {
+                listener.prepared();
+            }
         }
 
         @Override
@@ -380,7 +470,11 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
 
         @Override
         protected void handlePause() {
-
+            removeMessages(play);
+            DecodeListener<AudioDecodeInfo> listener = mListener.get();
+            if (listener != null) {
+                listener.paused();
+            }
         }
 
         @Override
@@ -427,7 +521,14 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
 
         @Override
         protected void handlePrepare(Message msg) {
-
+            IVideoDecoder decoder = accessDecoder();
+            if (decoder != null) {
+                decoder.prepare(msg.obj);
+            }
+            DecodeListener<VideoDecodeInfo> listener = mListener.get();
+            if (listener != null) {
+                listener.prepared();
+            }
         }
 
         @Override
@@ -444,7 +545,11 @@ public class PluginVideoView extends ConstraintLayout implements TextureView.Sur
 
         @Override
         protected void handlePause() {
-
+            removeMessages(play);
+            DecodeListener<VideoDecodeInfo> listener = mListener.get();
+            if (listener != null) {
+                listener.paused();
+            }
         }
 
         @Override

@@ -8,6 +8,7 @@ public enum Status {
     playing,
     pause,
     paused,
+    complete,
     stop,
     stopped,
     ;

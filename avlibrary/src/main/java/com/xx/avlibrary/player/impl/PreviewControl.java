@@ -1,5 +1,6 @@
 package com.xx.avlibrary.player.impl;
 
+import com.xx.avlibrary.player.ITimestamp;
 import com.xx.avlibrary.player.PluginVideoView;
 import com.xx.avlibrary.player.port.decode.IAudioDecoder;
 import com.xx.avlibrary.player.port.IControl;
@@ -10,6 +11,7 @@ public class PreviewControl implements IControl {
     private volatile IVideoDecoder mVideoDecoder;
     private volatile PluginVideoView.Renderer mRenderer;
     private volatile PluginVideoView.PlayerListener mPlayerListener;
+    private volatile ITimestamp mTimestamp;
 
     @Override
     public void setAudioDecoder(IAudioDecoder decoder) {
@@ -54,5 +56,15 @@ public class PreviewControl implements IControl {
     @Override
     public void unregisterPlayerListener() {
         mPlayerListener = null;
+    }
+
+    @Override
+    public void setTimestampManager(ITimestamp timestamp) {
+        mTimestamp = timestamp;
+    }
+
+    @Override
+    public ITimestamp getTimestampManager() {
+        return mTimestamp;
     }
 }

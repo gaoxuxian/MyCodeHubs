@@ -6,7 +6,7 @@ import com.xx.avlibrary.player.port.decode.IVideoDecoder;
 public class PreviewVideoDecoder implements IVideoDecoder {
 
     @Override
-    public void setPath(Object path) {
+    public void prepare(Object params) {
 
     }
 

@@ -89,9 +89,9 @@ public class TransitionActivity extends BaseActivity
         data.add(info);
 
         info = new FilterInfo();
-        info.mName = "(9)-旋转";
+        info.mName = "(9)-自旋";
         info.mBmpRes = R.drawable._filter_9;
-        info.mType = GPUTransitionFilterType.ROTATE;
+        info.mType = GPUTransitionFilterType.SPIN;
         data.add(info);
 
         info = new FilterInfo();
@@ -164,6 +164,18 @@ public class TransitionActivity extends BaseActivity
         info.mName = "(21)-随机方块";
         info.mBmpRes = R.drawable._filter_21;
         info.mType = GPUTransitionFilterType.RANDOM_SQUARE;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(22)-旋转闪白";
+        info.mBmpRes = R.drawable._filter_22;
+        info.mType = GPUTransitionFilterType.ROTATE_WHITE;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(23)-纯旋转";
+        info.mBmpRes = R.drawable._filter_23;
+        info.mType = GPUTransitionFilterType.JUST_ROTATION;
         data.add(info);
 
         mAdapter = new FilterAdapter(data, type -> mItemView.setTransitionFilter(type));

@@ -1,0 +1,38 @@
+precision mediump float;
+
+#define DEG2RAD 0.03926990816987241548078304229099 // 1/180*PI
+
+uniform sampler2D vTextureFront;
+uniform sampler2D vTextureBack;
+uniform float progress;
+varying vec2 aCoordinate;
+
+uniform float rotation;
+uniform float textureW;
+uniform float textureH;
+
+float detectEdge(float value) {
+    if (value > 1.) {
+        return 2. - value;
+    }
+    if (value < 0.) {
+        return -value;
+    }
+    return value;
+}
+
+void main() {
+    float factor = progress < .5 ? progress * 2. : (progress - .5) * 2.;
+    float angleOffset = progress < .5 ? mix(0., rotation * DEG2RAD, factor) : mix(-rotation * DEG2RAD, 0., factor);
+
+    vec2 center = vec2(0., 0.);
+    float ratio = textureW / textureH;
+    vec2 p = (aCoordinate - vec2(.5, .5)) * vec2(ratio, 1.);
+
+    float angle = atan(p.y, p.x) + angleOffset;
+    float dist = distance(center, p);
+    p.x = detectEdge(cos(angle) * dist / ratio + .5);
+    p.y = detectEdge(sin(angle) * dist + .5);
+
+    gl_FragColor = progress < 0.5 ? texture2D(vTextureFront, p) : texture2D(vTextureBack, p);
+}

@@ -1,0 +1,51 @@
+precision mediump float;
+
+#define DEG2RAD 0.03926990816987241548078304229099 // 1/180*PI
+
+uniform sampler2D vTextureFront;
+uniform sampler2D vTextureBack;
+uniform float progress;
+varying vec2 aCoordinate;
+
+// In degrees
+uniform float rotation; // = 6
+
+// Multiplier
+uniform float scale; // = 1.2
+
+uniform float textureW;
+uniform float textureH;
+
+float detectEdge(float x) {
+    if (x > 1.) {
+        return 2. - x;
+    }
+    if (x < 0.) {
+        return -x;
+    }
+    return x;
+}
+
+void main() {
+    // Massage parameters
+    float phase = progress < 0.5 ? progress * 2.0 : (progress - 0.5) * 2.0;
+    float angleOffset = progress < 0.5 ? mix(0.0, rotation * DEG2RAD, phase) : mix(-rotation * DEG2RAD, 0.0, phase);
+    float newScale = progress < 0.5 ? mix(1.0, scale, phase) : mix(scale, 1.0, phase);
+
+    vec2 center = vec2(0, 0);
+
+    // Calculate the source point
+    vec2 assumedCenter = vec2(0.5, 0.5);
+    float ratio = textureW / textureH;
+    vec2 p = (aCoordinate.xy - vec2(0.5, 0.5)) / newScale * vec2(ratio, 1.0);
+
+    // This can probably be optimized (with distance())
+    float angle = atan(p.y, p.x) + angleOffset;
+    float dist = distance(center, p);
+    p.x = detectEdge(cos(angle) * dist / ratio + 0.5);
+    p.y = detectEdge(sin(angle) * dist + 0.5);
+
+    vec4 c = progress < 0.5 ? texture2D(vTextureFront, p) : texture2D(vTextureBack, p);
+
+    gl_FragColor = c + (progress < 0.5 ? mix(0.0, 1.0, phase) : mix(1.0, 0.0, phase));
+}

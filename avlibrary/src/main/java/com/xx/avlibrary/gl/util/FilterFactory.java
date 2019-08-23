@@ -53,7 +53,7 @@ public class FilterFactory {
                 case FUZZY:
                     return new FuzzyTransitionFilter(context);
 
-                case ROTATE:
+                case SPIN:
                     return new RotateTransitionFilter(context);
 
                 case CIRCLE_CROP:
@@ -91,6 +91,12 @@ public class FilterFactory {
 
                 case RANDOM_SQUARE:
                     return new RandomSquaresTransitionFilter(context);
+
+                case ROTATE_WHITE:
+                    return new RotatingWhiteTransitionFilter(context);
+
+                case JUST_ROTATION:
+                    return new RotationTransitionFilter(context);
 
                 default:
                     return new GPUImageTransitionFilter(context);

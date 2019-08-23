@@ -181,8 +181,7 @@ public class GLUtil
         return result.toString().replaceAll("\\r\\n", "\n");
     }
 
-    public static int createShader(int type, String resource)
-    {
+    public static int createShader(int type, String resource) {
         if (TextUtils.isEmpty(resource)) return 0;
 
         // 构建一个着色器
@@ -194,16 +193,18 @@ public class GLUtil
         int[] compileResult = new int[1];
         // 检测着色器绑定情况
         GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compileResult, 0);
-        if (compileResult[0] == 0)
-        {
+        if (compileResult[0] == 0) {
+            String infoLog = GLES20.glGetShaderInfoLog(shader);
             GLES20.glDeleteShader(shader);
             shader = 0;
+            if (!TextUtils.isEmpty(infoLog)) {
+                Log.e(TAG, "createShader: shader error info log: " + infoLog);
+            }
         }
         return shader;
     }
 
-    public static int createAndLinkProgram(int vertexShader, int fragmentShader)
-    {
+    public static int createAndLinkProgram(int vertexShader, int fragmentShader) {
         int program = GLES20.glCreateProgram();
         GLES20.glAttachShader(program, vertexShader);
         GLES20.glAttachShader(program, fragmentShader);
@@ -212,10 +213,13 @@ public class GLUtil
         int[] compileResult = new int[1];
         // 检测着色器绑定情况
         GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, compileResult, 0);
-        if (compileResult[0] == 0)
-        {
+        if (compileResult[0] == 0) {
+            String infoLog = GLES20.glGetProgramInfoLog(program);
             GLES20.glDeleteProgram(program);
             program = 0;
+            if (!TextUtils.isEmpty(infoLog)) {
+                Log.e(TAG, "createAndLinkProgram: program error info log: " + infoLog);
+            }
         }
         return program;
     }

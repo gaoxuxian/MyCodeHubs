@@ -14,6 +14,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="false"
             android:theme="@style/AppTheme">
+        <activity android:name=".android.MultThreadActivity">
+        </activity>
+        <activity
+                android:name=".android.TouchEventActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
         <activity android:name=".gles.TextureViewActivity">
         </activity>
         <activity

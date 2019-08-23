@@ -15,7 +15,7 @@ public enum GPUTransitionFilterType implements FilterType
     PERLIN(6), // 转场-佩尔林算法
     PAGING(7), // 转场-翻页
     FUZZY(8), // 转场-模糊
-    ROTATE(9), // 转场-旋转
+    SPIN(9), // 转场-自旋
     CIRCLE_CROP(10), // 转场-可视范围以圆半径变化
     LUMINANCE_MELT(11), // 转场-亮度融化
     COLOR_DISTANCE(12), // 转场-色彩渐变
@@ -29,6 +29,9 @@ public enum GPUTransitionFilterType implements FilterType
     FUZZY_ZOOM(19), // 转场 - 模糊放大
     SINGLE_DRAG(20), // 转场 - 单方向拉扯
     RANDOM_SQUARE(21), // 转场 - 随机方块
+    ROTATE_WHITE(22), // 转场 - 旋转闪白
+
+    JUST_ROTATION(23), // 转场 - 纯旋转
     ;
     private int mValue;
 

@@ -95,8 +95,14 @@ public class FilterFactory {
                 case ROTATE_WHITE:
                     return new RotatingWhiteTransitionFilter(context);
 
-                case JUST_ROTATION:
+                case ROTATE_ZOOM:
                     return new RotationTransitionFilter(context);
+
+                case JUST_EXTEND:
+                    return new ExtendTransitionFilter(context);
+
+                case NOISE_BLUR_ZOOM:
+                    return new NoiseBlurZoomTransitionFilter(context);
 
                 default:
                     return new GPUImageTransitionFilter(context);

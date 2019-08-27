@@ -31,7 +31,9 @@ public enum GPUTransitionFilterType implements FilterType
     RANDOM_SQUARE(21), // 转场 - 随机方块
     ROTATE_WHITE(22), // 转场 - 旋转闪白
 
-    JUST_ROTATION(23), // 转场 - 纯旋转
+    ROTATE_ZOOM(23), // 转场 - 放大+旋转
+    JUST_EXTEND(24), // 转场 - 纯缩放
+    NOISE_BLUR_ZOOM(25), // 转场 - 虚化缩放
     ;
     private int mValue;
 

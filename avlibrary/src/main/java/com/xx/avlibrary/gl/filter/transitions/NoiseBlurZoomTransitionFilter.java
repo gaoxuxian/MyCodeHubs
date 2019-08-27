@@ -8,15 +8,11 @@ import com.xx.avlibrary.gl.filter.GPUImageTransitionFilter;
 import com.xx.avlibrary.gl.filter.GPUTransitionFilterType;
 import com.xx.avlibrary.gl.util.GLUtil;
 
-public class RotationTransitionFilter extends GPUImageTransitionFilter {
-    private int degreeHandle;
-    private int textureWHandle;
-    private int textureHHandle;
-    private int jitterRangeHHandle;
+public class NoiseBlurZoomTransitionFilter extends GPUImageTransitionFilter {
 
-    public RotationTransitionFilter(Context context) {
+    public NoiseBlurZoomTransitionFilter(Context context) {
         super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default),
-                GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_rotation));
+                GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_noise_blur_zoom));
     }
 
     @Override
@@ -26,32 +22,22 @@ public class RotationTransitionFilter extends GPUImageTransitionFilter {
 
     @Override
     public GPUTransitionFilterType getFilterType() {
-        return GPUTransitionFilterType.ROTATE_ZOOM;
+        return GPUTransitionFilterType.JUST_EXTEND;
     }
 
     @Override
     protected void onInitProgramHandle() {
         super.onInitProgramHandle();
-
-        degreeHandle = GLES30.glGetUniformLocation(getProgram(), "degree");
-        textureWHandle = GLES30.glGetUniformLocation(getProgram(), "textureW");
-        textureHHandle = GLES30.glGetUniformLocation(getProgram(), "textureH");
-        jitterRangeHHandle = GLES30.glGetUniformLocation(getProgram(), "jitterRange");
     }
 
     @Override
     protected void preDrawSteps4Other(boolean drawBuffer) {
         super.preDrawSteps4Other(drawBuffer);
-
-        GLES20.glUniform1f(degreeHandle, 20);
-        GLES20.glUniform1f(jitterRangeHHandle, 3);
-        GLES20.glUniform1f(textureWHandle, getTextureW());
-        GLES20.glUniform1f(textureHHandle, getTextureH());
     }
 
     @Override
     protected float getEffectTimeCycle() {
-        return 800f;
+        return 1200;
     }
 
     @Override

@@ -7,7 +7,8 @@ uniform sampler2D vTextureBack;
 uniform float progress;
 varying vec2 aCoordinate;
 
-uniform float rotation;
+uniform float degree; // 30
+uniform float jitterRange; // 1.5
 uniform float textureW;
 uniform float textureH;
 
@@ -21,18 +22,39 @@ float detectEdge(float value) {
     return value;
 }
 
+float a(float t, float s) {
+    return t * t * ((s + 1.) * t - s);
+}
+
+float o(float t, float s) {
+    return t * t * ((s + 1.) * t + s);
+}
+
+// 回弹函数
+float backInOut(float x) {
+    float tension = 2. * jitterRange;
+    if (x < 0.5) {
+        return 0.5 * a(x * 2.0, tension);
+    }
+    return 0.5 * (o(x * 2.0 - 2.0, tension) + 2.0);
+}
+
 void main() {
-    float factor = progress < .5 ? progress * 2. : (progress - .5) * 2.;
-    float angleOffset = progress < .5 ? mix(0., rotation * DEG2RAD, factor) : mix(-rotation * DEG2RAD, 0., factor);
+    float radian = degree * DEG2RAD; // 角度转弧度
+    float angleOffset = progress < .5 ? radian * mix(0., 1., backInOut(progress)) : radian * mix(1., 0., backInOut(progress));
+    float phase = progress < 0.5 ? progress * 2.0 : (progress - 0.5) * 2.0;
+    float scale = 1.3;
+    float newScale = progress < 0.5 ? mix(1.0, scale, phase) : mix(scale, 1.0, phase);
 
     vec2 center = vec2(0., 0.);
     float ratio = textureW / textureH;
-    vec2 p = (aCoordinate - vec2(.5, .5)) * vec2(ratio, 1.);
+    vec2 p = (aCoordinate - vec2(.5, .5)) / newScale * vec2(ratio, 1.);
 
     float angle = atan(p.y, p.x) + angleOffset;
     float dist = distance(center, p);
     p.x = detectEdge(cos(angle) * dist / ratio + .5);
     p.y = detectEdge(sin(angle) * dist + .5);
 
-    gl_FragColor = progress < 0.5 ? texture2D(vTextureFront, p) : texture2D(vTextureBack, p);
+    float factor = smoothstep(0.4, 0.6, progress);
+    gl_FragColor = mix(texture2D(vTextureFront, p), texture2D(vTextureBack, p), factor);
 }

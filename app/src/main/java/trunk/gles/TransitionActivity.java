@@ -173,9 +173,21 @@ public class TransitionActivity extends BaseActivity
         data.add(info);
 
         info = new FilterInfo();
-        info.mName = "(23)-纯旋转";
+        info.mName = "(23)-放大旋转";
         info.mBmpRes = R.drawable._filter_23;
-        info.mType = GPUTransitionFilterType.JUST_ROTATION;
+        info.mType = GPUTransitionFilterType.ROTATE_ZOOM;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(24)-纯缩放";
+        info.mBmpRes = R.drawable._filter_24;
+        info.mType = GPUTransitionFilterType.JUST_EXTEND;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(25)-虚化放大";
+        info.mBmpRes = R.drawable._filter_25;
+        info.mType = GPUTransitionFilterType.NOISE_BLUR_ZOOM;
         data.add(info);
 
         mAdapter = new FilterAdapter(data, type -> mItemView.setTransitionFilter(type));

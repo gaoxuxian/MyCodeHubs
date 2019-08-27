@@ -1,0 +1,28 @@
+precision mediump float;
+
+varying vec2 aCoordinate;
+uniform sampler2D vTextureFront;
+uniform sampler2D vTextureBack;
+uniform float progress;
+
+uniform float scale;
+
+float detectEdge(float value) {
+    if (value > 1.) {
+        return 2. - value;
+    }
+    if (value < 0.) {
+        return -value;
+    }
+    return value;
+}
+
+void main() {
+    float factor = progress < .5 ? progress * 2. : (progress - .5) * 2.;
+    float newScale = progress < .5 ? mix(1.0, scale, factor) : mix(scale, 1.0, factor);
+
+    vec2 temp = (aCoordinate - vec2(.5)) / newScale + vec2(.5);
+    vec2 p = vec2(detectEdge(temp.x), detectEdge(temp.y));
+
+    gl_FragColor = progress < .5 ? texture2D(vTextureFront, p) : texture2D(vTextureBack, p);
+}

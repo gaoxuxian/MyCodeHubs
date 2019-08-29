@@ -1,0 +1,79 @@
+precision highp float;
+
+uniform sampler2D vTextureBack;
+uniform sampler2D vTextureFront;
+uniform float progress;
+varying vec2 aCoordinate;
+
+const float PI = 3.141592653589793;
+
+// x:1-右平移，-1-左平移，0-无效果
+// y:1-上平移，-1-下平移，0-无效果
+uniform vec2 direction;
+
+float detectEdge(float value) {
+    if (value > 1.) {
+        return 2. - value;
+    }
+    if (value < 0.) {
+        return -value;
+    }
+    return value;
+}
+
+float Sinusoidal_easeInOut(float begin, float change, float duration, float time) {
+    return -change / 2. * (cos(PI * time / duration) - 1.) + begin;
+}
+
+float a(float t, float s) {
+    return t * t * ((s + 1.) * t - s);
+}
+
+float o(float t, float s) {
+    return t * t * ((s + 1.) * t + s);
+}
+
+// 回弹函数
+float backInOut(float x) {
+    float tension = 2. * 1.;
+    if (x < .5) {
+        return .5 * a(x * 2., tension);
+    }
+    return .5 * (o(x * 2. - 2., tension) + 2.);
+}
+
+float backIn(float x) {
+    float tension = 1.;
+    return x * x * (tension * x - tension);
+}
+
+void main() {
+    float moveOffset = 1.2;
+    float dis = progress < .5 ? moveOffset : -moveOffset;
+    float backInOutFactor = progress < .5 ? mix(0., 1., backInOut(progress)) : mix(1., 0., backInOut(progress));
+    vec2 disOffset = direction * dis * backInOutFactor;
+    vec2 texCoord = aCoordinate - disOffset;
+
+    float scaleOffset = .14;
+    float newScale = 1. - scaleOffset * backIn(progress);
+
+    vec2 p = vec2(detectEdge(texCoord.x), detectEdge(texCoord.y));
+    float strength = 0.;
+    if (progress >= .2 && progress <= .7) {
+        strength = Sinusoidal_easeInOut(0., 1.5, .5, (progress - .2)*2.);
+    }
+
+    vec3 color = vec3(0.);
+    float blurOffset = .4;
+    vec2 toCoord = blurOffset * direction;
+    float total = 0.;
+    for(int t=1; t<=16; t++) {
+        float percent = float(t) / 16.;
+        float weight = 4. * (percent - percent * percent);
+        vec2 p2 = (p - toCoord * percent * strength) / newScale;
+        color += progress < .5 ? texture2D(vTextureFront, p2).rgb * weight : texture2D(vTextureBack, p2).rgb * weight;
+        total += (weight);
+    }
+
+    gl_FragColor = vec4(color / total, 1.);
+}

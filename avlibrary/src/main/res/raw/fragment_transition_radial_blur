@@ -1,0 +1,64 @@
+precision highp float;
+
+uniform sampler2D vTextureBack;
+uniform sampler2D vTextureFront;
+uniform float progress;
+varying vec2 aCoordinate;
+
+const float PI = 3.141592653589793;
+
+uniform float order; // 0-无效果，1-缩小，-1-放大
+
+float Sinusoidal_easeInOut(float begin, float change, float duration, float time) {
+    return -change / 2.0 * (cos(PI * time / duration) - 1.0) + begin;
+}
+
+float detectEdge(float value) {
+    if (value > 1.) {
+        return 2. - value;
+    }
+    if (value < 0.) {
+        return -value;
+    }
+    return value;
+}
+
+float a(float t, float s) {
+    return t * t * ((s + 1.) * t - s);
+}
+
+float o(float t, float s) {
+    return t * t * ((s + 1.) * t + s);
+}
+
+// 回弹函数
+float backInOut(float x) {
+    float tension = 0.;
+    if (x < 0.5) {
+        return 0.5 * a(x * 2.0, tension);
+    }
+    return -0.5 * (o(x * 2.0 - 2.0, tension));
+}
+
+void main() {
+    float factor = backInOut(progress) * 2.;
+    float f = progress < .5 ? 1. : -1.;
+    float strength = factor;
+
+    vec2 blurCp = vec2(.5);
+    vec4 blurColor = vec4(0.);
+    float total = 0.;
+    vec2 toCoord = blurCp - aCoordinate;
+
+    for (float t = 0.0; t <= 20.0; t++) {
+        float percent = t / 20.0;
+        float weight = 4.0 * (percent - percent * percent);
+        vec2 p = aCoordinate - toCoord * percent * strength * f * order;
+        p.x = detectEdge(p.x);
+        p.y = detectEdge(p.y);
+        blurColor += progress < .5 ? texture2D(vTextureFront, p) * weight : texture2D(vTextureBack, p) * weight;
+        total += weight;
+    }
+
+    gl_FragColor = blurColor / total;
+}

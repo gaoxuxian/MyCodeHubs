@@ -131,8 +131,6 @@ public abstract class AbsFilter<Y extends FilterType> implements FilterIF<Y>
         mVertexShader = GLUtil.createShader(GLES20.GL_VERTEX_SHADER, mVertexStr);
         mFragmentShader = GLUtil.createShader(GLES20.GL_FRAGMENT_SHADER, mFragmentStr);
         mProgram = GLUtil.createAndLinkProgram(mVertexShader, mFragmentShader);
-
-        GLUtil.checkGlError("AbsFilter create error");
         onInitProgramHandle();
     }
 

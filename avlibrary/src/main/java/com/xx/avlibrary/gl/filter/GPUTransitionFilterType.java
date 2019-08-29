@@ -34,6 +34,19 @@ public enum GPUTransitionFilterType implements FilterType
     ROTATE_ZOOM(23), // 转场 - 放大+旋转
     JUST_EXTEND(24), // 转场 - 纯缩放
     NOISE_BLUR_ZOOM(25), // 转场 - 虚化缩放
+
+    MOTION_BLUR(26), // 转场 - 旋转运动模糊
+
+    MOVE_X_RIGHT(27), // 转场 - 右移动
+    MOVE_X_LEFT(28), // 转场 - 左移动
+    MOVE_Y_UP(29), // 转场 - 上移动
+    MOVE_Y_DOWN(30), // 转场 - 下移动
+
+    MOTION_ZOOM_OUT_ZOOM_IN(31), // 转场 - 运动伸缩-先缩小后放大-整体是放大效果
+    MOTION_ZOOM_IN_ZOOM_OUT(32), // 转场 - 运动伸缩-先放大后缩小-整体是缩小效果
+
+    RADIAL_BLUR_ZOOM_OUT(33), // 转场 - 径向模糊缩小
+    RADIAL_BLUR_ZOOM_IN(34), // 转场 - 径向模糊放大
     ;
     private int mValue;
 

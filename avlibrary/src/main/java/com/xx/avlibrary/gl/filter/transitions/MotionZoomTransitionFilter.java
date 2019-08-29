@@ -2,22 +2,21 @@ package com.xx.avlibrary.gl.filter.transitions;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import com.xx.avlibrary.gl.util.GLUtil;
-import com.xx.avlibrary.gl.util.GlMatrixTools;
 import com.xx.avlibrary.R;
 import com.xx.avlibrary.gl.filter.GPUImageTransitionFilter;
 import com.xx.avlibrary.gl.filter.GPUTransitionFilterType;
+import com.xx.avlibrary.gl.util.GLUtil;
 
-/**
- * @author Gxx
- * Created by Gxx on 2019/1/7.
- */
-public class ColourDistanceTransitionFilter extends GPUImageTransitionFilter {
-    private int powerHandle;
+public class MotionZoomTransitionFilter extends GPUImageTransitionFilter {
 
-    public ColourDistanceTransitionFilter(Context context) {
+    private int order;
+    private int orderHandle;
+    private int scaleHandle;
+
+    public MotionZoomTransitionFilter(Context context, int order) {
         super(context, GLUtil.readShaderFromRaw(context, R.raw.vertex_image_default),
-                GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_color_distance));
+                GLUtil.readShaderFromRaw(context, R.raw.fragment_transition_motion_zoom));
+        this.order = order;
     }
 
     @Override
@@ -27,26 +26,31 @@ public class ColourDistanceTransitionFilter extends GPUImageTransitionFilter {
 
     @Override
     public GPUTransitionFilterType getFilterType() {
-        return GPUTransitionFilterType.COLOR_DISTANCE;
+        if (order == 1) {
+            return GPUTransitionFilterType.MOTION_ZOOM_OUT_ZOOM_IN;
+        } else if (order == -1) {
+            return GPUTransitionFilterType.MOTION_ZOOM_IN_ZOOM_OUT;
+        }
+        return null;
     }
 
     @Override
     protected void onInitProgramHandle() {
         super.onInitProgramHandle();
-
-        powerHandle = GLES20.glGetUniformLocation(getProgram(), "power");
+        orderHandle = GLES20.glGetUniformLocation(getProgram(), "order");
+        scaleHandle = GLES20.glGetUniformLocation(getProgram(), "scale");
     }
 
     @Override
     protected void preDrawSteps4Other(boolean drawBuffer) {
         super.preDrawSteps4Other(drawBuffer);
-
-        GLES20.glUniform1f(powerHandle, 5);
+        GLES20.glUniform1f(orderHandle, order);
+        GLES20.glUniform1f(scaleHandle, 0.3f);
     }
 
     @Override
     protected float getEffectTimeCycle() {
-        return 600f;
+        return 1000;
     }
 
     @Override

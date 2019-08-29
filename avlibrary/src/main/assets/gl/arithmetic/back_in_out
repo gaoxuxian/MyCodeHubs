@@ -1,0 +1,18 @@
+// 弹性
+
+float a(float t, float s) {
+    return t * t * ((s + 1.) * t - s);
+}
+
+float o(float t, float s) {
+    return t * t * ((s + 1.) * t + s);
+}
+
+// 回弹函数
+float backInOut(float x) {
+    float tension = 2. * jitterRange;
+    if (x < 0.5) {
+        return 0.5 * a(x * 2.0, tension);
+    }
+    return 0.5 * (o(x * 2.0 - 2.0, tension) + 2.0);
+}

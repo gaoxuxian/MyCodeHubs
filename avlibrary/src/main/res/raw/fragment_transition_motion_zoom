@@ -1,0 +1,45 @@
+precision highp float;
+
+uniform sampler2D vTextureBack;
+uniform sampler2D vTextureFront;
+uniform float progress;
+varying vec2 aCoordinate;
+
+const float PI = 3.141592653589793;
+
+uniform float order; // 0-无效果，1-先缩小后放大，-1-先放大后缩小
+uniform float scale;
+
+float detectEdge(float value) {
+    if (value > 1.) {
+        return 2. - value;
+    }
+    if (value < 0.) {
+        return -value;
+    }
+    return value;
+}
+
+float a(float t, float s) {
+    return t * t * ((s + 1.) * t - s);
+}
+
+float o(float t, float s) {
+    return t * t * ((s + 1.) * t + s);
+}
+
+// 回弹函数
+float backInOut(float x) {
+    float tension = 2. * 1.5;
+    if (x < 0.5) {
+        return 0.5 * a(x * 2.0, tension);
+    }
+    return 0.5 * (o(x * 2.0 - 2.0, tension));
+}
+
+void main() {
+    float newScale = 1. + scale * 2. * backInOut(progress) * order;
+    vec2 texCoord = (aCoordinate - vec2(0.5)) / newScale + vec2(.5);
+    vec2 p = vec2(detectEdge(texCoord.x), detectEdge(texCoord.y));
+    gl_FragColor = progress < .5 ? texture2D(vTextureFront, p) : texture2D(vTextureBack, p);
+}

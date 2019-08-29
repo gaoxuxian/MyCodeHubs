@@ -25,7 +25,7 @@ void main(){
     float strength = Sinusoidal_easeInOut(0., vStrength, 1., rate);
     float total = 0.0;
     vec4 color = vec4(0.0);
-    for (float t = 0.0; t <= 50.0; t++) {
+    for (float t = 0.0; t <= 20.0; t++) {
         float percent = (t + offset) / 20.0;
         float weight = 8.0 * (percent - percent * percent);
         color += texture2D(vTextureFront, uv - coordinate * percent * strength) * weight;

@@ -1,0 +1,5 @@
+// 周期函数
+// Sinusoidal_easeInOut(0., 0.5, 1., x);
+float Sinusoidal_easeInOut(in float begin, in float change, in float duration, in float time) {
+    return -change / 2.0 * (cos(PI * time / duration) - 1.0) + begin;
+}

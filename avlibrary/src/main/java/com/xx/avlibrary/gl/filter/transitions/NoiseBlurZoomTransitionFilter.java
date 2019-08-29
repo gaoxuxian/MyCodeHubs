@@ -22,7 +22,7 @@ public class NoiseBlurZoomTransitionFilter extends GPUImageTransitionFilter {
 
     @Override
     public GPUTransitionFilterType getFilterType() {
-        return GPUTransitionFilterType.JUST_EXTEND;
+        return GPUTransitionFilterType.NOISE_BLUR_ZOOM;
     }
 
     @Override

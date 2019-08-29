@@ -1,0 +1,64 @@
+precision highp float;
+
+uniform sampler2D vTextureBack;
+uniform sampler2D vTextureFront;
+uniform float progress;
+varying vec2 aCoordinate;
+
+uniform float textureW;
+uniform float textureH;
+
+#define DEG2RAD 0.03926990816987241548078304229099 // 1/180*PI
+
+const float PI = 3.141592653589793;
+
+float detectEdge(float value) {
+    if (value > 1.) {
+        return 2. - value;
+    }
+    if (value < 0.) {
+        return -value;
+    }
+    return value;
+}
+
+vec2 rotateP(vec2 p, float radian, float ratio) {
+    vec2 center = vec2(0.);
+    vec2 texCoord = (p - vec2(.5, 0.)) * vec2(ratio, 1.);
+    float angle = atan(texCoord.y, texCoord.x) + radian;
+    float dist = distance(center, texCoord);
+    texCoord.x = detectEdge(cos(angle) * dist / ratio + .5);
+    texCoord.y = detectEdge(sin(angle) * dist);
+    return texCoord;
+}
+
+float Sinusoidal_easeInOut(in float begin, in float change, in float duration, in float time) {
+    return -change / 2.0 * (cos(PI * time / duration) - 1.0) + begin;
+}
+
+vec3 crossFade(vec2 uv, float dissolve) {
+    return mix(texture2D(vTextureFront, uv).rgb, texture2D(vTextureBack, uv).rgb, dissolve);
+}
+
+void main() {
+    float degree = 6.;
+    float strength = Sinusoidal_easeInOut(0.0, 1., 0.5, progress);
+    float radian = degree * DEG2RAD * strength; // 角度转弧度
+    float ratio = textureW / textureH;
+
+    vec3 color = vec3(0.);
+    float total = 0.;
+
+    for(float t=1.;t<=15.;t++) {
+        float percent = t / 15.;
+        float weight = 4.0 * (percent - percent * percent);
+        vec2 p1 = rotateP(aCoordinate, radian * percent, ratio);
+        vec2 p2 = rotateP(aCoordinate, -radian * percent, ratio);
+
+        color += (progress < 0.5 ? crossFade(p1, strength) : texture2D(vTextureBack, p1).rgb) * weight;
+        color += (progress < 0.5 ? crossFade(p2, strength) : texture2D(vTextureBack, p2).rgb) * weight;
+        total += (weight * 2.);
+    }
+
+    gl_FragColor = vec4(color / total, 1.);
+}

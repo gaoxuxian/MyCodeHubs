@@ -104,6 +104,33 @@ public class FilterFactory {
                 case NOISE_BLUR_ZOOM:
                     return new NoiseBlurZoomTransitionFilter(context);
 
+                case MOTION_BLUR:
+                    return new MotionBlurTransitionFilter(context);
+
+                case MOVE_X_RIGHT:
+                    return new MoveTransitionFilter(context, 1, 0);
+
+                case MOVE_X_LEFT:
+                    return new MoveTransitionFilter(context, -1,0);
+
+                case MOVE_Y_UP:
+                    return new MoveTransitionFilter(context, 0, 1);
+
+                case MOVE_Y_DOWN:
+                    return new MoveTransitionFilter(context, 0, -1);
+
+                case MOTION_ZOOM_OUT_ZOOM_IN:
+                    return new MotionZoomTransitionFilter(context, 1);
+
+                case MOTION_ZOOM_IN_ZOOM_OUT:
+                    return new MotionZoomTransitionFilter(context, -1);
+
+                case RADIAL_BLUR_ZOOM_OUT:
+                    return new RadialBlurTransitionFilter(context, 1);
+
+                case RADIAL_BLUR_ZOOM_IN:
+                    return new RadialBlurTransitionFilter(context, -1);
+
                 default:
                     return new GPUImageTransitionFilter(context);
             }

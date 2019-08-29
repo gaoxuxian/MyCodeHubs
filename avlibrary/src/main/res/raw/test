@@ -1,0 +1,118 @@
+//
+//  TransitionBlur.c
+//  CGL
+//
+//  Created by jishubu-039 on 2019/8/28.
+//  Copyright © 2019 beauty. All rights reserved.
+//
+
+precision highp float ;
+varying vec2 textureCoordinate;
+
+uniform sampler2D inputImageTexture;
+uniform vec4 u_opacityA;
+uniform vec2 blurSpanStrength;
+uniform int blurDirectionType;// 0径向，1纵向，2横向
+uniform vec2 bufferWH;//fbo width and height
+uniform vec2 radialBlurCenter;
+const int ZERO=0;
+const int ONE=1;
+const float POINT_ZERO_FIVE=0.05;
+
+vec4 getVerticalHorizontalBlurColor(){//横向或纵向模糊
+    vec4  tColor = vec4(float(ZERO));//最终要显示的颜色
+    float tTotal = float(ZERO);
+    float uvSeed = dot(vec3(12.9898, 78.233, 151.7182), gl_FragCoord.xyz);//以位置为随机种子
+    float uvRand = fract(sin(uvSeed) * 43758.5453) - 0.5;//随机
+
+    float uvStep = float(ONE);
+    float cRatio = uvRand * POINT_ZERO_FIVE;
+    float tRatio = float(ONE) - abs(cRatio);
+    vec4  bColor = texture2D(inputImageTexture, textureCoordinate + blurSpanStrength * cRatio);//blurSpanStrength * cRatio偏移坐标
+    //bColor.rgb *= bColor.a;
+    tColor += bColor * tRatio;
+    tTotal += tRatio;
+    for (int i = ZERO; i < 10; ++i) {//10
+        cRatio = (uvStep + uvRand) * POINT_ZERO_FIVE;
+        tRatio = float(ONE) - abs(cRatio);
+        bColor = texture2D(inputImageTexture, textureCoordinate + blurSpanStrength * cRatio);
+        tColor += bColor * tRatio;
+        tTotal += tRatio;
+
+        cRatio = (uvRand - uvStep) * POINT_ZERO_FIVE;
+        tRatio = float(ONE) - abs(cRatio);
+        bColor = texture2D(inputImageTexture, textureCoordinate + blurSpanStrength * cRatio);
+        tColor += bColor * tRatio;
+        tTotal += tRatio;
+
+        uvStep += float(ONE);
+
+        cRatio = (uvStep + uvRand) * POINT_ZERO_FIVE;
+        tRatio = float(ONE) - abs(cRatio);
+        bColor = texture2D(inputImageTexture, textureCoordinate + blurSpanStrength * cRatio);
+        tColor += bColor * tRatio;
+        tTotal += tRatio;
+
+        cRatio = (uvRand - uvStep) * POINT_ZERO_FIVE;
+        tRatio = float(ONE) - abs(cRatio);
+        bColor = texture2D(inputImageTexture, textureCoordinate + blurSpanStrength * cRatio);
+        tColor += bColor * tRatio;
+        tTotal += tRatio;
+
+        uvStep += float(ONE);
+    }
+    tColor /= tTotal;
+    return tColor;
+}
+vec4 getRadialBlurColor(){//纵向模糊
+    vec4  tColor = vec4(float(ZERO));//最终要显示的颜色
+    float stepAngle = blurSpanStrength.x* 6.2831852;//*2π
+    float targetXFactor = (textureCoordinate - radialBlurCenter).x ;
+    float targetYFactor = (textureCoordinate - radialBlurCenter).y ;
+    float bufferWHRatio=bufferWH.x/bufferWH.y;
+    float bufferHWRatio=bufferWH.y/bufferWH.x;
+
+    float uvStep = float(ONE);
+    float blurTime=40.0;
+    float angleScale=0.01;
+    vec4  bColor= vec4(float(ZERO));
+    for (int i = ZERO; i < 10; ++i) {//10
+        float angle = stepAngle * uvStep * angleScale;
+        float x1 = cos(angle) * targetXFactor - sin(angle) * targetYFactor * bufferHWRatio + radialBlurCenter.x;
+        float y1 = sin(angle) * targetXFactor * bufferWHRatio + cos(angle) * targetYFactor + radialBlurCenter.y;
+        bColor = texture2D(inputImageTexture, vec2(x1, y1));
+        tColor += bColor / blurTime;
+
+        float x2 = cos(-angle) * targetXFactor - sin(-angle) * targetYFactor * bufferHWRatio + radialBlurCenter.x;
+        float y2 = sin(-angle) * targetXFactor * bufferWHRatio + cos(-angle) * targetYFactor + radialBlurCenter.y;
+        bColor = texture2D(inputImageTexture, vec2(x2, y2));
+        tColor += bColor / blurTime;
+        uvStep +=
+        float(ONE);
+
+        angle = stepAngle * uvStep * angleScale;
+        x1 = cos(angle) * targetXFactor - sin(angle) * targetYFactor * bufferHWRatio + radialBlurCenter.x;
+        y1 = sin(angle) * targetXFactor * bufferWHRatio + cos(angle) * targetYFactor + radialBlurCenter.y;
+        bColor = texture2D(inputImageTexture, vec2(x1, y1));
+        tColor += bColor / blurTime;
+
+        x2 = cos(-angle) * targetXFactor - sin(-angle) * targetYFactor * bufferHWRatio + radialBlurCenter.x;
+        y2 = sin(-angle) * targetXFactor * bufferWHRatio + cos(-angle) * targetYFactor + radialBlurCenter.y;
+        bColor = texture2D(inputImageTexture, vec2(x2, y2));
+        tColor += bColor / blurTime;
+        uvStep +=
+        float(ONE);
+    }
+    return tColor;
+}
+
+void main() {
+    vec4 tColor = vec4(float(ZERO));//最终要显示的颜色
+    if (blurDirectionType == 0) {
+        tColor = getRadialBlurColor();
+    } else if (blurDirectionType == 1 || blurDirectionType == 2) {
+        tColor = getVerticalHorizontalBlurColor();
+    }
+    tColor *= u_opacityA;
+    gl_FragColor = tColor;
+}

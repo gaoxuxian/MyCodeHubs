@@ -190,6 +190,60 @@ public class TransitionActivity extends BaseActivity
         info.mType = GPUTransitionFilterType.NOISE_BLUR_ZOOM;
         data.add(info);
 
+        info = new FilterInfo();
+        info.mName = "(26)-旋转运动模糊";
+        info.mBmpRes = R.drawable._filter_25;
+        info.mType = GPUTransitionFilterType.MOTION_BLUR;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(27)-右移";
+        info.mBmpRes = R.drawable._filter_27;
+        info.mType = GPUTransitionFilterType.MOVE_X_RIGHT;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(28)-左移";
+        info.mBmpRes = R.drawable._filter_28;
+        info.mType = GPUTransitionFilterType.MOVE_X_LEFT;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(29)-上移";
+        info.mBmpRes = R.drawable._filter_29;
+        info.mType = GPUTransitionFilterType.MOVE_Y_UP;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(30)-下移";
+        info.mBmpRes = R.drawable._filter_30;
+        info.mType = GPUTransitionFilterType.MOVE_Y_DOWN;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(31)-放大";
+        info.mBmpRes = R.drawable._filter_31;
+        info.mType = GPUTransitionFilterType.MOTION_ZOOM_OUT_ZOOM_IN;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(32)-缩小";
+        info.mBmpRes = R.drawable._filter_32;
+        info.mType = GPUTransitionFilterType.MOTION_ZOOM_IN_ZOOM_OUT;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(33)-径向模糊-缩小";
+        info.mBmpRes = R.drawable._filter_32;
+        info.mType = GPUTransitionFilterType.RADIAL_BLUR_ZOOM_OUT;
+        data.add(info);
+
+        info = new FilterInfo();
+        info.mName = "(33)-径向模糊-放大";
+        info.mBmpRes = R.drawable._filter_32;
+        info.mType = GPUTransitionFilterType.RADIAL_BLUR_ZOOM_IN;
+        data.add(info);
+
         mAdapter = new FilterAdapter(data, type -> mItemView.setTransitionFilter(type));
     }
 

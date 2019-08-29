@@ -201,6 +201,7 @@ public class GLUtil
                 Log.e(TAG, "createShader: shader error info log: " + infoLog);
             }
         }
+        checkGlError("");
         return shader;
     }
 
@@ -221,6 +222,7 @@ public class GLUtil
                 Log.e(TAG, "createAndLinkProgram: program error info log: " + infoLog);
             }
         }
+        checkGlError("");
         return program;
     }
 

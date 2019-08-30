@@ -131,6 +131,9 @@ public class FilterFactory {
                 case RADIAL_BLUR_ZOOM_IN:
                     return new RadialBlurTransitionFilter(context, -1);
 
+                case ROTATE_ZOOM_V2:
+                    return new RotationTransitionFilterV2(context);
+
                 default:
                     return new GPUImageTransitionFilter(context);
             }

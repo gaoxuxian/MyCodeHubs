@@ -29,8 +29,8 @@ public enum GPUTransitionFilterType implements FilterType
     FUZZY_ZOOM(19), // 转场 - 模糊放大
     SINGLE_DRAG(20), // 转场 - 单方向拉扯
     RANDOM_SQUARE(21), // 转场 - 随机方块
-    ROTATE_WHITE(22), // 转场 - 旋转闪白
 
+    ROTATE_WHITE(22), // 转场 - 旋转闪白
     ROTATE_ZOOM(23), // 转场 - 放大+旋转
     JUST_EXTEND(24), // 转场 - 纯缩放
     NOISE_BLUR_ZOOM(25), // 转场 - 虚化缩放
@@ -47,6 +47,8 @@ public enum GPUTransitionFilterType implements FilterType
 
     RADIAL_BLUR_ZOOM_OUT(33), // 转场 - 径向模糊缩小
     RADIAL_BLUR_ZOOM_IN(34), // 转场 - 径向模糊放大
+
+    ROTATE_ZOOM_V2(35), // 转场 - 周期旋转
     ;
     private int mValue;
 

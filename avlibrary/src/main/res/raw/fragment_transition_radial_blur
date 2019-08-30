@@ -33,11 +33,11 @@ float o(float t, float s) {
 
 // 回弹函数
 float backInOut(float x) {
-    float tension = 0.;
+//    float tension = 2.;
     if (x < 0.5) {
-        return 0.5 * a(x * 2.0, tension);
+        return 0.5 * a(x * 2.0, 2.);
     }
-    return -0.5 * (o(x * 2.0 - 2.0, tension));
+    return -0.5 * (o(x * 2.0 - 2.0, 2.2));
 }
 
 void main() {
@@ -50,8 +50,8 @@ void main() {
     float total = 0.;
     vec2 toCoord = blurCp - aCoordinate;
 
-    for (float t = 0.0; t <= 20.0; t++) {
-        float percent = t / 20.0;
+    for (float t = 0.0; t <= 40.0; t++) {
+        float percent = t / 40.0;
         float weight = 4.0 * (percent - percent * percent);
         vec2 p = aCoordinate - toCoord * percent * strength * f * order;
         p.x = detectEdge(p.x);

@@ -244,6 +244,12 @@ public class TransitionActivity extends BaseActivity
         info.mType = GPUTransitionFilterType.RADIAL_BLUR_ZOOM_IN;
         data.add(info);
 
+        info = new FilterInfo();
+        info.mName = "(34)-周期旋转";
+        info.mBmpRes = R.drawable._filter_32;
+        info.mType = GPUTransitionFilterType.ROTATE_ZOOM_V2;
+        data.add(info);
+
         mAdapter = new FilterAdapter(data, type -> mItemView.setTransitionFilter(type));
     }
 

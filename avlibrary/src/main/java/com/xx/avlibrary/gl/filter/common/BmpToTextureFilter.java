@@ -100,8 +100,13 @@ public class BmpToTextureFilter extends GPUImageFilter
         float vs = drawBuffer ? (float) getFrameBufferH() / getFrameBufferW() : (float) getSurfaceH() / getSurfaceW();
         matrix.frustum(-1, 1, -vs, vs, 3, 7);
 
+        float texture_x_scale = 1;
+        float texture_y_scale = (float) mTextureH / mTextureW;
+        float scale = Math.min(1f / texture_x_scale, vs / texture_y_scale);
+
         matrix.pushMatrix();
-        matrix.scale(1f, (float) mTextureH / mTextureW, 1f);
+        matrix.scale(scale, scale,1f);
+        matrix.scale(texture_x_scale, texture_y_scale, 1f);
         GLES20.glUniformMatrix4fv(vMatrixHandle, 1, false, matrix.getFinalMatrix(), 0);
         matrix.popMatrix();
     }

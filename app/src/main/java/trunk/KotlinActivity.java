@@ -24,14 +24,28 @@ public class KotlinActivity extends BaseActivity {
         mData = new ArrayList<>();
 
         SparseArray<Object> map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "自制媒体播放器");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "Kotlin 测试 view 的 offsetLeftAndRight()");
         Intent intent = new Intent();
-        Class cls = Class.forName(activity_package_path + "MyMediaPlayerActivity");
+        Class cls = Class.forName(activity_package_path + "ViewOffsetLRActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
 
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "Kotlin 测试 RecyclerView");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "RecyclerActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
 
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "Kotlin 测试 NestedScroll 嵌套 RecyclerView");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "NestedScrollActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
     }
 
     @Override

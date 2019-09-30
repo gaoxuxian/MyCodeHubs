@@ -41,16 +41,16 @@ vec3 crossFade(vec2 uv, float dissolve) {
 }
 
 void main() {
-    float degree = 6.;
-    float strength = Sinusoidal_easeInOut(0.0, 1., 0.5, progress);
+    float degree = 30.;
+    float strength = Sinusoidal_easeInOut(.0, .5, .5, progress);
     float radian = degree * DEG2RAD * strength; // 角度转弧度
     float ratio = textureW / textureH;
 
     vec3 color = vec3(0.);
     float total = 0.;
 
-    for(float t=1.;t<=15.;t++) {
-        float percent = t / 15.;
+    for(float t=1.;t<=40.;t++) {
+        float percent = t / 40.;
         float weight = 4.0 * (percent - percent * percent);
         vec2 p1 = rotateP(aCoordinate, radian * percent, ratio);
         vec2 p2 = rotateP(aCoordinate, -radian * percent, ratio);

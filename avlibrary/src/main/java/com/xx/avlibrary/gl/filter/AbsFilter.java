@@ -157,6 +157,14 @@ public abstract class AbsFilter<Y extends FilterType> implements FilterIF<Y>
         return mTextureH;
     }
 
+    /**
+     * 设置外部 FrameBuffer
+     * @param fboMgr
+     */
+    public void setExternalFrameBufferMgr(AbsFboMgr fboMgr) {
+        mFrameBufferMgr = fboMgr;
+    }
+
     public final void initFrameBufferOfTextureSize()
     {
         initFrameBuffer(mTextureW, mTextureH);

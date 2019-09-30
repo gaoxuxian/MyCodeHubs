@@ -20,13 +20,13 @@ float Sinusoidal_easeInOut(in float begin, in float change, in float duration, i
 void main(){
     vec2 uv = aCoordinate;
     float rate = pow(progress, 2.5);
-    vec2 coordinate = uv - vec2(.5);
+    vec2 coordinate = uv - vec2(.0);
     float offset = rand(coordinate);
     float strength = Sinusoidal_easeInOut(0., vStrength, 1., rate);
     float total = 0.0;
     vec4 color = vec4(0.0);
-    for (float t = 0.0; t <= 50.0; t++) {
-        float percent = (t + offset) / 20.0;
+    for (float t = 0.0; t <= 40.0; t++) {
+        float percent = (t + offset) / 40.0;
         float weight = 8.0 * (percent - percent * percent);
         color += texture2D(vTextureFront, vec2(uv.x - coordinate.x * percent * strength, uv.y)) * weight;
         total += weight;

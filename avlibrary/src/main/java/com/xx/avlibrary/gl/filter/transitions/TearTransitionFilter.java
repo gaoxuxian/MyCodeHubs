@@ -44,7 +44,7 @@ public class TearTransitionFilter extends GPUImageTransitionFilter {
     protected void preDrawSteps4Other(boolean drawBuffer) {
         super.preDrawSteps4Other(drawBuffer);
 
-        GLES20.glUniform1f(vStrengthHandle, 0.6f);
+        GLES20.glUniform1f(vStrengthHandle, 0.5f);
     }
 
     @Override

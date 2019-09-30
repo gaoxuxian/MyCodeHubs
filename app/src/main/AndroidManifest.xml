@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="trunk">
+          xmlns:tools="http://schemas.android.com/tools" package="trunk">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -13,13 +13,107 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="false"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
+
+        <activity
+                android:name=".MainActivity"
+                android:theme="@style/AppTheme.FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".AndroidActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <activity
+                android:name=".OpenGLActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <activity
+                android:name=".KotlinActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <!-- Android Java -->
         <activity android:name=".android.MultThreadActivity">
         </activity>
+
         <activity
                 android:name=".android.TouchEventActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
+
+        <activity android:name=".android.RhythmTestActivity">
+        </activity>
+
+        <activity android:name=".android.WindowTestActivity">
+        </activity>
+
+        <activity android:name=".android.ServiceTestActivity">
+        </activity>
+
+        <activity
+                android:name=".android.RewindTestActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <activity android:name=".android.EventTestActivity">
+        </activity>
+
+        <activity android:name=".android.LayoutTestActivity">
+        </activity>
+
+        <activity
+                android:name=".android.MyMediaPlayerActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.EncodeActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.AudioActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.SoundRecordActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.LiveDataActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.MainActivity45"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".android.NestedScrollActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <!-- Android kotlin -->
+        <activity
+                android:name=".kotlin.ViewOffsetLRActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".kotlin.RecyclerActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
+                android:name=".kotlin.NestedScrollActivity"
+                android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <!-- openGL ES -->
         <activity android:name=".gles.TextureViewActivity">
         </activity>
         <activity
@@ -34,41 +128,7 @@
         </activity>
         <activity android:name=".gles.GLCustomViewActivity">
         </activity>
-        <activity android:name=".android.RhythmTestActivity">
-        </activity>
-        <activity android:name=".android.WindowTestActivity">
-        </activity>
-        <activity android:name=".android.ServiceTestActivity">
-        </activity>
-        <activity
-                android:name=".android.RewindTestActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity android:name=".android.EventTestActivity">
-        </activity>
-        <activity android:name=".android.LayoutTestActivity">
-        </activity>
-        <activity
-                android:name=".MainActivity"
-                android:theme="@style/AppTheme.FullScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".AndroidActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".OpenGLActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".KotlinActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
         <activity
                 android:name=".gles.SplitScreenActivity"
                 android:theme="@style/AppTheme.FullScreen">
@@ -93,35 +153,19 @@
                 android:name=".gles.TransitionActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity
-                android:name=".android.MyMediaPlayerActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
+
         <activity
                 android:name=".gles.EGLPbufferActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
-        <activity
-                android:name=".android.EncodeActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".android.AudioActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".android.SoundRecordActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".android.LiveDataActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
 
+
+        <!-- service -->
         <service
                 android:name=".service.ServiceTestActivityService"
                 android:process="">
         </service>
+
     </application>
 
 </manifest>

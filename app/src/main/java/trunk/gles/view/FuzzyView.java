@@ -2,6 +2,9 @@ package trunk.gles.view;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
+import com.xx.avlibrary.gl.filter.common.GaussianBlurFilter;
+import com.xx.avlibrary.gl.filter.rhythm.DisplayFilter;
 import com.xx.avlibrary.gl.util.GLUtil;
 import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
 import com.xx.avlibrary.gl.filter.innovation.FuzzyFilter;
@@ -17,7 +20,9 @@ import javax.microedition.khronos.opengles.GL10;
 public class FuzzyView extends GLSurfaceView implements GLSurfaceView.Renderer
 {
     private BmpToTextureFilter mBmpToTextureFilter;
-    private FuzzyFilter mFuzzyFilter;
+//    private FuzzyFilter mFuzzyFilter;
+    private GaussianBlurFilter mGaussianFilter;
+    private DisplayFilter mDisplayFilter;
 
     public FuzzyView(Context context)
     {
@@ -33,17 +38,24 @@ public class FuzzyView extends GLSurfaceView implements GLSurfaceView.Renderer
         mBmpToTextureFilter = new BmpToTextureFilter(getContext());
         mBmpToTextureFilter.onSurfaceCreated(config);
 
-        mFuzzyFilter = new FuzzyFilter(getContext());
-        GLUtil.checkGlError("AAA");
-        mFuzzyFilter.onSurfaceCreated(config);
-        GLUtil.checkGlError("AAA");
+//        mFuzzyFilter = new FuzzyFilter(getContext());
+//        mFuzzyFilter.onSurfaceCreated(config);
+
+        mGaussianFilter = new GaussianBlurFilter(getContext());
+        mGaussianFilter.onSurfaceCreated(config);
+
+        mDisplayFilter = new DisplayFilter(getContext());
+        mDisplayFilter.onSurfaceCreated(config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         mBmpToTextureFilter.onSurfaceChanged(width, height);
-        mFuzzyFilter.onSurfaceChanged(width, height);
+//        mFuzzyFilter.onSurfaceChanged(width, height);
+
+        mGaussianFilter.onSurfaceChanged(width, height);
+        mDisplayFilter.onSurfaceChanged(width, height);
     }
 
     @Override
@@ -53,7 +65,18 @@ public class FuzzyView extends GLSurfaceView implements GLSurfaceView.Renderer
         mBmpToTextureFilter.initFrameBufferOfTextureSize();
         int textureID = mBmpToTextureFilter.onDrawBuffer(0);
 
-        mFuzzyFilter.onDrawFrame(textureID);
+        long start = System.currentTimeMillis();
+        mGaussianFilter.setTextureWH(mBmpToTextureFilter.getFrameBufferW(), mBmpToTextureFilter.getFrameBufferH());
+        mGaussianFilter.initFrameBufferOfTextureSize();
+        mGaussianFilter.setBlurParams(2, 1.2f);
+        textureID = mGaussianFilter.onDrawBuffer(textureID);
+
+        Log.e("***", "onDrawFrame: 第一次高斯模糊耗时：" + (System.currentTimeMillis() - start));
+
+        mDisplayFilter.setTextureWH(mGaussianFilter.getTextureW(), mGaussianFilter.getTextureH());
+        mDisplayFilter.onDrawFrame(textureID);
+
+//        mFuzzyFilter.onDrawFrame(textureID);
     }
 
     @Override
@@ -66,9 +89,9 @@ public class FuzzyView extends GLSurfaceView implements GLSurfaceView.Renderer
             mBmpToTextureFilter.destroy();
         }
 
-        if (mFuzzyFilter != null)
-        {
-            mFuzzyFilter.destroy();
-        }
+//        if (mFuzzyFilter != null)
+//        {
+//            mFuzzyFilter.destroy();
+//        }
     }
 }

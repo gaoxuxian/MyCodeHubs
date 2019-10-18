@@ -1,12 +1,13 @@
 package trunk.kotlin
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,16 +17,23 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.view.NestedScrollingParent3
 import androidx.core.view.NestedScrollingParentHelper
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import trunk.R
 import util.PxUtil
+import java.util.*
+import kotlin.collections.ArrayList
 
 class NestedScrollActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PxUtil.init(this)
+        Glide.get(this).clearMemory()
 
         val layout = MyLinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
@@ -33,29 +41,75 @@ class NestedScrollActivity : AppCompatActivity() {
         layout.layoutParams = param
         setContentView(layout)
 
+        window.attributes.width = 1080
+        window.attributes.height = 1080
+
+        val newlayout = object :FrameLayout(this) {
+            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+                return super.dispatchKeyEvent(event)
+            }
+
+            override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+                return super.dispatchTouchEvent(ev)
+            }
+        }
+        newlayout.setBackgroundColor(Color.RED)
+        var params = WindowManager.LayoutParams()
+//        params.type = WindowManager.LayoutParams.TYPE_APPLICATION
+        params.token = window.attributes.token
+//        params.copyFrom(window.attributes)
+        params.width = 1080
+        params.height = 300
+        params.gravity = Gravity.BOTTOM
+        params.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION
+        windowManager.addView(newlayout, params)
+
+
         val imageView = ImageView(this)
-        imageView.setImageResource(R.drawable.open_test_9)
+//        imageView.setImageResource(R.drawable.open_test_9)
         var param1 = LinearLayout.LayoutParams(PxUtil.sU_1080p(1080), (PxUtil.sU_1080p(1080) * 9f / 16f).toInt())
         layout.addView(imageView, param1)
+        val target = object : CustomTarget<Bitmap>() {
+            override fun onLoadCleared(placeholder: Drawable?) {
+                imageView.setImageDrawable(placeholder)
+            }
+
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                imageView.setImageBitmap(resource)
+            }
+        }
+        imageView.postDelayed({ Glide.with(imageView.context).asBitmap().load(R.drawable.open_test_9).into(target) }, 2000)
 
         val data = ArrayList<String>()
         for (i in 1..100) {
             data.add(i.toString())
         }
 
+        val adapter = MyAdapter1(data = data)
         val recyclerView = RecyclerView(this)
         recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         recyclerView.isNestedScrollingEnabled = true
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView.adapter = MyAdapter1(data = data)
+        recyclerView.adapter = adapter
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.set(5, 5, 5, 5)
             }
         })
-        param1 = LinearLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sV_1080p(1920))
+//        param1 = LinearLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sV_1080p(1920))
 //        param1 = LinearLayout.LayoutParams(PxUtil.sU_1080p(1080), PxUtil.sU_1080p(1920))
+        param1 = LinearLayout.LayoutParams(PxUtil.sU_1080p(1080), LinearLayout.LayoutParams.MATCH_PARENT)
         layout.addView(recyclerView, param1)
+
+        val itemTouchHelper = ItemTouchHelper(MySimpleCallBack(adapter,
+            ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),
+            ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        Thread.dumpStack()
+        return super.onTouchEvent(event)
     }
 }
 
@@ -149,26 +203,24 @@ private class MyLinearLayout(context: Context) : LinearLayout(context), NestedSc
     }
 }
 
-private class MyHolder1(itemView: View) : RecyclerView.ViewHolder(itemView)
+private class MyAdapter1(private var data : ArrayList<String>) : RecyclerView.Adapter<MyHolder>() {
 
-private class MyAdapter1(private var data : ArrayList<String>) : RecyclerView.Adapter<MyHolder1>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder1 {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         val view = TextView(parent.context)
         view.setTextColor(Color.WHITE)
-        view.minHeight = 100
+        view.minHeight = 200
         view.gravity = Gravity.CENTER
         view.setBackgroundColor(ColorUtils.setAlphaComponent(Color.RED, (255 * 0.6f).toInt()))
         val rp = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
         view.layoutParams = rp
-        return MyHolder1(view)
+        return MyHolder(view)
     }
 
     override fun getItemCount(): Int {
-        return 100
+        return data.size
     }
 
-    override fun onBindViewHolder(holder: MyHolder1, position: Int) {
+    override fun onBindViewHolder(holder: MyHolder, position: Int) {
         val tv = holder.itemView as TextView
         tv.text = getData(position)
     }
@@ -176,4 +228,34 @@ private class MyAdapter1(private var data : ArrayList<String>) : RecyclerView.Ad
     private fun getData(index : Int) : String? {
         return data[index]
     }
+
+    //交换item
+    fun onItemMove(fromPosition: Int, toPosition: Int) {
+        Collections.swap(data, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    //删除item
+    fun onItemDismiss(position: Int) {
+        data.removeAt(position)
+        notifyItemRemoved(position)
+    }
+}
+
+private class MySimpleCallBack(val adapter: MyAdapter1, dragDirs : Int, swipeDirs : Int) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        adapter.onItemMove(fromPosition = viewHolder.adapterPosition, toPosition = target.adapterPosition)
+        Log.e("***", "MySimpleCallBack : onMove()")
+        return true
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        adapter.onItemDismiss(viewHolder.adapterPosition)
+        Log.e("***", "MySimpleCallBack : onSwiped()")
+    }
+
 }

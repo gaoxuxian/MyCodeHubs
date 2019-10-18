@@ -1,5 +1,6 @@
 package trunk;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -11,7 +12,7 @@ import android.widget.FrameLayout;
  * @author Gxx
  * Created by Gxx on 2018/12/19.
  */
-public abstract class BaseActivity extends AppCompatActivity
+public abstract class BaseActivity extends Activity
 {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)

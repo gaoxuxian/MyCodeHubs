@@ -4,12 +4,15 @@ import android.animation.ValueAnimator
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import trunk.R
@@ -60,5 +63,38 @@ class ViewOffsetLRActivity : AppCompatActivity() {
         }
         lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         layout.addView(button, lp)
+
+        val textView = TextView(this)
+        textView.also {  }
+        textView.addTextWatcher(
+            afterTextChanged = {
+
+            },
+            beforeTextChanged = {
+                s, start, count, after ->
+                Log.e("", s.toString())
+            }
+        )
     }
+}
+
+inline fun TextView.addTextWatcher(
+    crossinline afterTextChanged : (Editable?) -> Unit = {},
+    crossinline beforeTextChanged : (CharSequence?, Int, Int, Int) -> Unit = {_, _, _, _ -> Unit},
+    crossinline onTextChanged : (CharSequence?, Int, Int, Int) -> Unit = {_, _, _, _ -> Unit}) {
+    val listener : TextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            afterTextChanged(s)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            beforeTextChanged(s, start, count, after)
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            onTextChanged(s, start, before, count)
+        }
+
+    }
+    addTextChangedListener(listener)
 }

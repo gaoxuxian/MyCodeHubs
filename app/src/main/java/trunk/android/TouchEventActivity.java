@@ -40,6 +40,11 @@ public class TouchEventActivity extends BaseActivity {
             public boolean onTouchEvent(MotionEvent event) {
                 return super.onTouchEvent(event);
             }
+
+            @Override
+            public void onDrawForeground(Canvas canvas) {
+                super.onDrawForeground(canvas);
+            }
         };
         layoutA.setBackgroundColor(ColorUtils.setAlphaComponent(Color.RED, (int) (255 * 1f)));
         params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(810), PxUtil.sU_1080p(1620));
@@ -83,6 +88,11 @@ public class TouchEventActivity extends BaseActivity {
                 public boolean onTouchEvent(MotionEvent event) {
                     return super.onTouchEvent(event);
                 }
+
+                @Override
+                public void onDrawForeground(Canvas canvas) {
+                    super.onDrawForeground(canvas);
+                }
             };
             layoutB.setBackgroundColor(ColorUtils.setAlphaComponent(Color.GREEN, (int) (255 * 1f)));
             params = new FrameLayout.LayoutParams(PxUtil.sU_1080p(540), PxUtil.sU_1080p(1080));
@@ -98,12 +108,15 @@ public class TouchEventActivity extends BaseActivity {
                     @Override
                     public boolean onTouchEvent(MotionEvent event) {
                         Log.d("***", "onTouchEvent: viewA");
+                        if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                            invalidate();
+                        }
                         return true;
                     }
 
                     @Override
-                    protected void onDraw(Canvas canvas) {
-                        super.onDraw(canvas);
+                    public void onDrawForeground(Canvas canvas) {
+                        super.onDrawForeground(canvas);
                     }
                 };
                 viewA.setBackgroundColor(ColorUtils.setAlphaComponent(Color.BLUE, (int) (255 * 1f)));
@@ -113,6 +126,13 @@ public class TouchEventActivity extends BaseActivity {
             }
         }
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d("TouchEventActivity", "onTouchEvent, ev=" + event.getAction());
+        Thread.dumpStack();
+        return super.onTouchEvent(event);
     }
 
     @Override

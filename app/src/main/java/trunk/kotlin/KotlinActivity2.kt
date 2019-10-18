@@ -1,8 +1,10 @@
 package trunk.kotlin
 
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.addListener
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,15 +46,49 @@ class RecyclerActivity : AppCompatActivity() {
         lp.gravity = Gravity.CENTER
         layout.addView(mRecyclerView, lp)
 
-        val button = Button(this)
+        var button = Button(this)
         button.text = "test left"
         button.setOnClickListener {
-            mRecyclerView?.offsetChildrenHorizontal(-840)
+            val view = mRecyclerView?.getChildAt(1)
+            val animator = ValueAnimator.ofInt(500, 10)
+            var dx = 500
+            animator.addUpdateListener {
+                val value = it.animatedValue as Int
+                val x = dx - value
+                dx = value
+                if (view != null) {
+                    view.layoutParams.width = value
+                }
+                mRecyclerView?.scrollBy(-x, 0)
+                mRecyclerView?.requestLayout()
+            }
+            animator.duration = 2000
+            animator.start()
+//            mRecyclerView?.offsetChildrenHorizontal(240)
 //            mRecyclerView?.postDelayed({
 //                mRecyclerView?.requestLayout()
 //            }, 1000)
         }
         lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        layout.addView(button, lp)
+
+        button = Button(this)
+        button.text = "test right"
+        button.setOnClickListener {
+            val view = mRecyclerView?.getChildAt(1)
+            val animator = ValueAnimator.ofInt(500, 10)
+            animator.addUpdateListener {
+                val value = it.animatedValue as Int
+                if (view != null) {
+                    view.layoutParams.width = value
+                }
+                mRecyclerView?.requestLayout()
+            }
+            animator.duration = 2000
+            animator.start()
+        }
+        lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        lp.gravity = Gravity.CENTER_HORIZONTAL
         layout.addView(button, lp)
 
         val button1 = Button(this)
@@ -66,7 +103,7 @@ class RecyclerActivity : AppCompatActivity() {
     }
 }
 
-private class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+internal class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 private class MyAdapter(private var data : ArrayList<String>) : RecyclerView.Adapter<MyHolder>() {
 

@@ -2,9 +2,15 @@ package trunk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.SparseArray;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.FrameLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 

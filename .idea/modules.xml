@@ -3,8 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyCodeHubs.iml" filepath="$PROJECT_DIR$/MyCodeHubs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/MyCodeHubs-app.iml" filepath="$PROJECT_DIR$/app/MyCodeHubs-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/avlibrary/MyCodeHubs-avlibrary.iml" filepath="$PROJECT_DIR$/avlibrary/MyCodeHubs-avlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/utillibrary/MyCodeHubs-utillibrary.iml" filepath="$PROJECT_DIR$/utillibrary/MyCodeHubs-utillibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/widgetlibrary/MyCodeHubs-widgetlibrary.iml" filepath="$PROJECT_DIR$/widgetlibrary/MyCodeHubs-widgetlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/avlibrary/avlibrary.iml" filepath="$PROJECT_DIR$/avlibrary/avlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project-MyCodeHubs.iml" filepath="$PROJECT_DIR$/project-MyCodeHubs.iml" />
       <module fileurl="file://$PROJECT_DIR$/utillibrary/utillibrary.iml" filepath="$PROJECT_DIR$/utillibrary/utillibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/widgetlibrary/widgetlibrary.iml" filepath="$PROJECT_DIR$/widgetlibrary/widgetlibrary.iml" />
     </modules>

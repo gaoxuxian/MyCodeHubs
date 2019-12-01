@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,7 +15,11 @@ import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import my.code.IService;
+import my.code.myservice.aidl.Book;
+import my.code.myservice.aidl.IMyService;
 import trunk.BaseActivity;
+import trunk.aidl.MyService;
 import trunk.service.ServiceTestActivityService;
 
 public class ServiceTestActivity extends BaseActivity {
@@ -33,6 +38,14 @@ public class ServiceTestActivity extends BaseActivity {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Log.d("xxx", "onServiceConnected: ");
                 Log.d("xxx", "onServiceConnected: thread == " + Thread.currentThread().getName());
+                IService iService = IService.Stub.asInterface(service);
+                try {
+                    IBinder binder = iService.query(0);
+                    IMyService iMyService = IMyService.Stub.asInterface(binder);
+                    iMyService.addBook(new Book("小明", 10));
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -57,7 +70,7 @@ public class ServiceTestActivity extends BaseActivity {
 //                    new Thread(new Runnable() {
 //                        @Override
 //                        public void run() {
-                            Intent intent = new Intent(ServiceTestActivity.this, ServiceTestActivityService.class);
+                            Intent intent = new Intent(ServiceTestActivity.this, MyService.class);
                             startService(intent);
 //                        }
 //                    }).start();
@@ -76,7 +89,7 @@ public class ServiceTestActivity extends BaseActivity {
             btn1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ServiceTestActivity.this, ServiceTestActivityService.class);
+                    Intent intent = new Intent(ServiceTestActivity.this, MyService.class);
                     stopService(intent);
                 }
             });
@@ -91,7 +104,7 @@ public class ServiceTestActivity extends BaseActivity {
             btn2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ServiceTestActivity.this, ServiceTestActivityService.class);
+                    Intent intent = new Intent(ServiceTestActivity.this, MyService.class);
                     bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
                 }
             });

@@ -17,6 +17,14 @@ public final class Book implements Parcelable {
         this.mNumber = in.readInt();
     }
 
+    public String getName() {
+        return mName;
+    }
+
+    public int getNumber() {
+        return mNumber;
+    }
+
     public static final Creator<Book> CREATOR = new Creator<Book>() {
         @Override
         public Book createFromParcel(Parcel in) {

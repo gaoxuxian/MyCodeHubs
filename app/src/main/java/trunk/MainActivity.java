@@ -12,20 +12,35 @@ import android.widget.FrameLayout;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import util.PxUtil;
 
 import java.util.ArrayList;
+
+import util.PxUtil;
 
 public class MainActivity extends BaseActivity {
 
     private ArrayList<SparseArray<Object>> mData;
     private ActivityItemAdapter adapter;
+    private ArrayList<Integer>[] mTest;
+    private Object[] mTest1 = new Integer[10];
 
     public static final String activity_package_path = "trunk.";
 
     @Override
     public void onCreateBaseData() throws Exception {
-        mData = new ArrayList<>();
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        arrayList.add(1);
+        arrayList.add(2);
+        arrayList.add(3);
+
+        ArrayList<String> arrayList1 = new ArrayList<>();
+        arrayList1.add("1");
+        arrayList1.add("2");
+        arrayList1.add("3");
+
+        mTest = new ArrayList[]{arrayList, arrayList1};
+        Integer integer = mTest[0].get(0);
+        Integer integer1 = mTest[1].get(0);
 
         SparseArray<Object> map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "android 应用层");
@@ -66,7 +81,8 @@ public class MainActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
     }
 

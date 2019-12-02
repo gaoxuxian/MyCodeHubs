@@ -1,5 +1,6 @@
 package trunk.kotlin
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -28,7 +29,7 @@ import util.PxUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
-class NestedScrollActivity : AppCompatActivity() {
+class NestedScrollActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +59,9 @@ class NestedScrollActivity : AppCompatActivity() {
 //        params.type = WindowManager.LayoutParams.TYPE_APPLICATION
         params.token = window.attributes.token
 //        params.copyFrom(window.attributes)
-        params.width = 1080
+        params.width = 540
         params.height = 300
-        params.gravity = Gravity.BOTTOM
+        params.gravity = Gravity.BOTTOM.or(Gravity.CENTER_HORIZONTAL)
         params.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION
         windowManager.addView(newlayout, params)
 

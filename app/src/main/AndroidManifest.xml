@@ -60,9 +60,6 @@
         <activity android:name=".android.WindowTestActivity">
         </activity>
 
-        <activity android:name=".android.ServiceTestActivity">
-        </activity>
-
         <activity
                 android:name=".android.RewindTestActivity"
                 android:theme="@style/AppTheme.FullScreen">
@@ -165,10 +162,6 @@
 
 
         <!-- service -->
-        <service
-                android:name=".service.ServiceTestActivityService"
-                android:process="">
-        </service>
 
     </application>
 

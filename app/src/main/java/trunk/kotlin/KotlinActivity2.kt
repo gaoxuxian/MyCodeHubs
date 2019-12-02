@@ -1,6 +1,7 @@
 package trunk.kotlin
 
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
@@ -17,7 +18,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerActivity : AppCompatActivity() {
+class RecyclerActivity : Activity() {
 
     private var mRecyclerView : RecyclerView? = null
 
@@ -52,8 +53,8 @@ class RecyclerActivity : AppCompatActivity() {
             val view = mRecyclerView?.getChildAt(1)
             val animator = ValueAnimator.ofInt(500, 10)
             var dx = 500
-            animator.addUpdateListener {
-                val value = it.animatedValue as Int
+            animator.addUpdateListener { v ->
+                val value = v.animatedValue as Int
                 val x = dx - value
                 dx = value
                 if (view != null) {

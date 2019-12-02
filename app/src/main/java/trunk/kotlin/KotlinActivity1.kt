@@ -1,6 +1,7 @@
 package trunk.kotlin
 
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
@@ -17,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import trunk.R
 
-class ViewOffsetLRActivity : AppCompatActivity() {
+class ViewOffsetLRActivity : Activity() {
 
     var mImageView : ImageView? = null
 

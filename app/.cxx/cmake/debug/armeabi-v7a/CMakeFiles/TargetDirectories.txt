@@ -1,0 +1,4 @@
+G:/project/MyDemo/MyCodeHubs/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/native-lib.dir
+G:/project/MyDemo/MyCodeHubs/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/my-native-lib.dir
+G:/project/MyDemo/MyCodeHubs/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+G:/project/MyDemo/MyCodeHubs/app/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir

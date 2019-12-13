@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
             android:name=".MyApplication"
@@ -32,7 +33,8 @@
 
         <activity
                 android:name=".AndroidActivity"
-                android:theme="@style/AppTheme.FullScreen">
+                android:theme="@style/AppTheme.FullScreen"
+            android:parentActivityName=".MainActivity">
         </activity>
 
         <activity
@@ -99,6 +101,10 @@
                 android:name=".android.NestedScrollActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".android.ServiceTestActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
 
         <!-- Android kotlin -->
         <activity
@@ -162,6 +168,10 @@
 
 
         <!-- service -->
+        <service android:name=".aidl.MyService"
+            android:process=".myService">
+
+        </service>
 
     </application>
 

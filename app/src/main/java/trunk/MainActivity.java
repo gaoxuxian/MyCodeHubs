@@ -3,8 +3,10 @@ package trunk;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import util.PxUtil;
 
@@ -21,26 +25,12 @@ public class MainActivity extends BaseActivity {
 
     private ArrayList<SparseArray<Object>> mData;
     private ActivityItemAdapter adapter;
-    private ArrayList<Integer>[] mTest;
-    private Object[] mTest1 = new Integer[10];
 
     public static final String activity_package_path = "trunk.";
 
     @Override
     public void onCreateBaseData() throws Exception {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(3);
-
-        ArrayList<String> arrayList1 = new ArrayList<>();
-        arrayList1.add("1");
-        arrayList1.add("2");
-        arrayList1.add("3");
-
-        mTest = new ArrayList[]{arrayList, arrayList1};
-        Integer integer = mTest[0].get(0);
-        Integer integer1 = mTest[1].get(0);
+        mData = new ArrayList<>();
 
         SparseArray<Object> map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "android 应用层");
@@ -69,11 +59,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreateUI(Context context) {
-        FrameLayout mParent = new FrameLayout(context);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mParent.setLayoutParams(params);
-        setContentView(mParent);
-        onCreateChildren(context, mParent, params);
+        super.onCreateUI(context);
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

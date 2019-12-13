@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.xx.androiddemo">
+    package="com.xx.androiddemo">
 
     <application>
         <activity
-                android:name=".service.ServiceActivity"
-                android:label="ServiceActivity"
-                android:theme="@style/AppTheme.ActivityDemoTheme"/>
+            android:name=".service.ServiceActivity"
+            android:label="ServiceActivity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
-                android:name=".AndroidDemoActivity"
-                android:theme="@style/AppTheme.MyActivityTheme" />
+            android:name=".AndroidDemoActivity"
+            android:theme="@style/AppTheme.MyActivityTheme" />
         <activity
-                android:name=".activity.BaseActivity4Demo"
-                android:theme="@style/AppTheme.ActivityDemoTheme" />
+            android:name=".activity.BaseActivity4Demo"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
-                android:name=".activity.StandardActivity"
-                android:label="StandardActivity"
-                android:launchMode="standard"
-                android:theme="@style/AppTheme.ActivityDemoTheme" />
+            android:name=".activity.StandardActivity"
+            android:label="StandardActivity"
+            android:launchMode="standard"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
-                android:name=".activity.SingleTopActivity"
-                android:label="SingleTopActivity"
-                android:launchMode="singleTop"
-                android:theme="@style/AppTheme.ActivityDemoTheme" />
+            android:name=".activity.SingleTopActivity"
+            android:label="SingleTopActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
-                android:name=".activity.SingleTaskActivity"
-                android:label="SingleTaskActivity"
-                android:launchMode="singleTask"
-                android:theme="@style/AppTheme.ActivityDemoTheme" />
+            android:name=".activity.SingleTaskActivity"
+            android:label="SingleTaskActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
-                android:name=".activity.SingleTaskOtherTaskActivity"
-                android:label="SingleTaskOtherTaskActivity"
-                android:launchMode="singleTask"
-                android:taskAffinity=".other"
-                android:theme="@style/AppTheme.ActivityDemoTheme" /> <!-- 栈名要用.开头，并且不能有空格等字符 -->
+            android:name=".activity.SingleTaskOtherTaskActivity"
+            android:label="SingleTaskOtherTaskActivity"
+            android:launchMode="singleTask"
+            android:taskAffinity=".other"
+            android:theme="@style/AppTheme.ActivityDemoTheme" /> <!-- 栈名要用.开头，并且不能有空格等字符 -->
         <activity
-                android:name=".activity.SingleInstanceActivity"
-                android:label="SingleInstanceActivity"
-                android:launchMode="singleInstance"
-                android:theme="@style/AppTheme.ActivityDemoTheme" />
+            android:name=".activity.SingleInstanceActivity"
+            android:label="SingleInstanceActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
 
-        <service android:name=".service.ServiceTest"/>
+        <service android:name=".service.ServiceTest" />
     </application>
 
 </manifest>

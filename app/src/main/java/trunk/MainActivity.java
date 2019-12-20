@@ -33,9 +33,17 @@ public class MainActivity extends BaseActivity {
         mData = new ArrayList<>();
 
         SparseArray<Object> map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "android 应用层");
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "java");
         Intent intent = new Intent();
-        Class cls = Class.forName(activity_package_path + "AndroidActivity");
+        Class cls = Class.forName(activity_package_path + "JavaActivity");
+        intent.setClass(this, cls);
+        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
+        mData.add(map);
+
+        map = new SparseArray<>();
+        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "android");
+        intent = new Intent();
+        cls = Class.forName(activity_package_path + "AndroidActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

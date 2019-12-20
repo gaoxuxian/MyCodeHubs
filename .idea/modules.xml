@@ -3,10 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyCodeHubs.iml" filepath="$PROJECT_DIR$/MyCodeHubs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kotlindemo/MyCodeHubs-kotlindemo.iml" filepath="$PROJECT_DIR$/kotlindemo/MyCodeHubs-kotlindemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/androiddemo/androiddemo.iml" filepath="$PROJECT_DIR$/androiddemo/androiddemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/avlibrary/avlibrary.iml" filepath="$PROJECT_DIR$/avlibrary/avlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/javademo/javademo.iml" filepath="$PROJECT_DIR$/javademo/javademo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kotlindemo/kotlindemo.iml" filepath="$PROJECT_DIR$/kotlindemo/kotlindemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/utillibrary/utillibrary.iml" filepath="$PROJECT_DIR$/utillibrary/utillibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/widgetlibrary/widgetlibrary.iml" filepath="$PROJECT_DIR$/widgetlibrary/widgetlibrary.iml" />
     </modules>

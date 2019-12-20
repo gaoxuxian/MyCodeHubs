@@ -62,6 +62,7 @@ dependencies {
     implementation project(':widgetlibrary')
     implementation project(':androiddemo')
     implementation project(':javademo')
+    implementation project(':kotlindemo')
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
 //

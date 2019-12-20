@@ -38,6 +38,11 @@
         </activity>
 
         <activity
+            android:name=".JavaActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <activity
                 android:name=".OpenGLActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
@@ -47,7 +52,23 @@
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
 
-        <!-- Android Java -->
+        <!-- Java -->
+        <activity
+            android:name=".java.IOTest1Activity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <activity
+            android:name=".java.IOTest2Activity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <activity
+            android:name=".java.GCRootTestActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
+
+        <!-- Android -->
         <activity android:name=".android.MultThreadActivity">
         </activity>
 

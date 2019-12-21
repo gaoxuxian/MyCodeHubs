@@ -28,19 +28,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreateBaseData() throws Exception {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(3);
-
-        ArrayList<String> arrayList1 = new ArrayList<>();
-        arrayList1.add("1");
-        arrayList1.add("2");
-        arrayList1.add("3");
-
-        mTest = new ArrayList[]{arrayList, arrayList1};
-        Integer integer = mTest[0].get(0);
-        Integer integer1 = mTest[1].get(0);
+        mData = new ArrayList<>();
 
         SparseArray<Object> map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "android 应用层");

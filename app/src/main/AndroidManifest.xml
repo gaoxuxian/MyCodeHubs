@@ -99,6 +99,10 @@
                 android:name=".android.NestedScrollActivity"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".android.GCTestActivity"
+            android:theme="@style/AppTheme.FullScreen">
+        </activity>
 
         <!-- Android kotlin -->
         <activity

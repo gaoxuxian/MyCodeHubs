@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "my.code"
         minSdkVersion 21
@@ -62,6 +62,10 @@ dependencies {
     implementation project(':widgetlibrary')
     implementation project(':androiddemo')
     implementation project(':javademo')
+    implementation project(':kotlindemo')
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
+//
+//    // Gradle plugin 源码
+//    implementation 'com.android.tools.build:gradle:3.5.2'
 }

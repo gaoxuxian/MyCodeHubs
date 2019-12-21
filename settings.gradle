@@ -1,1 +1,1 @@
-include ':app', ':utillibrary', ':widgetlibrary', ':androiddemo', ':avlibrary', ':javademo'
+include ':app', ':utillibrary', ':widgetlibrary', ':androiddemo', ':avlibrary', ':javademo', ':kotlindemo'

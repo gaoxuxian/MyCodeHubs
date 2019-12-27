@@ -126,6 +126,11 @@
             android:name=".android.ServiceTestActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
+        <activity
+            android:name=".android.FragmentTestActivity"
+            android:theme="@style/AppTheme.FullScreen_v"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
 
         <!-- Android kotlin -->
         <activity

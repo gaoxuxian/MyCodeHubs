@@ -29,27 +29,27 @@
             app:layout_constraintTop_toBottomOf="@+id/othertasksingletask" />
 
     <Button
-            android:id="@+id/singletop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
-            android:text="启动SingleTopActivity"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@+id/singletask"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/singletop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:text="启动SingleTopActivity"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/singletask"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-            android:id="@+id/standard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
-            android:text="启动StandardActivity"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@+id/singletop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/standard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="148dp"
+        android:text="启动StandardActivity"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/singletop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
             android:id="@+id/finish"
@@ -74,5 +74,16 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/singletask" />
+
+    <Button
+        android:id="@+id/standardtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="启动栈名：standard 的 StandardTaskActivity"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/singletop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/standard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

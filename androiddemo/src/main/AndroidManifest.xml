@@ -19,6 +19,12 @@
             android:launchMode="standard"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
+            android:name=".activity.StandardTaskActivity"
+            android:label="StandardTaskActivity"
+            android:launchMode="standard"
+            android:taskAffinity=".standard"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+        <activity
             android:name=".activity.SingleTopActivity"
             android:label="SingleTopActivity"
             android:launchMode="singleTop"

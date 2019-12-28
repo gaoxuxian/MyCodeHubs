@@ -86,6 +86,7 @@ public class MyService extends Service {
 
         @Override
         public void addBook(Book book) throws RemoteException {
+            Log.d("xxx", "addBook: run on Pid-" + Process.myPid() + ", Uid-" + Process.myUid() +", " + Thread.currentThread().getName());
             Log.d("xxx", "addBook: book object == " + book);
             Log.d("xxx", "addBook: book name == " + book.getName());
             Log.d("xxx", "addBook: book number == " + book.getNumber());

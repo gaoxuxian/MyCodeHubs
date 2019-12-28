@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +37,7 @@ public class ServiceTestActivity extends BaseActivity {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Log.d("xxx", "onServiceConnected: ");
-                Log.d("xxx", "onServiceConnected: thread == " + Thread.currentThread().getName());
+                Log.d("xxx", "onServiceConnected: run on Pid-" + Process.myPid() + ", Uid-" + Process.myUid() +", " + Thread.currentThread().getName());
                 IService iService = IService.Stub.asInterface(service);
                 try {
                     IBinder binder = iService.query(0);

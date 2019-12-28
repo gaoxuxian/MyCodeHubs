@@ -22,8 +22,10 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="AppTheme.FullScreen_v">
+    <style name="AppTheme.FullScreen_v" parent="Theme.AppCompat.Light">
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
     </style>
 
 </resources>

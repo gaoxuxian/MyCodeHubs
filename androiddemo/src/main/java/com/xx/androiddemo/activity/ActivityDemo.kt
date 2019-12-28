@@ -1,9 +1,13 @@
 package com.xx.androiddemo.activity
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Process
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.xx.androiddemo.R
 import kotlinx.android.synthetic.main.activity_demo.*
@@ -20,6 +24,13 @@ fun BaseActivity4Demo.startStandardActivity() {
     standard.setOnClickListener {
         v: View? ->
         startActivity(Intent(this, Class.forName(getPackagePath() + "StandardActivity")))
+    }
+}
+
+fun BaseActivity4Demo.startStandardTaskActivity() {
+    standardtask.setOnClickListener {
+            v: View? ->
+        startActivity(Intent(this, Class.forName(getPackagePath() + "StandardTaskActivity")))
     }
 }
 
@@ -52,6 +63,8 @@ fun BaseActivity4Demo.startSingleInstanceActivity() {
 
 class StandardActivity : BaseActivity4Demo()
 
+class StandardTaskActivity : BaseActivity4Demo()
+
 class SingleTopActivity : BaseActivity4Demo()
 
 class SingleTaskActivity : BaseActivity4Demo()
@@ -70,6 +83,7 @@ open class BaseActivity4Demo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
         this.startStandardActivity()
+        this.startStandardTaskActivity()
         this.startSingleTopActivity()
         this.startSingleTaskActivity()
         this.startSingleTaskOtherTaskActivity()

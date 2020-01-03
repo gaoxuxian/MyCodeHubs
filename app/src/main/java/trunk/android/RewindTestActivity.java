@@ -9,16 +9,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.FrameLayout;
-import trunk.BaseActivity;
-import util.PxUtil;
-import util.ThreadUtil;
+
+import com.xx.commonlib.PxUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import trunk.BaseActivity;
 
 public class RewindTestActivity extends BaseActivity {
 

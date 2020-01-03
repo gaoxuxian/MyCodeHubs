@@ -1,9 +1,5 @@
 package trunk.android;
 
-import androidx.annotation.Nullable;
-import com.xx.avlibrary.gl.decode.MediaPlayer;
-import trunk.BaseActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import util.PxUtil;
+
+import androidx.annotation.Nullable;
+
+import com.xx.avlibrary.gl.decode.MediaPlayer;
+import com.xx.commonlib.PxUtil;
+
+import trunk.BaseActivity;
 
 public class MyMediaPlayerActivity extends BaseActivity implements View.OnClickListener {
     private Button btn;

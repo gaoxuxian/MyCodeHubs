@@ -13,10 +13,11 @@ import com.xx.avlibrary.gl.util.GLUtil;
 import com.xx.avlibrary.gl.egl.EglCore;
 import com.xx.avlibrary.gl.egl.EglSurfaceBase;
 import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
+import com.xx.commonlib.PxUtil;
+import com.xx.commonlib.ThreadUtil;
+
 import trunk.BaseActivity;
 import trunk.R;
-import util.PxUtil;
-import util.ThreadUtil;
 
 public class EGLPbufferActivity extends BaseActivity
 {

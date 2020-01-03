@@ -2,6 +2,8 @@ package com.xx.javademo.IO;
 
 import android.util.Log;
 
+import com.xx.commonlib.FileUtil;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,8 +15,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
-import util.FileUtil;
 
 public class IOCase2 {
     private static final String content =

@@ -1,4 +1,4 @@
-package util;
+package com.xx.commonlib;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -17,7 +17,16 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.ArrayList;

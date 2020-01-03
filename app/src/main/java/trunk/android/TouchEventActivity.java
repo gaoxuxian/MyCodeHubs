@@ -7,14 +7,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+
 import androidx.core.graphics.ColorUtils;
+
+import com.xx.commonlib.PxUtil;
+
 import trunk.BaseActivity;
-import util.ImageUtils;
-import util.PxUtil;
 
 public class TouchEventActivity extends BaseActivity {
 
@@ -38,6 +37,7 @@ public class TouchEventActivity extends BaseActivity {
 
             @Override
             public boolean onTouchEvent(MotionEvent event) {
+                Log.d("***", "onTouchEvent: layoutA");
                 return super.onTouchEvent(event);
             }
 
@@ -70,22 +70,23 @@ public class TouchEventActivity extends BaseActivity {
                 @Override
                 public boolean onInterceptTouchEvent(MotionEvent ev) {
                     boolean intercept = false;
-                    switch (ev.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_MOVE: {
-                            float dx = Math.abs(ev.getX() - x);
-                            float dy = Math.abs(ev.getY() - y);
-
-                            if (ImageUtils.Spacing(dx, dy) > PxUtil.sU_1080p(100)) {
-                                intercept = true;
-                            }
-                            break;
-                        }
-                    }
+//                    switch (ev.getAction() & MotionEvent.ACTION_MASK) {
+//                        case MotionEvent.ACTION_MOVE: {
+//                            float dx = Math.abs(ev.getX() - x);
+//                            float dy = Math.abs(ev.getY() - y);
+//
+//                            if (ImageUtils.Spacing(dx, dy) > PxUtil.sU_1080p(100)) {
+//                                intercept = true;
+//                            }
+//                            break;
+//                        }
+//                    }
                     return intercept || super.onInterceptTouchEvent(ev);
                 }
 
                 @Override
                 public boolean onTouchEvent(MotionEvent event) {
+                    Log.d("***", "onTouchEvent: layoutB");
                     return super.onTouchEvent(event);
                 }
 
@@ -131,8 +132,12 @@ public class TouchEventActivity extends BaseActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.d("TouchEventActivity", "onTouchEvent, ev=" + event.getAction());
-        Thread.dumpStack();
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

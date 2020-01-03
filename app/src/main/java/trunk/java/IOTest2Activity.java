@@ -1,7 +1,6 @@
 package trunk.java;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -9,11 +8,10 @@ import android.widget.FrameLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.xx.javademo.IO.IOCase1;
+import com.xx.commonlib.PxUtil;
 import com.xx.javademo.IO.IOCase2;
 
 import trunk.BaseActivity;
-import util.PxUtil;
 
 public class IOTest2Activity extends BaseActivity {
 

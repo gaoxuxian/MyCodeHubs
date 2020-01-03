@@ -13,7 +13,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.NestedScrollingParent3
 import androidx.core.view.NestedScrollingParentHelper
@@ -24,8 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.xx.commonlib.PxUtil
 import trunk.R
-import util.PxUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -42,28 +41,28 @@ class NestedScrollActivity : Activity() {
         layout.layoutParams = param
         setContentView(layout)
 
-        window.attributes.width = 1080
-        window.attributes.height = 1080
-
-        val newlayout = object :FrameLayout(this) {
-            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-                return super.dispatchKeyEvent(event)
-            }
-
-            override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-                return super.dispatchTouchEvent(ev)
-            }
-        }
-        newlayout.setBackgroundColor(Color.RED)
-        var params = WindowManager.LayoutParams()
-//        params.type = WindowManager.LayoutParams.TYPE_APPLICATION
-        params.token = window.attributes.token
-//        params.copyFrom(window.attributes)
-        params.width = 540
-        params.height = 300
-        params.gravity = Gravity.BOTTOM.or(Gravity.CENTER_HORIZONTAL)
-        params.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION
-        windowManager.addView(newlayout, params)
+//        window.attributes.width = 1080
+//        window.attributes.height = 1080
+//
+//        val newlayout = object :FrameLayout(this) {
+//            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+//                return super.dispatchKeyEvent(event)
+//            }
+//
+//            override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+//                return super.dispatchTouchEvent(ev)
+//            }
+//        }
+//        newlayout.setBackgroundColor(Color.RED)
+//        var params = WindowManager.LayoutParams()
+////        params.type = WindowManager.LayoutParams.TYPE_APPLICATION
+//        params.token = window.attributes.token
+////        params.copyFrom(window.attributes)
+//        params.width = 540
+//        params.height = 300
+//        params.gravity = Gravity.BOTTOM.or(Gravity.CENTER_HORIZONTAL)
+//        params.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION
+//        windowManager.addView(newlayout, params)
 
 
         val imageView = ImageView(this)

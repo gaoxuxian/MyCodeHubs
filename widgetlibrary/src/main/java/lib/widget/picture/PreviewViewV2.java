@@ -4,12 +4,20 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
-import util.ImageUtils;
-import util.PxUtil;
+
+import com.xx.commonlib.ImageUtils;
+import com.xx.commonlib.PxUtil;
 
 public class PreviewViewV2 extends View
 {

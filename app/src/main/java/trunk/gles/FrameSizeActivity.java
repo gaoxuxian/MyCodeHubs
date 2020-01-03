@@ -13,20 +13,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.xx.avlibrary.gl.filter.rhythm.DisplayFilter;
+import com.xx.avlibrary.gl.filter.rhythm.FrameSizeFilter;
+import com.xx.avlibrary.gl.filter.rhythm.FrameSizeHelper;
+import com.xx.avlibrary.gl.filter.rhythm.FrameSizeType;
+import com.xx.avlibrary.gl.filter.rhythm.TextureFilter;
 import com.xx.avlibrary.gl.util.GLUtil;
-import com.xx.avlibrary.gl.filter.rhythm.*;
-import trunk.BaseActivity;
-import trunk.R;
-import util.ImageUtils;
-import util.PxUtil;
+import com.xx.commonlib.ImageUtils;
+import com.xx.commonlib.PxUtil;
+
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import java.util.ArrayList;
+
+import trunk.BaseActivity;
+import trunk.R;
 
 public class FrameSizeActivity extends BaseActivity implements GLSurfaceView.Renderer {
     RecyclerView mFrameSizeListView;

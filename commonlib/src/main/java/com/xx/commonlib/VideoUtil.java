@@ -1,4 +1,4 @@
-package util;
+package com.xx.commonlib;
 
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;

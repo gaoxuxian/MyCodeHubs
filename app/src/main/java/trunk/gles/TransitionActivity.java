@@ -1,14 +1,5 @@
 package trunk.gles;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.xx.avlibrary.gl.filter.GPUTransitionFilterType;
-import trunk.BaseActivity;
-import trunk.R;
-import trunk.gles.view.TransitionView;
-import util.PxUtil;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -22,7 +13,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.xx.avlibrary.gl.filter.GPUTransitionFilterType;
+import com.xx.commonlib.PxUtil;
+
 import java.util.ArrayList;
+
+import trunk.BaseActivity;
+import trunk.R;
+import trunk.gles.view.TransitionView;
 
 public class TransitionActivity extends BaseActivity
 {

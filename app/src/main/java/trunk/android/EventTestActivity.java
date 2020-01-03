@@ -3,11 +3,17 @@ package trunk.android;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.*;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import androidx.core.graphics.ColorUtils;
+
+import com.xx.commonlib.PxUtil;
+
 import trunk.BaseActivity;
-import util.PxUtil;
 
 public class EventTestActivity extends BaseActivity {
 

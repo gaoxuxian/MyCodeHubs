@@ -1,7 +1,13 @@
 package trunk.android;
 
 import android.content.Context;
-import android.media.*;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.media.MediaCodec;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.media.MediaMuxer;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,20 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.xx.avlibrary.gl.util.GLUtil;
+
 import com.xx.avlibrary.gl.egl.EglCore;
 import com.xx.avlibrary.gl.egl.EglSurfaceBase;
 import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
 import com.xx.avlibrary.gl.filter.common.DisplayImageFilter;
-import trunk.R;
-import util.PxUtil;
+import com.xx.avlibrary.gl.util.GLUtil;
+import com.xx.commonlib.PxUtil;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+import trunk.R;
 
 public class RhythmTestActivity extends AppCompatActivity {
 

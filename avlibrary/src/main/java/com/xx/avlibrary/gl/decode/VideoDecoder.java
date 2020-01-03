@@ -1,12 +1,17 @@
 package com.xx.avlibrary.gl.decode;
 
-import android.media.*;
+import android.media.MediaCodec;
+import android.media.MediaCodecList;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
-import util.FileUtil;
-import util.ThreadUtil;
+
+import com.xx.commonlib.FileUtil;
+import com.xx.commonlib.ThreadUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;

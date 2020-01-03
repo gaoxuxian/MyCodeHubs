@@ -9,17 +9,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import com.xx.avlibrary.gl.util.ByteBufferUtil;
 import com.xx.avlibrary.gl.util.GLUtil;
 import com.xx.avlibrary.gl.util.GlMatrixTools;
-import trunk.BaseActivity;
-import trunk.R;
-import util.PxUtil;
+import com.xx.commonlib.PxUtil;
+
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
+
+import trunk.BaseActivity;
+import trunk.R;
 
 public class TextureOrientationActivity extends BaseActivity {
     Bitmap bitmap = null;

@@ -9,15 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import trunk.BaseActivity;
-import util.PxUtil;
+
+import com.xx.commonlib.PxUtil;
 
 import java.util.ArrayList;
+
+import trunk.BaseActivity;
 
 public class LiveDataActivity extends BaseActivity {
     private RecyclerView mItemView;

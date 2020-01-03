@@ -123,6 +123,10 @@
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
+        android:name=".android.GCTestActivity"
+        android:theme="@style/AppTheme.FullScreen">
+        </activity>
+        <activity
             android:name=".android.ServiceTestActivity"
             android:theme="@style/AppTheme.FullScreen">
         </activity>

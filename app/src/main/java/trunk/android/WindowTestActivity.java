@@ -1,13 +1,19 @@
 package trunk.android;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import util.PxUtil;
+
+import com.xx.commonlib.PxUtil;
 
 public class WindowTestActivity extends AppCompatActivity {
 

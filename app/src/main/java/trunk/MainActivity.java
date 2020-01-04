@@ -13,9 +13,9 @@ import android.widget.FrameLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.xx.commonlib.PxUtil;
 
-import util.PxUtil;
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 

@@ -8,10 +8,9 @@ import android.widget.FrameLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.xx.javademo.IO.IOCase2;
+import com.xx.commonlib.PxUtil;
 
 import trunk.BaseActivity;
-import util.PxUtil;
 
 public class GCRootTestActivity extends BaseActivity {
 

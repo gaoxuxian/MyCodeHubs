@@ -2,9 +2,15 @@ package lib.widget.progress;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
+import android.graphics.RectF;
 import android.view.View;
-import util.PxUtil;
+
+import com.xx.commonlib.PxUtil;
 
 /**
  * 模仿系统 progress view 效果，具体参数，可定制

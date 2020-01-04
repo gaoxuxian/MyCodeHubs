@@ -3,8 +3,9 @@ package com.xx.avlibrary.gl.filter.rhythm;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import com.xx.avlibrary.gl.util.AbsTask;
-import util.FileUtil;
+import com.xx.commonlib.FileUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

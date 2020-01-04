@@ -4,19 +4,23 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.util.Log;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Surface;
+import android.view.TextureView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
 import com.xx.avlibrary.gl.egl.EglCore;
 import com.xx.avlibrary.gl.egl.EglSurfaceBase;
 import com.xx.avlibrary.gl.filter.common.BmpToTextureFilter;
 import com.xx.avlibrary.gl.filter.common.DisplayImageFilter;
-import com.xx.avlibrary.gl.util.GLUtil;
-import trunk.ActivityItemAdapter;
+import com.xx.commonlib.PxUtil;
+import com.xx.commonlib.ThreadUtil;
+
 import trunk.BaseActivity;
 import trunk.R;
-import util.PxUtil;
-import util.ThreadUtil;
 
 public class TextureViewActivity extends BaseActivity implements TextureView.SurfaceTextureListener {
 

@@ -9,13 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.view.ViewCompat;
+
+import com.xx.commonlib.PxUtil;
+
 import trunk.R;
-import util.PxUtil;
 
 public class NestedScrollActivity extends AppCompatActivity {
     @Override

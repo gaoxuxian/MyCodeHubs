@@ -1,10 +1,11 @@
 package trunk;
 
 import android.app.Application;
+
 import com.xx.avlibrary.gl.util.GLThreadPool;
 import com.xx.avlibrary.gl.util.SysConfig;
-import util.PxUtil;
-import util.ThreadUtil;
+import com.xx.commonlib.PxUtil;
+import com.xx.commonlib.ThreadUtil;
 
 /**
  * @author Gxx

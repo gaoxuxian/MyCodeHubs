@@ -14,22 +14,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.xx.avlibrary.gl.filter.rhythm.DisplayFilter;
+import com.xx.avlibrary.gl.filter.rhythm.FrameBase;
+import com.xx.avlibrary.gl.filter.rhythm.FrameLogicExecutor;
+import com.xx.avlibrary.gl.filter.rhythm.FrameSizeFilterV2;
+import com.xx.avlibrary.gl.filter.rhythm.FrameSizeHelper;
+import com.xx.avlibrary.gl.filter.rhythm.FrameSizeType;
+import com.xx.avlibrary.gl.filter.rhythm.GLFrame;
+import com.xx.avlibrary.gl.filter.rhythm.TextureFilter;
 import com.xx.avlibrary.gl.util.GLUtil;
-import com.xx.avlibrary.gl.filter.rhythm.*;
-import trunk.BaseActivity;
-import trunk.R;
-import util.ImageUtils;
-import util.PxUtil;
+import com.xx.commonlib.ImageUtils;
+import com.xx.commonlib.PxUtil;
+
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import java.util.ArrayList;
+
+import trunk.BaseActivity;
+import trunk.R;
 
 public class FrameSizeV2Activity extends BaseActivity implements GLSurfaceView.Renderer {
     RecyclerView mFrameSizeListView;

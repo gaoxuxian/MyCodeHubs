@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
+import com.xx.commonlib.PxUtil;
+
 import trunk.BaseActivity;
-import trunk.gles.view.FuzzyView;
 import trunk.gles.view.GhostingView;
-import util.PxUtil;
 
 public class GhostingActivity extends BaseActivity
 {

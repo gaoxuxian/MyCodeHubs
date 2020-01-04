@@ -5,21 +5,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.xx.commonlib.FileUtil;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-
-import util.FileUtil;
 
 public class IOCase1 {
     private String testString = "IOCase1";

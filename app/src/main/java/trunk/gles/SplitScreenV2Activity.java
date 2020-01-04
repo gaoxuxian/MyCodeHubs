@@ -1,12 +1,13 @@
 package trunk.gles;
 
-import trunk.BaseActivity;
-import trunk.gles.view.SplitScreenViewV2;
-import util.PxUtil;
-
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.FrameLayout;
+
+import com.xx.commonlib.PxUtil;
+
+import trunk.BaseActivity;
+import trunk.gles.view.SplitScreenViewV2;
 
 public class SplitScreenV2Activity extends BaseActivity
 {

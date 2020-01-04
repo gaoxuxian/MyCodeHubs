@@ -1,13 +1,27 @@
-package util;
+package com.xx.commonlib;
 
 import android.content.Context;
-import android.graphics.*;
-import android.renderscript.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.renderscript.Short4;
+import android.renderscript.Type;
 import android.text.TextUtils;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import xx.demo.rs.ScriptC_tint;
 
 /**

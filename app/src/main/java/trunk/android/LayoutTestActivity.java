@@ -6,11 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.xx.commonlib.PxUtil;
+
 import trunk.BaseActivity;
-import util.PxUtil;
 
 public class LayoutTestActivity extends BaseActivity {
 

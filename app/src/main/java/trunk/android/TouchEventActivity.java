@@ -7,11 +7,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+
 import androidx.core.graphics.ColorUtils;
+
 import trunk.BaseActivity;
 import util.ImageUtils;
 import util.PxUtil;
@@ -38,6 +37,7 @@ public class TouchEventActivity extends BaseActivity {
 
             @Override
             public boolean onTouchEvent(MotionEvent event) {
+                Log.d("***", "onTouchEvent: layoutA");
                 return super.onTouchEvent(event);
             }
 
@@ -86,6 +86,7 @@ public class TouchEventActivity extends BaseActivity {
 
                 @Override
                 public boolean onTouchEvent(MotionEvent event) {
+                    Log.d("***", "onTouchEvent: layoutB");
                     return super.onTouchEvent(event);
                 }
 
@@ -108,6 +109,7 @@ public class TouchEventActivity extends BaseActivity {
                     @Override
                     public boolean onTouchEvent(MotionEvent event) {
                         Log.d("***", "onTouchEvent: viewA");
+                        Thread.dumpStack();
                         if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
                             invalidate();
                         }
@@ -131,7 +133,7 @@ public class TouchEventActivity extends BaseActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.d("TouchEventActivity", "onTouchEvent, ev=" + event.getAction());
-        Thread.dumpStack();
+//        Thread.dumpStack();
         return super.onTouchEvent(event);
     }
 

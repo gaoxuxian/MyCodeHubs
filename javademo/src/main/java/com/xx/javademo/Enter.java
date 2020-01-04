@@ -11,6 +11,20 @@ import com.xx.javademo.store.SortUtil;
 import java.util.Arrays;
 
 public class Enter {
+
+    public static void FindNumsAppearOnce(int[] nums, int num1[], int num2[]) {
+        int diff = 0;
+        for (int num : nums)
+            diff ^= num;
+        diff &= -diff;
+        for (int num : nums) {
+            if ((num & diff) == 0)
+                num1[0] ^= num;
+            else
+                num2[0] ^= num;
+        }
+    }
+
     public static void main(String[] args) {
 //        LC20 lc20 = new LC20();
 //        System.out.println(lc20.isValid("()[]{}"));
@@ -47,7 +61,9 @@ public class Enter {
 //        LC46 lc46 = new LC46();
 //        lc46.permute(new int[]{1, 2, 3});
 
-        LC22 lc22 = new LC22();
-        lc22.generateParenthesis(3);
+//        LC22 lc22 = new LC22();
+//        lc22.generateParenthesis(3);
+
+        FindNumsAppearOnce(new int[]{11,22,11,23,23,45}, new int[1], new int[1]);
     }
 }

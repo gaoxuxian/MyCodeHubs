@@ -7,8 +7,7 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 
-public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChangeListener> extends View
-{
+public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChangeListener> extends View {
     private boolean mCanTriggerTouchEvent;
     private boolean mEventLock;
     protected T mConfig;
@@ -25,8 +24,7 @@ public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChan
     protected float mLastValue;
     protected float mCurrentValue;
 
-    public SemiFinishedSeekBar(Context context)
-    {
+    public SemiFinishedSeekBar(Context context) {
         super(context);
         onInitBaseData();
     }
@@ -46,23 +44,18 @@ public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChan
     protected abstract void onDrawToCanvas(Canvas canvas);
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         if (mEventLock) return true;
 
-        switch (event.getAction() & MotionEvent.ACTION_MASK)
-        {
-            case MotionEvent.ACTION_DOWN:
-            {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: {
                 mCanTriggerTouchEvent = true;
                 oddDown(event);
                 break;
             }
 
-            case MotionEvent.ACTION_MOVE:
-            {
-                if (mCanTriggerTouchEvent)
-                {
+            case MotionEvent.ACTION_MOVE: {
+                if (mCanTriggerTouchEvent) {
                     oddMove(event);
                 }
                 break;
@@ -70,17 +63,14 @@ public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChan
 
             case MotionEvent.ACTION_OUTSIDE:
             case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-            {
-                if (mCanTriggerTouchEvent)
-                {
+            case MotionEvent.ACTION_UP: {
+                if (mCanTriggerTouchEvent) {
                     oddUp(event);
                 }
                 break;
             }
 
-            case MotionEvent.ACTION_POINTER_DOWN:
-            {
+            case MotionEvent.ACTION_POINTER_DOWN: {
                 mCanTriggerTouchEvent = false;
                 break;
             }
@@ -89,23 +79,19 @@ public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChan
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
-    {
+    protected void onDraw(Canvas canvas) {
         onDrawToCanvas(canvas);
     }
 
-    public void setEventLock(boolean lock)
-    {
+    public void setEventLock(boolean lock) {
         mEventLock = lock;
     }
 
-    public void update()
-    {
+    public void update() {
         invalidate();
     }
 
-    protected void onInitBaseData()
-    {
+    protected void onInitBaseData() {
         mPaint = new Paint();
         mMatrix = new Matrix();
         mCanTriggerTouchEvent = true;
@@ -113,63 +99,53 @@ public abstract class SemiFinishedSeekBar<T extends IConfig, E extends ValueChan
         resetCanTouchMaxMinValue();
     }
 
-    public void onClear()
-    {
+    public void onClear() {
         mListener = null;
     }
 
     /**
      * 设置当前可以被滑动的最大值
      */
-    public void setCanTouchMaxValue(float max)
-    {
+    public void setCanTouchMaxValue(float max) {
         mCanTouchMaxValue = max;
     }
 
     /**
      * 设置当前可以被滑动的最小值
      */
-    public void setCanTouchMinValue(float min)
-    {
+    public void setCanTouchMinValue(float min) {
         mCanTouchMinValue = min;
     }
 
     /**
      * 将可以滑动的最大值小值恢复至默认
      */
-    public void resetCanTouchMaxMinValue()
-    {
+    public void resetCanTouchMaxMinValue() {
         mCanTouchMaxValue = Float.MAX_VALUE;
         mCanTouchMinValue = -mCanTouchMaxValue;
     }
 
-    public void setConfig(T config)
-    {
+    public void setConfig(T config) {
         mConfig = config;
     }
 
-    public T getConfig()
-    {
+    public T getConfig() {
         return mConfig;
     }
 
-    protected boolean isConfigAvailable()
-    {
+    protected boolean isConfigAvailable() {
         return mConfig != null;
     }
 
-    public void setValueChangeListener(E listener)
-    {
+    public void setValueChangeListener(E listener) {
         mListener = listener;
     }
 
-    protected boolean isValueChangeListenerAvailable()
-    {
+    protected boolean isValueChangeListenerAvailable() {
         return mListener != null;
     }
 
-    protected E getValueChangeListener()
-    {
+    protected E getValueChangeListener() {
         return mListener;
     }
 }

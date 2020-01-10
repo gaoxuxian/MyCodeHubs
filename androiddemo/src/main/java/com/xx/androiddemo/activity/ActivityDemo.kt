@@ -91,11 +91,11 @@ open class BaseActivity4Demo : AppCompatActivity() {
         finish.setOnClickListener {
             finish()
         }
-        this.log("***", "onCreate")
+        log("***", "onCreate")
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        this.log("***", "onNewIntent")
+        log("***", "onNewIntent")
     }
 }

@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xx.androiddemo">
+    xmlns:tools="http://schemas.android.com/tools" package="com.xx.androiddemo">
 
-    <application>
+    <application
+        android:name="debug.MyApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="false"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!--   默认启动的 Activity 若设置了 label，优先级会高于 Application 的 label     -->
+        <activity
+            android:name=".AndroidDemoActivity"
+            android:theme="@style/AppTheme.MyActivityTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".service.ServiceActivity"
             android:label="ServiceActivity"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
-        <activity
-            android:name=".AndroidDemoActivity"
-            android:theme="@style/AppTheme.MyActivityTheme" />
         <activity
             android:name=".activity.BaseActivity4Demo"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
@@ -47,6 +63,9 @@
             android:theme="@style/AppTheme.ActivityDemoTheme" />
 
         <service android:name=".service.LocalService" />
+        <service android:name=".service.ProcessService"
+            android:process=".process_service"/>
+
     </application>
 
 </manifest>

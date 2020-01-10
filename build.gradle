@@ -26,3 +26,9 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+// Define versions in a single place
+//时间：2020.1.7；每次修改版本号都要添加修改时间
+ext {
+    glide_version = '4.10.0'
+}

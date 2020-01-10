@@ -1,58 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/service"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-    <Button
-            android:id="@+id/start_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="start service"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.332" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/service"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <Button
-            android:id="@+id/bind_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="bind service"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/start_service" />
+        android:id="@+id/start_process_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="start process service"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.074" />
 
     <Button
-            android:id="@+id/unbind_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="unbind service"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bind_service" />
+        android:id="@+id/stop_process_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="stop process service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/start_process_service"
+        app:layout_constraintStart_toStartOf="@+id/start_process_service"
+        app:layout_constraintTop_toBottomOf="@+id/start_process_service" />
 
     <Button
-            android:id="@+id/stop_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="stop service"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/unbind_service" />
+        android:id="@+id/bind_process_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="bind process service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/stop_process_service"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/stop_process_service"
+        app:layout_constraintTop_toBottomOf="@+id/stop_process_service" />
+
+    <Button
+        android:id="@+id/unbind_process_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="unbind process service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/bind_process_service"
+        app:layout_constraintStart_toStartOf="@+id/bind_process_service"
+        app:layout_constraintTop_toBottomOf="@+id/bind_process_service" />
+
+    <Button
+        android:id="@+id/start_local_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="start local service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/unbind_process_service"
+        app:layout_constraintStart_toStartOf="@+id/unbind_process_service"
+        app:layout_constraintTop_toBottomOf="@+id/unbind_process_service" />
+
+    <Button
+        android:id="@+id/bind_local_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="bind local service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/stop_local_service"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/stop_local_service"
+        app:layout_constraintTop_toBottomOf="@+id/stop_local_service" />
+
+    <Button
+        android:id="@+id/unbind_local_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="unbind local service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/bind_local_service"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toStartOf="@+id/bind_local_service"
+        app:layout_constraintTop_toBottomOf="@+id/bind_local_service" />
+
+    <Button
+        android:id="@+id/stop_local_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="stop local service"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="@+id/start_local_service"
+        app:layout_constraintHorizontal_bias="0.527"
+        app:layout_constraintStart_toStartOf="@+id/start_local_service"
+        app:layout_constraintTop_toBottomOf="@+id/start_local_service" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

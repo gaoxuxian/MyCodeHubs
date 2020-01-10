@@ -2,8 +2,7 @@ package lib.widget.seekbar;
 
 import android.graphics.Color;
 
-public class CirclePointConfig implements IConfig
-{
+public class CirclePointConfig implements IConfig {
     /*
     For example:
 
@@ -48,8 +47,7 @@ public class CirclePointConfig implements IConfig
         }
      */
 
-    CirclePointConfig()
-    {
+    CirclePointConfig() {
 
     }
 
@@ -121,8 +119,7 @@ public class CirclePointConfig implements IConfig
 
     public float mPointsTranslationY; // 默认点是居中view 画，+往下偏，-往上偏
 
-    public CirclePointConfig cloneTo()
-    {
+    public CirclePointConfig cloneTo() {
         CirclePointConfig config = new CirclePointConfig();
 
         config.mPointSum = this.mPointSum;

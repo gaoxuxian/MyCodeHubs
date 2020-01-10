@@ -1,4 +1,8 @@
-apply plugin: 'com.android.library'
+if (isModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
@@ -26,14 +30,24 @@ android {
     // 解决 aidl 自定义对象文件查找不到包的问题
     sourceSets {
         main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
+            aidl.srcDirs = ['src/main/aidl']
             java.srcDirs = ['src/main/java', 'src/main/aidl']
             resources.srcDirs = ['src/main/java', 'src/main/aidl']
-            aidl.srcDirs = ['src/main/aidl']
             res.srcDirs = ['src/main/res']
             assets.srcDirs = ['src/main/assets']
+
+            if (Boolean.valueOf(isModule)) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                //集成开发模式下排除debug文件夹中的所有Java文件
+                java {
+                    exclude 'debug/**'
+                }
+            }
         }
     }
+
 
 }
 

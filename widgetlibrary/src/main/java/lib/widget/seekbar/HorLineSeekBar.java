@@ -10,8 +10,7 @@ import android.view.MotionEvent;
  * @author Gxx
  * Created by Gxx on 2018/10/22.
  */
-public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChangeListener<HorLineSeekBar>>
-{
+public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChangeListener<HorLineSeekBar>> {
     private Bitmap mZeroPointBmp;
     private Bitmap mSetPointBmp;
     private Bitmap mPresetPointBmp;
@@ -27,8 +26,7 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     private LinearGradient mProgressBarGradientColor;
     private String mValueText;
 
-    public HorLineSeekBar(Context context)
-    {
+    public HorLineSeekBar(Context context) {
         super(context);
     }
 
@@ -36,64 +34,51 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
      * @param value 具体数值
      */
     @Override
-    public void setSelectedValue(float value)
-    {
+    public void setSelectedValue(float value) {
         mLastValue = mCurrentValue;
         mCurrentValue = value;
         mValueText = countValueText(getConfig(), value);
     }
 
     @Override
-    public void setConfig(HorLineConfig config)
-    {
+    public void setConfig(HorLineConfig config) {
         super.setConfig(config);
 
-        if (config != null)
-        {
+        if (config != null) {
             mCurrentValue = config.mSelectedValue;
             mValueText = countValueText(config, mCurrentValue);
 
             int measuredWidth = getMeasuredWidth();
             int measuredHeight = getMeasuredHeight();
 
-            if ((measuredWidth > 0 && measuredHeight > 0))
-            {
+            if ((measuredWidth > 0 && measuredHeight > 0)) {
                 HorLineConfig.Progress progress = config.mProgress;
-                if (progress != null && progress.mBgColorArr != null && progress.mBgColorArr.length > 1)
-                {
+                if (progress != null && progress.mBgColorArr != null && progress.mBgColorArr.length > 1) {
                     initProgressBarGradientColor(measuredWidth, measuredHeight, config);
                 }
             }
 
-            if (config.mZero != null && config.mZero.mType == HorLineConfig.PointDrawType.resource)
-            {
+            if (config.mZero != null && config.mZero.mType == HorLineConfig.PointDrawType.resource) {
                 mZeroPointBmp = BitmapFactory.decodeResource(getResources(), config.mZero.mBmpResId);
             }
 
-            if (config.mSetPoint != null && config.mSetPoint.mType == HorLineConfig.PointDrawType.resource)
-            {
+            if (config.mSetPoint != null && config.mSetPoint.mType == HorLineConfig.PointDrawType.resource) {
                 mSetPointBmp = BitmapFactory.decodeResource(getResources(), config.mSetPoint.mBmpResId);
             }
-            
-            if (config.mPresetPoint != null && config.mPresetPoint.mType == HorLineConfig.PointDrawType.resource)
-            {
+
+            if (config.mPresetPoint != null && config.mPresetPoint.mType == HorLineConfig.PointDrawType.resource) {
                 mPresetPointBmp = BitmapFactory.decodeResource(getResources(), config.mPresetPoint.mBmpResId);
             }
         }
     }
 
     @Override
-    public float getCurrentValue()
-    {
-        if (isConfigAvailable())
-        {
+    public float getCurrentValue() {
+        if (isConfigAvailable()) {
             HorLineConfig config = getConfig();
-            if (config.mDataType == HorLineConfig.DataType.type_float)
-            {
+            if (config.mDataType == HorLineConfig.DataType.type_float) {
                 return mCurrentValue;
-            }
-            else if (config.mDataType == HorLineConfig.DataType.type_int)
-            {
+            } else if (config.mDataType == HorLineConfig.DataType.type_int) {
                 return Math.round(mCurrentValue);
             }
         }
@@ -101,17 +86,12 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    public float getLastValue()
-    {
-        if (isConfigAvailable())
-        {
+    public float getLastValue() {
+        if (isConfigAvailable()) {
             HorLineConfig config = getConfig();
-            if (config.mDataType == HorLineConfig.DataType.type_float)
-            {
+            if (config.mDataType == HorLineConfig.DataType.type_float) {
                 return mLastValue;
-            }
-            else if (config.mDataType == HorLineConfig.DataType.type_int)
-            {
+            } else if (config.mDataType == HorLineConfig.DataType.type_int) {
                 return Math.round(mLastValue);
             }
         }
@@ -119,12 +99,10 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    protected void oddDown(MotionEvent event)
-    {
+    protected void oddDown(MotionEvent event) {
         countValueByXY(getConfig(), event.getX());
 
-        if (isValueChangeListenerAvailable())
-        {
+        if (isValueChangeListenerAvailable()) {
             getValueChangeListener().onValueChange(this, getCurrentValue(), getLastValue(), event);
         }
 
@@ -132,12 +110,10 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    protected void oddMove(MotionEvent event)
-    {
+    protected void oddMove(MotionEvent event) {
         countValueByXY(getConfig(), event.getX());
 
-        if (isValueChangeListenerAvailable())
-        {
+        if (isValueChangeListenerAvailable()) {
             getValueChangeListener().onValueChange(this, getCurrentValue(), getLastValue(), event);
         }
 
@@ -145,20 +121,16 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    protected void oddUp(MotionEvent event)
-    {
+    protected void oddUp(MotionEvent event) {
         countValueByXY(getConfig(), event.getX());
 
-        if (isValueChangeListenerAvailable())
-        {
+        if (isValueChangeListenerAvailable()) {
             getValueChangeListener().onValueChange(this, getCurrentValue(), getLastValue(), event);
         }
 
-        if (isConfigAvailable())
-        {
+        if (isConfigAvailable()) {
             HorLineConfig config = getConfig();
-            if (config.mDataType == HorLineConfig.DataType.type_int)
-            {
+            if (config.mDataType == HorLineConfig.DataType.type_int) {
                 mLastValue = getLastValue();
                 mCurrentValue = getCurrentValue();
             }
@@ -168,8 +140,7 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    public void onClear()
-    {
+    public void onClear() {
         super.onClear();
 
         mZeroPointBmp = null;
@@ -178,20 +149,16 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh)
-    {
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        if ((oldw != w || oldh != h) && isConfigAvailable())
-        {
+        if ((oldw != w || oldh != h) && isConfigAvailable()) {
             initProgressBarGradientColor(w, h, getConfig());
         }
     }
 
-    private void initProgressBarGradientColor(int viewW, int viewH, HorLineConfig config)
-    {
-        if (config != null && config.mProgress != null && config.mProgress.mBgColorArr != null && config.mProgress.mBgColorArr.length > 1)
-        {
+    private void initProgressBarGradientColor(int viewW, int viewH, HorLineConfig config) {
+        if (config != null && config.mProgress != null && config.mProgress.mBgColorArr != null && config.mProgress.mBgColorArr.length > 1) {
             float startX = config.mLeftMargin;
             float startY = viewH / 2 + config.mTranslationY;
             float endX = viewW - config.mLeftMargin;
@@ -200,28 +167,22 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
     }
 
     @Override
-    protected void onDrawToCanvas(Canvas canvas)
-    {
-        if (isConfigAvailable())
-        {
+    protected void onDrawToCanvas(Canvas canvas) {
+        if (isConfigAvailable()) {
             HorLineConfig config = getConfig();
 
             // 画背景
             drawProgressBar(canvas, config);
 
             // 画原点
-            if (config.mZero != null)
-            {
-                switch (config.mZero.mType)
-                {
-                    case HorLineConfig.PointDrawType.self:
-                    {
+            if (config.mZero != null) {
+                switch (config.mZero.mType) {
+                    case HorLineConfig.PointDrawType.self: {
                         drawZeroPointBySelf(canvas, config);
                         break;
                     }
 
-                    case HorLineConfig.PointDrawType.resource:
-                    {
+                    case HorLineConfig.PointDrawType.resource: {
                         drawZeroPointByRes(canvas, config);
                         break;
                     }
@@ -232,18 +193,14 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             drawProgress(canvas, config);
 
             // 画预设点
-            if (config.mPresetPoint != null)
-            {
-                switch (config.mPresetPoint.mType)
-                {
-                    case HorLineConfig.PointDrawType.self:
-                    {
+            if (config.mPresetPoint != null) {
+                switch (config.mPresetPoint.mType) {
+                    case HorLineConfig.PointDrawType.self: {
                         drawPresetPointBySelf(canvas, config);
                         break;
                     }
 
-                    case HorLineConfig.PointDrawType.resource:
-                    {
+                    case HorLineConfig.PointDrawType.resource: {
                         drawPresetPointByRes(canvas, config);
                         break;
                     }
@@ -251,18 +208,14 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             }
 
             // 画动点
-            if (config.mSetPoint != null)
-            {
-                switch (config.mSetPoint.mType)
-                {
-                    case HorLineConfig.PointDrawType.self:
-                    {
+            if (config.mSetPoint != null) {
+                switch (config.mSetPoint.mType) {
+                    case HorLineConfig.PointDrawType.self: {
                         drawSetPointBySelf(canvas, config);
                         break;
                     }
 
-                    case HorLineConfig.PointDrawType.resource:
-                    {
+                    case HorLineConfig.PointDrawType.resource: {
                         drawSetPointByRes(canvas, config);
                         break;
                     }
@@ -274,18 +227,15 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawPresetPointByRes(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mShowPresetPoint && config.mPresetPoint != null && mPresetPointBmp != null && config.mZero != null)
-        {
+    private void drawPresetPointByRes(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mShowPresetPoint && config.mPresetPoint != null && mPresetPointBmp != null && config.mZero != null) {
             HorLineConfig.PresetPoint point = config.mPresetPoint;
             HorLineConfig.ZeroPoint zero = config.mZero;
 
             int layer = canvas.saveLayer(null, null, Canvas.ALL_SAVE_FLAG);
             mPaint.reset();
             mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-            if (point.mColorType == HorLineConfig.PointColorType.gradient)
-            {
+            if (point.mColorType == HorLineConfig.PointColorType.gradient) {
                 mPaint.setShader(mProgressBarGradientColor);
             }
 
@@ -296,34 +246,28 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             float percent = point.mPresetValue / config.mMaxValue;
             float x;
             float y = mZeroPointY;
-            switch (zero.mLocation)
-            {
-                case HorLineConfig.ZeroLocation.middle:
-                {
+            switch (zero.mLocation) {
+                case HorLineConfig.ZeroLocation.middle: {
                     x = mZeroPointX + (getMeasuredWidth() / 2f - config.mLeftMargin) * percent;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     x = mZeroPointX + (getMeasuredWidth() - config.mLeftMargin * 2f) * percent;
                 }
             }
 
             mMatrix.postTranslate(x - point.mBmpResW / 2f, y - point.mBmpResH / 2f);
             canvas.drawBitmap(mPresetPointBmp, mMatrix, mPaint);
-            if (point.mColorType == HorLineConfig.PointColorType.fixed_one_color)
-            {
+            if (point.mColorType == HorLineConfig.PointColorType.fixed_one_color) {
                 canvas.drawColor(point.mColor, PorterDuff.Mode.SRC_IN);
             }
             canvas.restoreToCount(layer);
         }
     }
 
-    private void drawPresetPointBySelf(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mShowPresetPoint && config.mPresetPoint != null && config.mZero != null)
-        {
+    private void drawPresetPointBySelf(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mShowPresetPoint && config.mPresetPoint != null && config.mZero != null) {
             HorLineConfig.PresetPoint point = config.mPresetPoint;
             HorLineConfig.ZeroPoint zero = config.mZero;
 
@@ -331,16 +275,13 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             mPaint.reset();
             mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 
-            switch (point.mColorType)
-            {
-                case HorLineConfig.PointColorType.fixed_one_color:
-                {
+            switch (point.mColorType) {
+                case HorLineConfig.PointColorType.fixed_one_color: {
                     mPaint.setColor(point.mColor);
                     break;
                 }
 
-                case HorLineConfig.PointColorType.gradient:
-                {
+                case HorLineConfig.PointColorType.gradient: {
                     mPaint.setShader(mProgressBarGradientColor);
                     break;
                 }
@@ -349,30 +290,24 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             float percent = point.mPresetValue / config.mMaxValue;
             float x;
             float y = mZeroPointY;
-            switch (zero.mLocation)
-            {
-                case HorLineConfig.ZeroLocation.middle:
-                {
+            switch (zero.mLocation) {
+                case HorLineConfig.ZeroLocation.middle: {
                     x = mZeroPointX + (getMeasuredWidth() / 2f - config.mLeftMargin) * percent;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     x = mZeroPointX + (getMeasuredWidth() - config.mLeftMargin * 2f) * percent;
                 }
             }
 
-            switch (point.mShape)
-            {
-                case HorLineConfig.PointShape.circle:
-                {
+            switch (point.mShape) {
+                case HorLineConfig.PointShape.circle: {
                     canvas.drawCircle(x, y, point.mCircleRadius, mPaint);
                     break;
                 }
 
-                case HorLineConfig.PointShape.rect:
-                {
+                case HorLineConfig.PointShape.rect: {
                     canvas.drawRect(x - point.mRectW / 2f, y - point.mRectH / 2f, x + point.mRectW / 2f, y + point.mRectH / 2f, mPaint);
                     break;
                 }
@@ -381,24 +316,19 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawSetPointByRes(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mSetPoint != null && mSetPointBmp != null && !mSetPointBmp.isRecycled())
-        {
+    private void drawSetPointByRes(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mSetPoint != null && mSetPointBmp != null && !mSetPointBmp.isRecycled()) {
             HorLineConfig.SetPoint point = config.mSetPoint;
             canvas.save();
             mPaint.reset();
             mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-            switch (point.mType)
-            {
-                case HorLineConfig.PointColorType.fixed_one_color:
-                {
+            switch (point.mType) {
+                case HorLineConfig.PointColorType.fixed_one_color: {
                     mPaint.setColor(point.mColor);
                     break;
                 }
 
-                case HorLineConfig.PointColorType.gradient:
-                {
+                case HorLineConfig.PointColorType.gradient: {
                     mPaint.setShader(mProgressBarGradientColor);
                     break;
                 }
@@ -414,10 +344,8 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawZeroPointByRes(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mZero != null && mZeroPointBmp != null)
-        {
+    private void drawZeroPointByRes(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mZero != null && mZeroPointBmp != null) {
             HorLineConfig.ZeroPoint zero = config.mZero;
 
             int layer = canvas.saveLayer(null, null, Canvas.ALL_SAVE_FLAG);
@@ -427,19 +355,16 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             mMatrix.reset();
             float scale = Math.min((float) zero.mBmpResW / mZeroPointBmp.getWidth(), (float) zero.mRectH / mZeroPointBmp.getHeight());
             mMatrix.postScale(scale, scale);
-            
+
             float x;
             float y = getMeasuredHeight() / 2f + config.mTranslationY;
-            switch (zero.mLocation)
-            {
-                case HorLineConfig.ZeroLocation.middle:
-                {
+            switch (zero.mLocation) {
+                case HorLineConfig.ZeroLocation.middle: {
                     x = getMeasuredWidth() / 2f;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     x = config.mLeftMargin;
                 }
             }
@@ -452,10 +377,8 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawZeroPointBySelf(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mZero != null)
-        {
+    private void drawZeroPointBySelf(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mZero != null) {
             HorLineConfig.ZeroPoint zero = config.mZero;
 
             canvas.save();
@@ -466,16 +389,13 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             float x;
             float y = getMeasuredHeight() / 2f + config.mTranslationY;
 
-            switch (zero.mLocation)
-            {
-                case HorLineConfig.ZeroLocation.middle:
-                {
+            switch (zero.mLocation) {
+                case HorLineConfig.ZeroLocation.middle: {
                     x = getMeasuredWidth() / 2f;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     x = config.mLeftMargin;
                 }
             }
@@ -483,21 +403,17 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             mZeroPointX = x;
             mZeroPointY = y;
 
-            switch (zero.mShape)
-            {
-                case HorLineConfig.PointShape.circle:
-                {
+            switch (zero.mShape) {
+                case HorLineConfig.PointShape.circle: {
                     canvas.drawCircle(x, y, zero.mCircleRadius, mPaint);
                     break;
                 }
 
-                case HorLineConfig.PointShape.rect:
-                {
+                case HorLineConfig.PointShape.rect: {
                     canvas.drawRect(x - zero.mRectW / 2f, y - zero.mRectH / 2f, x + zero.mRectW / 2f, y + zero.mRectH / 2f, mPaint);
                     break;
                 }
-                case HorLineConfig.PointShape.rect_round:
-                {
+                case HorLineConfig.PointShape.rect_round: {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         canvas.drawRoundRect(x - zero.mRectW / 2f, y - zero.mRectH / 2f, x + zero.mRectW / 2f, y + zero.mRectH / 2f, zero.mRectRadius, zero.mRectRadius, mPaint);
                     } else {
@@ -510,16 +426,13 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawValueText(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mValueText != null && config.mSetPoint != null)
-        {
+    private void drawValueText(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mValueText != null && config.mSetPoint != null) {
             HorLineConfig.ValueText valueText = config.mValueText;
             HorLineConfig.SetPoint setPoint = config.mSetPoint;
             canvas.save();
 
-            if (config.mShowSelectedValue && !TextUtils.isEmpty(this.mValueText))
-            {
+            if (config.mShowSelectedValue && !TextUtils.isEmpty(this.mValueText)) {
                 mPaint.reset();
                 mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
                 mPaint.setTextSize(valueText.mTextSize);
@@ -535,24 +448,19 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawSetPointBySelf(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mSetPoint != null)
-        {
+    private void drawSetPointBySelf(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mSetPoint != null) {
             HorLineConfig.SetPoint point = config.mSetPoint;
             canvas.save();
             mPaint.reset();
             mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-            switch (point.mColorType)
-            {
-                case HorLineConfig.PointColorType.fixed_one_color:
-                {
+            switch (point.mColorType) {
+                case HorLineConfig.PointColorType.fixed_one_color: {
                     mPaint.setColor(point.mColor);
                     break;
                 }
 
-                case HorLineConfig.PointColorType.gradient:
-                {
+                case HorLineConfig.PointColorType.gradient: {
                     mPaint.setShader(mProgressBarGradientColor);
                     break;
                 }
@@ -562,10 +470,8 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void drawProgress(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mZero != null && config.mProgress != null)
-        {
+    private void drawProgress(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mZero != null && config.mProgress != null) {
             canvas.save();
             mPaint.reset();
             mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
@@ -577,33 +483,27 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             float startY = mZeroPointY;
             float endX;
             float percent = mCurrentValue / config.mMaxValue;
-            switch (config.mZero.mLocation)
-            {
-                case HorLineConfig.ZeroLocation.middle:
-                {
+            switch (config.mZero.mLocation) {
+                case HorLineConfig.ZeroLocation.middle: {
                     endX = mZeroPointX + (getMeasuredWidth() / 2f - config.mLeftMargin) * percent;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     endX = mZeroPointX + (getMeasuredWidth() - config.mLeftMargin * 2f) * percent;
                 }
             }
             mSetPointX = endX;
             mSetPointY = startY;
-            if (config.mShowProgress)
-            {
+            if (config.mShowProgress) {
                 canvas.drawLine(startX, startY, endX, startY, mPaint);
             }
             canvas.restore();
         }
     }
 
-    private void drawProgressBar(Canvas canvas, HorLineConfig config)
-    {
-        if (config != null && config.mProgress != null && config.mProgress.mBgColorArr != null)
-        {
+    private void drawProgressBar(Canvas canvas, HorLineConfig config) {
+        if (config != null && config.mProgress != null && config.mProgress.mBgColorArr != null) {
             HorLineConfig.Progress progress = config.mProgress;
             canvas.save();
             int measuredWidth = getMeasuredWidth();
@@ -620,12 +520,9 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
             mPaint.setStrokeWidth(progress.mLineWidth);
             mPaint.setStrokeCap(Paint.Cap.ROUND);
 
-            if (length == 1)
-            {
+            if (length == 1) {
                 mPaint.setColor(progress.mBgColorArr[0]);
-            }
-            else if (length > 1)
-            {
+            } else if (length > 1) {
                 mPaint.setShader(mProgressBarGradientColor);
             }
             canvas.drawLine(x, y, x + lineWidth, y, mPaint);
@@ -633,31 +530,23 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private void countValueByXY(HorLineConfig config, float x)
-    {
-        if (config != null)
-        {
+    private void countValueByXY(HorLineConfig config, float x) {
+        if (config != null) {
             float minX = config.mLeftMargin;
             float maxX = getMeasuredWidth() - config.mLeftMargin;
             float realW = getMeasuredWidth() - config.mLeftMargin * 2f;
 
-            if (x < minX)
-            {
+            if (x < minX) {
                 x = minX;
-            }
-            else if (x > maxX)
-            {
+            } else if (x > maxX) {
                 x = maxX;
             }
 
             float percent = (x - minX) / realW;
 
-            if (config.mZero != null)
-            {
-                switch (config.mZero.mLocation)
-                {
-                    case HorLineConfig.ZeroLocation.middle:
-                    {
+            if (config.mZero != null) {
+                switch (config.mZero.mLocation) {
+                    case HorLineConfig.ZeroLocation.middle: {
                         percent = percent * 2f - 1f;
                         break;
                     }
@@ -675,60 +564,38 @@ public class HorLineSeekBar extends SemiFinishedSeekBar<HorLineConfig, ValueChan
         }
     }
 
-    private String countValueText(HorLineConfig config, float value)
-    {
+    private String countValueText(HorLineConfig config, float value) {
         String out = null;
-        if (config != null && config.mShowSelectedValue)
-        {
-            if (value > 0)
-            {
-                if (config.mShowValuePlusLogo)
-                {
-                    if (config.mDataType == HorLineConfig.DataType.type_int)
-                    {
+        if (config != null && config.mShowSelectedValue) {
+            if (value > 0) {
+                if (config.mShowValuePlusLogo) {
+                    if (config.mDataType == HorLineConfig.DataType.type_int) {
                         int round = Math.round(value);
-                        if (round == 0){
+                        if (round == 0) {
                             out = "0";
-                        }else {
+                        } else {
                             out = "+" + Math.round(value);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         out = "+" + value;
                     }
-                }
-                else
-                {
-                    if (config.mDataType == HorLineConfig.DataType.type_int)
-                    {
+                } else {
+                    if (config.mDataType == HorLineConfig.DataType.type_int) {
                         out = String.valueOf(Math.round(value));
-                    }
-                    else
-                    {
+                    } else {
                         out = String.valueOf(value);
                     }
                 }
-            }
-            else if (value < 0)
-            {
-                if (config.mDataType == HorLineConfig.DataType.type_int)
-                {
+            } else if (value < 0) {
+                if (config.mDataType == HorLineConfig.DataType.type_int) {
                     out = String.valueOf(Math.round(value));
-                }
-                else
-                {
+                } else {
                     out = String.valueOf(value);
                 }
-            }
-            else
-            {
-                if (config.mDataType == HorLineConfig.DataType.type_int)
-                {
+            } else {
+                if (config.mDataType == HorLineConfig.DataType.type_int) {
                     out = String.valueOf(0);
-                }
-                else
-                {
+                } else {
                     out = String.valueOf(0.0);
                 }
 

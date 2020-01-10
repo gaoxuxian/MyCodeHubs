@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools" package="trunk">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
     <application
             android:name=".MyApplication"
             android:allowBackup="false"
@@ -69,13 +64,6 @@
         </activity>
 
         <!-- Android -->
-        <activity android:name=".android.MultThreadActivity">
-        </activity>
-
-        <activity
-                android:name=".android.TouchEventActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
 
         <activity android:name=".android.RhythmTestActivity">
         </activity>
@@ -86,9 +74,6 @@
         <activity
                 android:name=".android.RewindTestActivity"
                 android:theme="@style/AppTheme.FullScreen">
-        </activity>
-
-        <activity android:name=".android.EventTestActivity">
         </activity>
 
         <activity android:name=".android.LayoutTestActivity">
@@ -108,14 +93,6 @@
         </activity>
         <activity
                 android:name=".android.SoundRecordActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".android.LiveDataActivity"
-                android:theme="@style/AppTheme.FullScreen">
-        </activity>
-        <activity
-                android:name=".android.MainActivity45"
                 android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity

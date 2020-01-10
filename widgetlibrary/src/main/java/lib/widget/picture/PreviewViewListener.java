@@ -1,7 +1,6 @@
 package lib.widget.picture;
 
-public interface PreviewViewListener
-{
+public interface PreviewViewListener {
     void onClickWaterMark();
 
     void onActionDown();

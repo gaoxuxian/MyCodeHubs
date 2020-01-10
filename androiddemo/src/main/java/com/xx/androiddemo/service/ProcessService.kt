@@ -3,14 +3,13 @@ package com.xx.androiddemo.service
 import android.app.Service
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
+import com.xx.androiddemo.IClass
+import com.xx.androiddemo.Student
 
-class ServiceTest: Service() {
+class ProcessService:Service() {
 
-    private val binder: BinderTest by lazy { BinderTest() }
     private val tag = this.javaClass.name
 
     override fun onCreate() {
@@ -25,7 +24,7 @@ class ServiceTest: Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         Log.d(tag, "onBind, 所在线程: " + Thread.currentThread().name)
-        return binder
+        return MyClassStudentManager()
     }
 
     override fun onRebind(intent: Intent?) {
@@ -48,10 +47,16 @@ class ServiceTest: Service() {
         Log.d(tag, "onDestroy, 所在线程: " + Thread.currentThread().name)
     }
 
-    inner class BinderTest: Binder() {
-        fun showServiceName() {
-            Toast.makeText(this@ServiceTest, "ServiceTest", Toast.LENGTH_SHORT).show()
-        }
-    }
+    inner class MyClassStudentManager: IClass.Stub() {
+        private val studentList: HashMap<String?, Student?> by lazy { HashMap<String?,Student?>() }
 
+        override fun findStudent(name: String?): Student {
+            return studentList[name] as Student
+        }
+
+        override fun addStudent(student: Student?) {
+            studentList[student?.name] = student
+        }
+
+    }
 }

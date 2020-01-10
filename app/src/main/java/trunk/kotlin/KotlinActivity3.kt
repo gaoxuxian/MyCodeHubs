@@ -30,6 +30,8 @@ import kotlin.collections.ArrayList
 
 class NestedScrollActivity : Activity() {
 
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PxUtil.init(this)
@@ -64,8 +66,17 @@ class NestedScrollActivity : Activity() {
 //        params.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION
 //        windowManager.addView(newlayout, params)
 
+        val data = ArrayList<String>()
+        for (i in 1..100) {
+            data.add(i.toString())
+        }
 
         val imageView = ImageView(this)
+        imageView.setOnClickListener {
+            data.removeAt(1)
+            recyclerView.adapter?.notifyItemRemoved(1)
+//            recyclerView.requestLayout()
+        }
 //        imageView.setImageResource(R.drawable.open_test_9)
         var param1 = LinearLayout.LayoutParams(PxUtil.sU_1080p(1080), (PxUtil.sU_1080p(1080) * 9f / 16f).toInt())
         layout.addView(imageView, param1)
@@ -80,13 +91,8 @@ class NestedScrollActivity : Activity() {
         }
         imageView.postDelayed({ Glide.with(imageView.context).asBitmap().load(R.drawable.open_test_9).into(target) }, 2000)
 
-        val data = ArrayList<String>()
-        for (i in 1..100) {
-            data.add(i.toString())
-        }
-
         val adapter = MyAdapter1(data = data)
-        val recyclerView = RecyclerView(this)
+        recyclerView = RecyclerView(this)
         recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         recyclerView.isNestedScrollingEnabled = true
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

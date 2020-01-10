@@ -53,9 +53,10 @@ dependencies {
     implementation project(':commonlib')
     implementation project(':avlibrary')
     implementation project(':widgetlibrary')
-    implementation project(':androiddemo')
+    if (!isModule.toBoolean()) {
+        implementation project(':androiddemo')
+    }
     implementation project(':javademo')
-    implementation project(':kotlindemo')
 //
 //    // Gradle plugin 源码
 //    implementation 'com.android.tools.build:gradle:3.5.2'

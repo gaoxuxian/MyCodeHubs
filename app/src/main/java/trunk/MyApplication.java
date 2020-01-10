@@ -1,9 +1,8 @@
 package trunk;
 
-import android.app.Application;
-
 import com.xx.avlibrary.gl.util.GLThreadPool;
 import com.xx.avlibrary.gl.util.SysConfig;
+import com.xx.commonlib.BaseApplication;
 import com.xx.commonlib.PxUtil;
 import com.xx.commonlib.ThreadUtil;
 
@@ -11,7 +10,7 @@ import com.xx.commonlib.ThreadUtil;
  * @author Gxx
  * Created by Gxx on 2018/12/19.
  */
-public class MyApplication extends Application {
+public class MyApplication extends BaseApplication {
     @Override
     public void onCreate()
     {

@@ -53,25 +53,9 @@ public class AndroidActivity extends BaseActivity {
         mData.add(map);
 
         map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 LiveData");
-        intent = new Intent();
-        cls = Class.forName(activity_package_path + "LiveDataActivity");
-        intent.setClass(this, cls);
-        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
-        mData.add(map);
-
-        map = new SparseArray<>();
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 ConstraintLayout");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "LayoutTestActivity");
-        intent.setClass(this, cls);
-        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
-        mData.add(map);
-
-        map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 MotionEvent");
-        intent = new Intent();
-        cls = Class.forName(activity_package_path + "EventTestActivity");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);
@@ -96,30 +80,6 @@ public class AndroidActivity extends BaseActivity {
         map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 节奏");
         intent = new Intent();
         cls = Class.forName(activity_package_path + "RhythmTestActivity");
-        intent.setClass(this, cls);
-        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
-        mData.add(map);
-
-        map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 事件分发");
-        intent = new Intent();
-        cls = Class.forName(activity_package_path + "TouchEventActivity");
-        intent.setClass(this, cls);
-        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
-        mData.add(map);
-
-        map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 线程");
-        intent = new Intent();
-        cls = Class.forName(activity_package_path + "MultThreadActivity");
-        intent.setClass(this, cls);
-        map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
-        mData.add(map);
-
-        map = new SparseArray<>();
-        map.put(ActivityItemAdapter.DataKey.ITEM_TITLE, "测试 RecyclerView");
-        intent = new Intent();
-        cls = Class.forName(activity_package_path + "MainActivity45");
         intent.setClass(this, cls);
         map.put(ActivityItemAdapter.DataKey.CLASS_INTENT, intent);
         mData.add(map);

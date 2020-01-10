@@ -17,8 +17,7 @@ import com.xx.commonlib.PxUtil;
  * Created by Gxx on 2018/2/12.
  */
 
-public class WaitProgressView extends View
-{
+public class WaitProgressView extends View {
     private Path mProgressPath;
     private Path mTempPath;
     private PathMeasure mMeasure;
@@ -34,8 +33,7 @@ public class WaitProgressView extends View
     private float mAnimValues;
     private ValueAnimator mAnim;
 
-    public WaitProgressView(Context context)
-    {
+    public WaitProgressView(Context context) {
         super(context);
         mTempPath = new Path();
         mPaint = new Paint();
@@ -47,49 +45,39 @@ public class WaitProgressView extends View
         mPeriodDuration = 1500;
     }
 
-    public void setProgressWidth(int width)
-    {
+    public void setProgressWidth(int width) {
         mProgressWidth = width;
     }
 
-    public void setProgressColor(int color)
-    {
+    public void setProgressColor(int color) {
         mProgressColor = color;
     }
 
     /**
-     *
      * @param period_duration 每个周期持续时间
      */
-    public void setPeriodDuration(long period_duration)
-    {
+    public void setPeriodDuration(long period_duration) {
         mPeriodDuration = period_duration;
     }
 
-    public void show(boolean show)
-    {
+    public void show(boolean show) {
         mShow = show;
 
-        if (show)
-        {
+        if (show) {
             mAnimValues = 0;
             mAnim = ValueAnimator.ofFloat(0, 1);
             mAnim.setDuration(mPeriodDuration);
             mAnim.setRepeatCount(ValueAnimator.INFINITE);
             mAnim.setRepeatMode(ValueAnimator.RESTART);
-            mAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
+            mAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
+                public void onAnimationUpdate(ValueAnimator animation) {
                     mAnimValues = (float) animation.getAnimatedValue();
                     invalidate();
                 }
             });
             mAnim.start();
-        }
-        else if (mAnim != null)
-        {
+        } else if (mAnim != null) {
             mAnim.cancel();
             mAnim.removeAllUpdateListeners();
             mAnim.removeAllListeners();
@@ -100,8 +88,7 @@ public class WaitProgressView extends View
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
@@ -111,23 +98,16 @@ public class WaitProgressView extends View
         setMeasuredDimension(getMeasureSize(widthMode, widthSize), getMeasureSize(heightMode, heightSize));
     }
 
-    private int getMeasureSize(int mode, int size)
-    {
+    private int getMeasureSize(int mode, int size) {
         int result;
-        if (mode == MeasureSpec.AT_MOST)
-        {
+        if (mode == MeasureSpec.AT_MOST) {
             result = mViewDefWH;
-            if (result > size)
-            {
+            if (result > size) {
                 result = size;
             }
-        }
-        else if (size == 0)
-        {
+        } else if (size == 0) {
             result = mViewDefWH;
-        }
-        else
-        {
+        } else {
             result = size;
         }
 
@@ -135,17 +115,15 @@ public class WaitProgressView extends View
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh)
-    {
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
         initPath(w, h);
     }
 
-    private void initPath(int w, int h)
-    {
+    private void initPath(int w, int h) {
         mProgressPath = new Path();
-        float radius = Math.max(0.5f , Math.min(w / 2f, h / 2f) - mProgressWidth);
+        float radius = Math.max(0.5f, Math.min(w / 2f, h / 2f) - mProgressWidth);
         RectF rectF = new RectF(-radius, -radius, radius, radius);
         mProgressPath.addArc(rectF, 0, 360);
 
@@ -159,10 +137,8 @@ public class WaitProgressView extends View
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
-    {
-        if (mShow && mProgressPath != null)
-        {
+    protected void onDraw(Canvas canvas) {
+        if (mShow && mProgressPath != null) {
             canvas.save();
             canvas.rotate(-90, getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);
             canvas.translate(getMeasuredWidth() / 2f, getMeasuredHeight() / 2f);

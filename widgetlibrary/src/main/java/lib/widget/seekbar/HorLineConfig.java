@@ -2,8 +2,7 @@ package lib.widget.seekbar;
 
 import android.graphics.Color;
 
-public class HorLineConfig implements IConfig
-{
+public class HorLineConfig implements IConfig {
     /*
     For example:
 
@@ -61,22 +60,19 @@ public class HorLineConfig implements IConfig
         }
      */
 
-    public @interface PointShape
-    {
+    public @interface PointShape {
         int none = 0;
         int circle = 1;
         int rect = 2;
         int rect_round = 3;
     }
 
-    public @interface ZeroLocation
-    {
+    public @interface ZeroLocation {
         int start = 0;
         int middle = 1;
     }
 
-    HorLineConfig()
-    {
+    HorLineConfig() {
 
     }
 
@@ -119,8 +115,7 @@ public class HorLineConfig implements IConfig
 
     public boolean mShowPresetPoint = true; //是否显示默认点
 
-    public HorLineConfig cloneTo()
-    {
+    public HorLineConfig cloneTo() {
         HorLineConfig config = new HorLineConfig();
 
         config.mMaxValue = this.mMaxValue;
@@ -129,28 +124,23 @@ public class HorLineConfig implements IConfig
         config.mDataType = this.mDataType;
         config.mLeftMargin = this.mLeftMargin;
 
-        if (this.mZero != null)
-        {
+        if (this.mZero != null) {
             config.mZero = this.mZero.cloneTo();
         }
 
-        if (this.mSetPoint != null)
-        {
+        if (this.mSetPoint != null) {
             config.mSetPoint = this.mSetPoint.cloneTo();
         }
 
-        if (this.mPresetPoint != null)
-        {
+        if (this.mPresetPoint != null) {
             config.mPresetPoint = this.mPresetPoint.cloneTo();
         }
 
-        if (this.mProgress != null)
-        {
+        if (this.mProgress != null) {
             config.mProgress = this.mProgress.cloneTo();
         }
 
-        if (this.mValueText != null)
-        {
+        if (this.mValueText != null) {
             config.mValueText = this.mValueText.cloneTo();
         }
 
@@ -164,8 +154,7 @@ public class HorLineConfig implements IConfig
         return config;
     }
 
-    public static class ZeroPoint
-    {
+    public static class ZeroPoint {
         /**
          * 零位置, {@link ZeroLocation}
          */
@@ -193,8 +182,7 @@ public class HorLineConfig implements IConfig
         public int mBmpResW;
         public int mBmpResH;
 
-        public ZeroPoint cloneTo()
-        {
+        public ZeroPoint cloneTo() {
             ZeroPoint out = new ZeroPoint();
 
             out.mLocation = this.mLocation;
@@ -213,8 +201,7 @@ public class HorLineConfig implements IConfig
         }
     }
 
-    public static class SetPoint
-    {
+    public static class SetPoint {
         public int mType = PointDrawType.self; // 画法
 
         public int mBmpResId;
@@ -235,8 +222,7 @@ public class HorLineConfig implements IConfig
          */
         public int mColorType = PointColorType.fixed_one_color;
 
-        public SetPoint cloneTo()
-        {
+        public SetPoint cloneTo() {
             SetPoint out = new SetPoint();
 
             out.mType = this.mType;
@@ -249,8 +235,7 @@ public class HorLineConfig implements IConfig
         }
     }
 
-    public static class PresetPoint
-    {
+    public static class PresetPoint {
         public int mType = PointDrawType.self; // 画法
 
         public int mBmpResId;
@@ -284,8 +269,7 @@ public class HorLineConfig implements IConfig
          */
         public int mColorType = PointColorType.fixed_one_color;
 
-        public PresetPoint cloneTo()
-        {
+        public PresetPoint cloneTo() {
             PresetPoint out = new PresetPoint();
 
             out.mType = this.mType;
@@ -303,8 +287,7 @@ public class HorLineConfig implements IConfig
         }
     }
 
-    public static class Progress
-    {
+    public static class Progress {
         /**
          * 进度条底色, 会按数量在进度条上以百分比的区域绘制颜色
          */
@@ -315,8 +298,7 @@ public class HorLineConfig implements IConfig
         // 进度颜色
         public int mColor = Color.WHITE;
 
-        public Progress cloneTo()
-        {
+        public Progress cloneTo() {
             Progress out = new Progress();
 
             out.mBgColorArr = this.mBgColorArr;
@@ -327,16 +309,14 @@ public class HorLineConfig implements IConfig
         }
     }
 
-    public static class ValueText
-    {
+    public static class ValueText {
         public float mDistanceToSetPoint = 10; // 点与数值间的距离
 
         public float mTextSize = 10;
 
         public int mColor = Color.WHITE;
 
-        public ValueText cloneTo()
-        {
+        public ValueText cloneTo() {
             ValueText out = new ValueText();
 
             out.mDistanceToSetPoint = this.mDistanceToSetPoint;

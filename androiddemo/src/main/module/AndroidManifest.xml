@@ -66,6 +66,16 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
 
+        <activity
+            android:name=".canvas.Canvas1Activity"
+            android:label="Canvas1Activity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
+        <activity
+            android:name=".anim.Animation1Activity"
+            android:label="Animation1Activity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
         <service android:name=".service.LocalService" />
         <service android:name=".service.ProcessService"
             android:process=".process_service"/>

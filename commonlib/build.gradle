@@ -53,6 +53,16 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
+    // Event Bus
+    api 'org.greenrobot:eventbus:3.2.0'
+
+    // JavaPoet
+    implementation 'com.squareup:javapoet:1.12.1'
+    // 解决使用JavaPoet无法导入Javax包的问题
+    implementation files ('E:/Java/jdk1.8.0_191/jre/lib/rt.jar')
+
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+
     // 单元测试
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

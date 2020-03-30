@@ -27,6 +27,10 @@
             android:label="ServiceActivity"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
+            android:name=".broadcast.BroadcastActivity"
+            android:label="BroadcastActivity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+        <activity
             android:name=".activity.BaseActivity4Demo"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
         <activity
@@ -65,6 +69,14 @@
         <service android:name=".service.LocalService" />
         <service android:name=".service.ProcessService"
             android:process=".process_service"/>
+
+        <!-- android:exported 其作用是设置此 BroadcastReceiver 能否接受其他 APP 发出的广播 -->
+        <!-- 当设为 false 时，只能接受同一应用的的组件或具有相同 user ID 的应用发送的消息。 -->
+        <!-- 这个属性的默认值是由 BroadcastReceiver 中有无 Intent-filter 决定的，如果有 Intent-filter ，默认值为 true ，否则为 false 。 -->
+        <receiver android:name=".broadcast.StaticReceiver"
+            android:enabled="true"
+            android:exported="false">
+        </receiver>
 
     </application>
 

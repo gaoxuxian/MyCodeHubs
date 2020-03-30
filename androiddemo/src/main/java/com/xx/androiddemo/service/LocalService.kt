@@ -48,10 +48,14 @@ class LocalService: Service() {
         Log.d(tag, "onDestroy, 所在线程: " + Thread.currentThread().name)
     }
 
-    inner class BinderTest: Binder() {
-        fun showServiceName() {
+    inner class BinderTest: Binder(), IConnectService{
+        override fun showServiceName() {
             Toast.makeText(this@LocalService, "ServiceTest", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    interface IConnectService {
+        fun showServiceName()
     }
 
 }

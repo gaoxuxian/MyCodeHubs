@@ -70,7 +70,7 @@ class ServiceActivity : AppCompatActivity() {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            (service as? LocalService.BinderTest)?.showServiceName()
+            (service as? LocalService.IConnectService)?.showServiceName()
             Log.d(tag, "onServiceConnected")
         }
     }

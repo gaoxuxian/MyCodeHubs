@@ -101,34 +101,34 @@ public class MainActivity extends BaseActivity {
         adapter = new ActivityItemAdapter(mData, new ActivityItemAdapter.Listener() {
             @Override
             public void onClickItem(Intent intent) {
-//                startActivity(intent);
+                startActivity(intent);
 //                intent = new Intent();
 //                intent.setAction(Intent.ACTION_PICK);
 //                intent.setType("video/*");
 //                startActivityForResult(intent, 2);
-                Glide.with(MainActivity.this).asBitmap().load(R.drawable.open_test_5).transform(new BitmapTransformation() {
-                    @Override
-                    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
-                        return toTransform;
-                    }
-
-                    @Override
-                    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-
-                    }
-                }).into(new CustomTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        if (resource != null) {
-                            resource.prepareToDraw();
-                        }
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
+//                Glide.with(MainActivity.this).asBitmap().load(R.drawable.open_test_5).transform(new BitmapTransformation() {
+//                    @Override
+//                    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+//                        return toTransform;
+//                    }
+//
+//                    @Override
+//                    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+//
+//                    }
+//                }).into(new CustomTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        if (resource != null) {
+//                            resource.prepareToDraw();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//                    }
+//                });
             }
         });
         recyclerView.setAdapter(adapter);

@@ -17,8 +17,8 @@ import android.widget.FrameLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import my.code.IService;
-import my.code.myservice.aidl.Book;
-import my.code.myservice.aidl.IMyService;
+import my.code.Book;
+import my.code.IMyService;
 import trunk.BaseActivity;
 import trunk.aidl.MyService;
 

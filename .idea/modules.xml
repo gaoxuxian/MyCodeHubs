@@ -3,9 +3,17 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MyCodeHubs.iml" filepath="$PROJECT_DIR$/.idea/MyCodeHubs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androiddemo/MyCodeHubs-androiddemo.iml" filepath="$PROJECT_DIR$/androiddemo/MyCodeHubs-androiddemo.iml" group="MyCodeHubs/androiddemo" />
+      <module fileurl="file://$PROJECT_DIR$/app/MyCodeHubs-app.iml" filepath="$PROJECT_DIR$/app/MyCodeHubs-app.iml" group="MyCodeHubs/app" />
+      <module fileurl="file://$PROJECT_DIR$/avlibrary/MyCodeHubs-avlibrary.iml" filepath="$PROJECT_DIR$/avlibrary/MyCodeHubs-avlibrary.iml" group="MyCodeHubs/avlibrary" />
       <module fileurl="file://$PROJECT_DIR$/commonlib/MyCodeHubs-commonlib.iml" filepath="$PROJECT_DIR$/commonlib/MyCodeHubs-commonlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/javademo/MyCodeHubs-javademo.iml" filepath="$PROJECT_DIR$/javademo/MyCodeHubs-javademo.iml" group="MyCodeHubs/javademo" />
       <module fileurl="file://$PROJECT_DIR$/kotlindemo/MyCodeHubs-kotlindemo.iml" filepath="$PROJECT_DIR$/kotlindemo/MyCodeHubs-kotlindemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/widgetlibrary/MyCodeHubs-widgetlibrary.iml" filepath="$PROJECT_DIR$/widgetlibrary/MyCodeHubs-widgetlibrary.iml" group="MyCodeHubs/widgetlibrary" />
       <module fileurl="file://$PROJECT_DIR$/MyDemo-MyCodeHubs.iml" filepath="$PROJECT_DIR$/MyDemo-MyCodeHubs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Project-MyCodeHubs.iml" filepath="$PROJECT_DIR$/Project-MyCodeHubs.iml" group="MyCodeHubs" />
+      <module fileurl="file://$PROJECT_DIR$/commonlib/Project-MyCodeHubs-commonlib.iml" filepath="$PROJECT_DIR$/commonlib/Project-MyCodeHubs-commonlib.iml" group="MyCodeHubs/commonlib" />
+      <module fileurl="file://$PROJECT_DIR$/kotlindemo/Project-MyCodeHubs-kotlindemo.iml" filepath="$PROJECT_DIR$/kotlindemo/Project-MyCodeHubs-kotlindemo.iml" group="MyCodeHubs/kotlindemo" />
       <module fileurl="file://$PROJECT_DIR$/androiddemo/androiddemo.iml" filepath="$PROJECT_DIR$/androiddemo/androiddemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/avlibrary/avlibrary.iml" filepath="$PROJECT_DIR$/avlibrary/avlibrary.iml" />

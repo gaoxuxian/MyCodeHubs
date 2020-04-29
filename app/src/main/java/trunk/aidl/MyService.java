@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import my.code.IService;
-import my.code.myservice.aidl.Book;
-import my.code.myservice.aidl.IMyService;
+import my.code.Book;
+import my.code.IMyService;
 
 public class MyService extends Service {
 

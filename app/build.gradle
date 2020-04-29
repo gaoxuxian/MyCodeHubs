@@ -1,3 +1,7 @@
+import java.util.function.Function
+import java.util.function.Predicate
+import java.util.stream.Collectors
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -5,6 +9,55 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+
+    def src_root = new File(projectDir, 'src')
+    // step1：遍历src目录下的全部文件
+    def p_modules = src_root.list().toList().stream()
+            .filter(new Predicate<String>() {
+                    @Override
+                    boolean test(String name) {
+                        // 符合条件的文件夹以集合的方式输出
+                        return name == 'main' || (name.startsWith('g_') && new File(src_root, name).isDirectory())
+                    }
+            }).collect(Collectors.toList())
+    // step2：遍历step1筛选出来的所有文件夹，找到对应的文件夹，如 /java/、/res/、/aidl/
+    def module_src = p_modules.stream()
+            .map(new Function() {
+                @Override
+                Object apply(Object moduleName) {
+                    // 将符合条件的文件夹以集合的方式输出
+                    return ['src', moduleName, 'java'].join('/')
+                }
+            })
+            .collect(Collectors.toList())
+
+    def module_res = p_modules.stream()
+            .map(new Function() {
+                @Override
+                Object apply(Object moduleName) {
+                    return ['src', moduleName, 'res'].join('/')
+                }
+            }).collect(Collectors.toList())
+
+    def module_aidl = p_modules.stream()
+            .map(new Function() {
+                @Override
+                Object apply(Object moduleName) {
+                    return ['src', moduleName, 'aidl'].join('/')
+                }
+            }).collect(Collectors.toList())
+    // step3：将step2筛选出来的所有文件夹设置成源码范围
+    sourceSets {
+        main {
+            manifest.srcFile "src/main/AndroidManifest.xml"
+            java.srcDirs = module_src
+            res.srcDirs = module_res
+            aidl.srcDirs = module_aidl
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs', 'jni']
+        }
+    }
+
     compileSdkVersion 29
     defaultConfig {
         applicationId "my.code"
@@ -29,17 +82,17 @@ android {
         }
     }
 
-    // 解决 aidl 自定义对象文件查找不到包的问题
-    sourceSets {
-        main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-            java.srcDirs = ['src/main/java', 'src/main/aidl']
-            resources.srcDirs = ['src/main/java', 'src/main/aidl']
-            aidl.srcDirs = ['src/main/aidl']
-            res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['src/main/assets']
-        }
-    }
+//    // 解决 aidl 自定义对象文件查找不到包的问题
+//    sourceSets {
+//        main {
+//            manifest.srcFile 'src/main/AndroidManifest.xml'
+//            java.srcDirs = ['src/main/java', 'src/main/aidl']
+//            resources.srcDirs = ['src/main/java', 'src/main/aidl']
+//            aidl.srcDirs = ['src/main/aidl']
+//            res.srcDirs = ['src/main/res']
+//            assets.srcDirs = ['src/main/assets']
+//        }
+//    }
 
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8

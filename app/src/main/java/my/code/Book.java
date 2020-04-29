@@ -1,8 +1,11 @@
-package my.code.myservice.aidl;
+package my.code;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * aidl 的实体类，只需要保证包名、类名一致就可以，不需要放在同一个目录下
+ */
 public final class Book implements Parcelable {
     private String mName;
     private int mNumber;

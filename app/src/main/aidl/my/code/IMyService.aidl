@@ -1,8 +1,8 @@
 // IMyService.aidl
-package my.code.myservice.aidl;
+package my.code;
 
 // Declare any non-default types here with import statements
-import my.code.myservice.aidl.Book;
+import my.code.Book;
 
 interface IMyService {
     /**

@@ -32,6 +32,8 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dir.TestExtraCode;
+
 public class MainActivity extends BaseActivity {
 
     private ArrayList<SparseArray<Object>> mData;
@@ -136,7 +138,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreateFinish() {
-
+        TestExtraCode.test();
     }
 
     @Override

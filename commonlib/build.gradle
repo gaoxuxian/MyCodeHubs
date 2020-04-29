@@ -59,7 +59,7 @@ dependencies {
     // JavaPoet
     implementation 'com.squareup:javapoet:1.12.1'
     // 解决使用JavaPoet无法导入Javax包的问题
-    implementation files ('E:/Android/JAVA_JDK1.8/Java/jdk1.8.0_102/jre/lib/rt.jar')
+//    implementation files ('E:/Android/JAVA_JDK1.8/Java/jdk1.8.0_102/jre/lib/rt.jar')
 
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 

@@ -1,5 +1,5 @@
 // Book.aidl
-package my.code.myservice.aidl;
+package my.code;
 
 // Declare any non-default types here with import statements
 parcelable Book;

@@ -56,12 +56,18 @@ dependencies {
     // Event Bus
     api 'org.greenrobot:eventbus:3.2.0'
 
+    // Rxjava
+    api 'io.reactivex:rxjava:1.2.1'
+    api 'io.reactivex:rxandroid:1.2.1'
+
     // JavaPoet
     implementation 'com.squareup:javapoet:1.12.1'
     // 解决使用JavaPoet无法导入Javax包的问题
 //    implementation files ('E:/Android/JAVA_JDK1.8/Java/jdk1.8.0_102/jre/lib/rt.jar')
 
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
 
     // 单元测试
     testImplementation 'junit:junit:4.12'

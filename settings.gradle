@@ -1,1 +1,2 @@
 include ':app', ':widgetlibrary', ':androiddemo', ':avlibrary', ':javademo', ':kotlindemo', ':commonlib'
+include ':rxjavademo'

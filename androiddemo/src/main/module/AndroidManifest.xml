@@ -76,6 +76,26 @@
             android:label="Animation1Activity"
             android:theme="@style/AppTheme.ActivityDemoTheme" />
 
+        <activity
+            android:name=".span.FakeBoldSpanActivity"
+            android:label="FakeBoldSpanActivity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
+        <activity
+            android:name=".inke.InKeGiftDemoActivity"
+            android:label="InKeGiftDemoActivity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
+        <activity
+            android:name=".viewpager.DoubleViewPagerActivity"
+            android:label="DoubleViewPagerActivity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
+        <activity
+            android:name=".viewpager.DoubleViewPager2Activity"
+            android:label="DoubleViewPager2Activity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
         <service android:name=".service.LocalService" />
         <service android:name=".service.ProcessService"
             android:process=".process_service"/>

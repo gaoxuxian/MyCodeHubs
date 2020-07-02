@@ -9,9 +9,9 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.xx.androiddemo.R
-import com.xx.avlibrary.inke.giftplayer.GiftCompletionListener
-import com.xx.avlibrary.inke.giftplayer.GiftErrorListener
-import com.xx.avlibrary.inke.giftplayer.GiftVideoView
+import com.xx.androiddemo.inke.giftplayer.GiftCompletionListener
+import com.xx.androiddemo.inke.giftplayer.GiftErrorListener
+import com.xx.androiddemo.inke.giftplayer.GiftVideoView
 import kotlinx.android.synthetic.main.activity_android_demo.button
 import kotlinx.android.synthetic.main.activity_inke_gift_demo.*
 

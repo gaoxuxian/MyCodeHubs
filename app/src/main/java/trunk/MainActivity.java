@@ -27,6 +27,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.xx.commonlib.PxUtil;
+import com.xx.commonlib.ThreadUtil;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -170,5 +171,14 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }
+        try {
+            test();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test() throws Exception {
+        throw new RuntimeException();
     }
 }

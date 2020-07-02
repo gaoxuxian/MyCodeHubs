@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/commonlib/MyCodeHubs-commonlib.iml" filepath="$PROJECT_DIR$/commonlib/MyCodeHubs-commonlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/javademo/MyCodeHubs-javademo.iml" filepath="$PROJECT_DIR$/javademo/MyCodeHubs-javademo.iml" group="MyCodeHubs/javademo" />
       <module fileurl="file://$PROJECT_DIR$/kotlindemo/MyCodeHubs-kotlindemo.iml" filepath="$PROJECT_DIR$/kotlindemo/MyCodeHubs-kotlindemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rxjavademo/MyCodeHubs-rxjavademo.iml" filepath="$PROJECT_DIR$/.idea/modules/rxjavademo/MyCodeHubs-rxjavademo.iml" group="MyCodeHubs/rxjavademo" />
       <module fileurl="file://$PROJECT_DIR$/widgetlibrary/MyCodeHubs-widgetlibrary.iml" filepath="$PROJECT_DIR$/widgetlibrary/MyCodeHubs-widgetlibrary.iml" group="MyCodeHubs/widgetlibrary" />
       <module fileurl="file://$PROJECT_DIR$/MyDemo-MyCodeHubs.iml" filepath="$PROJECT_DIR$/MyDemo-MyCodeHubs.iml" />
       <module fileurl="file://$PROJECT_DIR$/Project-MyCodeHubs.iml" filepath="$PROJECT_DIR$/Project-MyCodeHubs.iml" group="MyCodeHubs" />
@@ -20,6 +21,14 @@
       <module fileurl="file://$PROJECT_DIR$/commonlib/commonlib.iml" filepath="$PROJECT_DIR$/commonlib/commonlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/javademo/javademo.iml" filepath="$PROJECT_DIR$/javademo/javademo.iml" />
       <module fileurl="file://$PROJECT_DIR$/kotlindemo/kotlindemo.iml" filepath="$PROJECT_DIR$/kotlindemo/kotlindemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-MyCodeHubs.iml" filepath="$PROJECT_DIR$/.idea/modules/project-MyCodeHubs.iml" group="MyCodeHubs" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/androiddemo/project-MyCodeHubs-androiddemo.iml" filepath="$PROJECT_DIR$/.idea/modules/androiddemo/project-MyCodeHubs-androiddemo.iml" group="MyCodeHubs/androiddemo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/project-MyCodeHubs-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/project-MyCodeHubs-app.iml" group="MyCodeHubs/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/avlibrary/project-MyCodeHubs-avlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/avlibrary/project-MyCodeHubs-avlibrary.iml" group="MyCodeHubs/avlibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/commonlib/project-MyCodeHubs-commonlib.iml" filepath="$PROJECT_DIR$/.idea/modules/commonlib/project-MyCodeHubs-commonlib.iml" group="MyCodeHubs/commonlib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javademo/project-MyCodeHubs-javademo.iml" filepath="$PROJECT_DIR$/.idea/modules/javademo/project-MyCodeHubs-javademo.iml" group="MyCodeHubs/javademo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlindemo/project-MyCodeHubs-kotlindemo.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlindemo/project-MyCodeHubs-kotlindemo.iml" group="MyCodeHubs/kotlindemo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetlibrary/project-MyCodeHubs-widgetlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetlibrary/project-MyCodeHubs-widgetlibrary.iml" group="MyCodeHubs/widgetlibrary" />
       <module fileurl="file://$PROJECT_DIR$/rxjavademo/rxjavademo.iml" filepath="$PROJECT_DIR$/rxjavademo/rxjavademo.iml" group="MyCodeHubs/rxjavademo" />
       <module fileurl="file://$PROJECT_DIR$/widgetlibrary/widgetlibrary.iml" filepath="$PROJECT_DIR$/widgetlibrary/widgetlibrary.iml" />
     </modules>

@@ -65,7 +65,7 @@ dependencies {
     // 解决使用JavaPoet无法导入Javax包的问题
 //    implementation files ('E:/Android/JAVA_JDK1.8/Java/jdk1.8.0_102/jre/lib/rt.jar')
 
-    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.7'
 
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
 

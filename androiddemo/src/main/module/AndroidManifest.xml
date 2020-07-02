@@ -87,6 +87,11 @@
             android:theme="@style/AppTheme.ActivityDemoTheme" />
 
         <activity
+            android:name=".coroutine.KotlinCoroutineActivity"
+            android:label="KotlinCoroutineActivity"
+            android:theme="@style/AppTheme.ActivityDemoTheme" />
+
+        <activity
             android:name=".viewpager.DoubleViewPagerActivity"
             android:label="DoubleViewPagerActivity"
             android:theme="@style/AppTheme.ActivityDemoTheme" />

@@ -1,4 +1,4 @@
-package com.xx.avlibrary.inke.giftplayer
+package com.xx.androiddemo.inke.giftplayer
 
 import android.app.AlertDialog
 import android.content.Context
